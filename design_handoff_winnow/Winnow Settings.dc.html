@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:#ececed;}
+  .trunc{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .di{display:inline-block;background:#2f6bdb;transform:rotate(45deg);border-radius:1.5px;}
+  .chT{font:600 11px system-ui;letter-spacing:.05em;text-transform:uppercase;color:#9aa6bb;}
+  .nav{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:7px;font:500 13px system-ui;color:#55555c;}
+  .tog{flex:none;width:38px;height:22px;border-radius:11px;position:relative;}
+  .tog i{position:absolute;top:2px;width:18px;height:18px;border-radius:50%;background:#fff;}
+  .togOn{background:#2f6bdb;}
+  .togOn i{left:18px;box-shadow:0 1px 2px rgba(0,0,0,.25);}
+  .togOff{background:#d8d8de;}
+  .togOff i{left:2px;box-shadow:0 1px 2px rgba(0,0,0,.2);}
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:34px 28px;">
+  <div style="width:1060px;border-radius:14px;box-shadow:0 30px 80px rgba(20,22,45,.20),0 2px 8px rgba(0,0,0,.06);overflow:hidden;border:1px solid rgba(0,0,0,.08);background:#fff;display:flex;flex-direction:column;">
+
+    <div style="height:46px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;">
+      <div style="display:flex;gap:8px;"><span style="width:12px;height:12px;border-radius:50%;background:#ff5f57;"></span><span style="width:12px;height:12px;border-radius:50%;background:#febc2e;"></span><span style="width:12px;height:12px;border-radius:50%;background:#28c840;"></span></div>
+      <div style="position:absolute;left:0;right:0;text-align:center;font:600 13px system-ui;color:#9a9aa0;pointer-events:none;">Settings</div>
+    </div>
+
+    <div style="display:flex;align-items:stretch;">
+      <!-- settings nav -->
+      <div style="width:202px;flex:none;background:#fafafa;border-right:1px solid rgba(0,0,0,.05);padding:14px 10px;display:flex;flex-direction:column;gap:1px;">
+        <div class="nav">General</div>
+        <div class="nav">Accounts</div>
+        <div class="nav">Appearance</div>
+        <div class="nav" style="background:#eef3fc;box-shadow:inset 2px 0 #2f6bdb;color:#1c1c20;font-weight:600;"><span class="di" style="width:7px;height:7px;"></span>Intelligence</div>
+        <div class="nav">Privacy &amp; Security</div>
+        <div class="nav">Shortcuts</div>
+        <div class="nav">Lab</div>
+      </div>
+
+      <!-- content -->
+      <div style="flex:1;min-width:0;padding:28px 36px 32px;">
+        <div style="font:600 22px system-ui;color:#161618;letter-spacing:-.01em;">Intelligence</div>
+        <div style="font:400 13px/1.5 system-ui;color:#8a8a90;margin-top:5px;max-width:560px;">Winnow's assistance runs on this Mac by default. Generation tasks — summaries and replies — use a language model; everything else is local code.</div>
+
+        <!-- ENGINE -->
+        <div style="margin-top:26px;"><span class="chT">Engine</span></div>
+        <div style="margin-top:11px;display:flex;flex-direction:column;gap:10px;">
+          <!-- selected -->
+          <div style="border:1.5px solid #2f6bdb;border-radius:12px;padding:15px 17px;background:#fbfcfe;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <span style="flex:none;width:18px;height:18px;border-radius:50%;border:5px solid #2f6bdb;background:#fff;"></span>
+              <div style="flex:1;"><div style="font:600 14px system-ui;color:#1c1c20;">On-device · Apple Foundation Models</div><div style="font:400 12.5px/1.5 system-ui;color:#8a8a90;margin-top:2px;">Runs on this Mac and your iPhone. Free, private, always available. Best for summaries and short replies.</div></div>
+              <span style="font:600 10.5px system-ui;letter-spacing:.04em;text-transform:uppercase;color:#2f9e6f;background:#e8f4ee;border-radius:5px;padding:3px 8px;">Active</span>
+            </div>
+            <div style="display:flex;gap:28px;margin-top:13px;margin-left:30px;padding-top:12px;border-top:1px solid rgba(0,0,0,.06);">
+              <div><div style="font:500 10.5px system-ui;color:#a2a2a8;">Model</div><div style="font:500 12.5px system-ui;color:#34343a;margin-top:3px;">Foundation · 3B</div></div>
+              <div><div style="font:500 10.5px system-ui;color:#a2a2a8;">Source</div><div style="font:500 12.5px system-ui;color:#34343a;margin-top:3px;">Built into macOS 26</div></div>
+              <div><div style="font:500 10.5px system-ui;color:#a2a2a8;">Storage</div><div style="font:500 12.5px system-ui;color:#34343a;margin-top:3px;">0 MB · ships with OS</div></div>
+            </div>
+          </div>
+          <!-- mlx -->
+          <div style="border:1px solid rgba(0,0,0,.10);border-radius:12px;padding:15px 17px;display:flex;align-items:center;gap:12px;">
+            <span style="flex:none;width:18px;height:18px;border-radius:50%;border:1.5px solid #c2c2c8;background:#fff;"></span>
+            <div style="flex:1;"><div style="font:600 14px system-ui;color:#1c1c20;">Mac power model · MLX</div><div style="font:400 12.5px/1.5 system-ui;color:#8a8a90;margin-top:2px;">A larger local model for sharper drafts. Runs on Apple silicon when your Mac is plugged in.</div></div>
+            <span style="font:600 12.5px system-ui;color:#2f6bdb;border:1px solid rgba(47,107,219,.28);border-radius:9px;padding:7px 14px;white-space:nowrap;">Download · 4.2 GB</span>
+          </div>
+          <!-- cloud -->
+          <div style="border:1px solid rgba(0,0,0,.10);border-radius:12px;padding:15px 17px;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <span style="flex:none;width:18px;height:18px;border-radius:50%;border:1.5px solid #c2c2c8;background:#fff;"></span>
+              <div style="flex:1;"><div style="display:flex;align-items:center;gap:8px;"><span style="font:600 14px system-ui;color:#1c1c20;">Connect your own API key</span><span style="font:600 10px system-ui;letter-spacing:.04em;text-transform:uppercase;color:#c08a4a;background:#f7efe2;border-radius:5px;padding:2px 7px;">Leaves device</span></div><div style="font:400 12.5px/1.5 system-ui;color:#8a8a90;margin-top:2px;">Use a frontier cloud model for drafting. Only the text you ask Winnow to draft is sent — and only when you trigger it.</div></div>
+              <div class="tog togOff"><i></i></div>
+            </div>
+            <div style="margin-left:30px;margin-top:12px;display:flex;align-items:center;gap:10px;border:1px solid rgba(0,0,0,.08);border-radius:9px;padding:9px 13px;background:#f6f6f7;opacity:.6;"><span style="font:400 12.5px system-ui;color:#a2a2a8;flex:1;">sk-········································</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">disabled</span></div>
+          </div>
+        </div>
+
+        <!-- ASSISTANCE LEVEL -->
+        <div style="margin-top:26px;display:flex;align-items:center;gap:10px;"><span class="chT">Assistance level</span></div>
+        <div style="margin-top:11px;display:flex;align-items:center;gap:14px;">
+          <div style="display:flex;background:rgba(0,0,0,.05);border-radius:9px;padding:3px;">
+            <span style="font:600 12.5px system-ui;color:#1c1c20;background:#fff;border-radius:6px;padding:6px 16px;box-shadow:0 1px 2px rgba(0,0,0,.12);">Suggest</span>
+            <span style="font:500 12.5px system-ui;color:#6a6a70;padding:6px 16px;">Auto-file</span>
+            <span style="font:500 12.5px system-ui;color:#6a6a70;padding:6px 16px;">Off</span>
+          </div>
+          <span style="font:400 12.5px/1.5 system-ui;color:#9a9aa0;flex:1;">Winnow surfaces drafts and triage suggestions, but never sends or files anything without you.</span>
+        </div>
+
+        <!-- WHAT RUNS LOCALLY -->
+        <div style="margin-top:26px;display:flex;align-items:center;gap:8px;"><span class="di" style="width:6px;height:6px;"></span><span class="chT">What runs locally</span></div>
+        <div style="margin-top:11px;display:grid;grid-template-columns:1fr 1fr;gap:10px 22px;">
+          <div style="display:flex;align-items:center;gap:11px;"><div style="flex:1;"><div style="font:600 13px system-ui;color:#1c1c20;">Packages &amp; deliveries</div><div style="font:400 11.5px system-ui;color:#a2a2a8;margin-top:1px;">Code · no model</div></div><div class="tog togOn"><i></i></div></div>
+          <div style="display:flex;align-items:center;gap:11px;"><div style="flex:1;"><div style="font:600 13px system-ui;color:#1c1c20;">Flights &amp; trips</div><div style="font:400 11.5px system-ui;color:#a2a2a8;margin-top:1px;">Code · no model</div></div><div class="tog togOn"><i></i></div></div>
+          <div style="display:flex;align-items:center;gap:11px;"><div style="flex:1;"><div style="font:600 13px system-ui;color:#1c1c20;">Hotels &amp; reservations</div><div style="font:400 11.5px system-ui;color:#a2a2a8;margin-top:1px;">Code · no model</div></div><div class="tog togOn"><i></i></div></div>
+          <div style="display:flex;align-items:center;gap:11px;"><div style="flex:1;"><div style="font:600 13px system-ui;color:#1c1c20;">Price quotes &amp; estimates</div><div style="font:400 11.5px system-ui;color:#a2a2a8;margin-top:1px;">On-device embeddings</div></div><div class="tog togOn"><i></i></div></div>
+          <div style="display:flex;align-items:center;gap:11px;"><div style="flex:1;"><div style="font:600 13px system-ui;color:#1c1c20;">Subscriptions &amp; renewals</div><div style="font:400 11.5px system-ui;color:#a2a2a8;margin-top:1px;">Code · no model</div></div><div class="tog togOn"><i></i></div></div>
+          <div style="display:flex;align-items:center;gap:11px;"><div style="flex:1;"><div style="font:600 13px system-ui;color:#1c1c20;">Triage &amp; needs-reply</div><div style="font:400 11.5px system-ui;color:#a2a2a8;margin-top:1px;">On-device classifier</div></div><div class="tog togOn"><i></i></div></div>
+        </div>
+
+        <!-- PRIVACY LEDGER -->
+        <div style="margin-top:26px;"><span class="chT">Privacy ledger</span></div>
+        <div style="margin-top:11px;border:1px solid rgba(0,0,0,.07);border-radius:13px;display:flex;overflow:hidden;">
+          <div style="flex:1;padding:16px 18px;"><div style="font:600 22px ui-monospace,monospace;color:#161618;">0 B</div><div style="font:500 12px system-ui;color:#8a8a90;margin-top:4px;">sent off device</div></div>
+          <div style="flex:1;padding:16px 18px;border-left:1px solid rgba(0,0,0,.06);"><div style="font:600 22px ui-monospace,monospace;color:#161618;">41</div><div style="font:500 12px system-ui;color:#8a8a90;margin-top:4px;">trackers blocked</div></div>
+          <div style="flex:1;padding:16px 18px;border-left:1px solid rgba(0,0,0,.06);"><div style="font:600 22px ui-monospace,monospace;color:#161618;">24</div><div style="font:500 12px system-ui;color:#8a8a90;margin-top:4px;">newsletters filed</div></div>
+          <div style="flex:1;padding:16px 18px;border-left:1px solid rgba(0,0,0,.06);"><div style="font:600 22px ui-monospace,monospace;color:#161618;">128</div><div style="font:500 12px system-ui;color:#8a8a90;margin-top:4px;">summaries made</div></div>
+        </div>
+        <div style="font:400 11.5px system-ui;color:#b2b2b8;margin-top:9px;">This week · resets Monday · <span style="color:#2f6bdb;font-weight:600;">View full activity</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

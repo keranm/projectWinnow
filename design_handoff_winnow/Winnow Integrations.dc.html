@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:system-ui,-apple-system,sans-serif;}
+  .trunc{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .win{border-radius:13px;box-shadow:0 24px 70px rgba(20,22,45,.18),0 2px 6px rgba(0,0,0,.05);overflow:hidden;border:1px solid rgba(0,0,0,.07);background:#fff;display:flex;flex-direction:column;}
+  .lbl{font:600 13px system-ui;color:#3a3a40;margin:0 0 16px 4px;}
+  .tl{display:flex;gap:8px;}
+  .tl span{width:12px;height:12px;border-radius:50%;}
+  .di{display:inline-block;background:#2f6bdb;transform:rotate(45deg);border-radius:1.5px;}
+  .chT{font:600 11px system-ui;letter-spacing:.05em;text-transform:uppercase;color:#9aa6bb;}
+  .mk{flex:none;width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font:700 14px system-ui;color:#fff;}
+  .row{display:flex;align-items:center;gap:13px;padding:14px 16px;}
+  .btn{font:600 12.5px system-ui;border-radius:9px;padding:7px 15px;}
+  .tog{flex:none;width:38px;height:22px;border-radius:11px;position:relative;}
+  .togOn{background:#2f6bdb;} .togOn i{position:absolute;top:2px;left:18px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);}
+</style>
+</helmet>
+
+<!-- ===== F1 — INTEGRATIONS DIRECTORY ===== -->
+<div style="position:absolute; left:0; top:0; width:860px;">
+  <div data-drags-parent="1" class="lbl">01 · Settings → Integrations — your accounts, connected directly</div>
+  <div class="win" style="height:740px;">
+    <div style="height:44px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;">
+      <div class="tl"><span style="background:#ff5f57;"></span><span style="background:#febc2e;"></span><span style="background:#28c840;"></span></div>
+      <div style="position:absolute;left:0;right:0;text-align:center;font:600 13px system-ui;color:#9a9aa0;pointer-events:none;">Settings — Integrations</div>
+    </div>
+    <div style="flex:1;padding:26px 32px;overflow:hidden;">
+      <div style="font:600 20px system-ui;color:#161618;letter-spacing:-.01em;">Integrations</div>
+      <!-- privacy banner -->
+      <div style="display:flex;align-items:flex-start;gap:11px;margin-top:14px;padding:13px 15px;background:#f7f9fc;border:1px solid rgba(47,107,219,.12);border-radius:11px;">
+        <span class="di" style="width:8px;height:8px;margin-top:3px;"></span>
+        <div style="font:400 12.5px/1.5 system-ui;color:#55555c;">Each integration is <strong style="color:#1c1c20;font-weight:600;">your</strong> account, connected straight from this Mac — no Winnow server in between. Everything's off until you switch it on, and each one shows exactly what leaves your device.</div>
+      </div>
+
+      <div class="chT" style="margin-top:24px;">Scheduling</div>
+      <div style="margin-top:10px;border:1px solid rgba(0,0,0,.07);border-radius:12px;overflow:hidden;">
+        <div class="row">
+          <span class="mk" style="background:#006bff;">C</span>
+          <div style="flex:1;min-width:0;"><div style="font:600 14px system-ui;color:#1c1c20;">Calendly</div><div style="font:400 12px system-ui;color:#8a8a90;margin-top:2px;">Connected · alex@morgan.studio · inserts your booking links</div></div>
+          <span style="display:flex;align-items:center;gap:6px;font:400 11px system-ui;color:#9a9aa0;margin-right:6px;"><span style="width:5px;height:5px;border-radius:50%;background:#c08a4a;"></span>leaves device → Calendly</span>
+          <span class="btn" style="color:#2f6bdb;border:1px solid rgba(47,107,219,.28);">Manage</span>
+        </div>
+        <div class="row" style="border-top:1px solid rgba(0,0,0,.05);">
+          <span class="mk" style="background:#1a1a1a;font-size:11px;">cal</span>
+          <div style="flex:1;min-width:0;"><div style="font:600 14px system-ui;color:#1c1c20;">Cal.com</div><div style="font:400 12px system-ui;color:#8a8a90;margin-top:2px;">Open-source scheduling · self-hosted or cloud</div></div>
+          <span class="btn" style="color:#fff;background:#2f6bdb;">Connect</span>
+        </div>
+      </div>
+
+      <div class="chT" style="margin-top:22px;">Tasks &amp; follow-ups</div>
+      <div style="margin-top:10px;border:1px solid rgba(0,0,0,.07);border-radius:12px;overflow:hidden;">
+        <div class="row">
+          <span class="mk" style="background:linear-gradient(#ff7a3d,#ff525a);">☑</span>
+          <div style="flex:1;min-width:0;"><div style="display:flex;align-items:center;gap:8px;"><span style="font:600 14px system-ui;color:#1c1c20;">Apple Reminders</span><span style="font:600 9.5px system-ui;letter-spacing:.04em;text-transform:uppercase;color:#2f9e6f;background:#e8f4ee;border-radius:5px;padding:2px 7px;">On-device</span></div><div style="font:400 12px system-ui;color:#8a8a90;margin-top:2px;">Turn any email into a reminder — stays local, no account needed</div></div>
+          <div class="tog togOn"><i></i></div>
+        </div>
+        <div class="row" style="border-top:1px solid rgba(0,0,0,.05);">
+          <span class="mk" style="background:#e44332;">T</span>
+          <div style="flex:1;min-width:0;"><div style="font:600 14px system-ui;color:#1c1c20;">Todoist</div><div style="font:400 12px system-ui;color:#8a8a90;margin-top:2px;">Send a thread to a project as a task with a due date</div></div>
+          <span class="btn" style="color:#fff;background:#2f6bdb;">Connect</span>
+        </div>
+        <div class="row" style="border-top:1px solid rgba(0,0,0,.05);">
+          <span class="mk" style="background:#254bdd;">✦</span>
+          <div style="flex:1;min-width:0;"><div style="font:600 14px system-ui;color:#1c1c20;">Things · Linear</div><div style="font:400 12px system-ui;color:#8a8a90;margin-top:2px;">Personal tasks &amp; issue tracking</div></div>
+          <span style="font:600 10.5px system-ui;letter-spacing:.04em;text-transform:uppercase;color:#9a9aa0;background:#f0f0f2;border-radius:6px;padding:5px 11px;">Soon</span>
+        </div>
+      </div>
+
+      <div style="margin-top:18px;display:flex;align-items:center;"><span style="font:600 12.5px system-ui;color:#2f6bdb;">Request an integration</span><span style="flex:1;"></span><span style="font:400 11.5px system-ui;color:#9a9aa0;">Tokens stored in the macOS Keychain · revoke anytime</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== F2 — CONNECT / CONSENT SHEET ===== -->
+<div style="position:absolute; left:960px; top:0; width:620px;">
+  <div data-drags-parent="1" class="lbl">02 · Connecting Calendly — what it can see, stated plainly</div>
+  <div class="win" style="height:740px;position:relative;">
+    <div style="height:44px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;">
+      <div class="tl"><span style="background:#ff5f57;"></span><span style="background:#febc2e;"></span><span style="background:#28c840;"></span></div>
+      <div style="position:absolute;left:0;right:0;text-align:center;font:600 13px system-ui;color:#9a9aa0;pointer-events:none;">Settings — Integrations</div>
+    </div>
+    <div style="flex:1;background:#fafafa;opacity:.5;"></div>
+    <div style="position:absolute;inset:0;top:44px;background:rgba(20,22,40,.22);display:flex;align-items:center;justify-content:center;padding:24px;">
+      <div style="width:420px;background:#fff;border-radius:16px;box-shadow:0 30px 70px rgba(10,12,30,.34);overflow:hidden;">
+        <div style="padding:26px 26px 0;display:flex;flex-direction:column;align-items:center;text-align:center;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span class="mk" style="width:46px;height:46px;border-radius:12px;background:#006bff;font-size:18px;">C</span>
+            <span style="font:300 20px system-ui;color:#c2c2c8;">↔</span>
+            <span style="width:46px;height:46px;border-radius:12px;background:#eef3fc;display:flex;align-items:center;justify-content:center;"><span class="di" style="width:13px;height:13px;"></span></span>
+          </div>
+          <div style="font:600 18px system-ui;color:#161618;margin-top:16px;">Connect Calendly</div>
+          <div style="font:400 13px/1.55 system-ui;color:#8a8a90;margin-top:6px;">Winnow will open Calendly so you can sign in. It connects directly — nothing routes through a Winnow server.</div>
+        </div>
+        <div style="margin:20px 22px 0;border:1px solid rgba(0,0,0,.08);border-radius:11px;overflow:hidden;">
+          <div style="padding:9px 14px 5px;background:#fafafa;border-bottom:1px solid rgba(0,0,0,.05);"><span class="chT">Winnow will be able to</span></div>
+          <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;"><span style="color:#2f9e6f;font-size:13px;">✓</span><span style="font:500 13px system-ui;color:#3a3a40;">Read your event types &amp; booking links</span></div>
+          <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-top:1px solid rgba(0,0,0,.04);"><span style="color:#2f9e6f;font-size:13px;">✓</span><span style="font:500 13px system-ui;color:#3a3a40;">See which links you've already shared</span></div>
+          <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-top:1px solid rgba(0,0,0,.04);"><span style="color:#c0566c;font-size:13px;">✕</span><span style="font:500 13px system-ui;color:#9a9aa0;">Never sees your email content or contacts</span></div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:8px;margin:13px 22px 0;"><span class="di" style="width:6px;height:6px;margin-top:4px;"></span><span style="font:400 11.5px/1.45 system-ui;color:#9a9aa0;">When you insert a link, Winnow fetches your event types from Calendly. Only the chosen link is added to your email.</span></div>
+        <div style="display:flex;gap:10px;padding:20px 22px 22px;">
+          <span style="flex:1;text-align:center;font:600 13.5px system-ui;color:#5a5a62;border:1px solid rgba(0,0,0,.12);border-radius:10px;padding:11px 0;">Cancel</span>
+          <span style="flex:1;text-align:center;font:600 13.5px system-ui;color:#fff;background:#2f6bdb;border-radius:10px;padding:11px 0;">Continue to Calendly</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== F3 — COMPOSE: INSERT SCHEDULING LINK ===== -->
+<div style="position:absolute; left:1680px; top:0; width:720px;">
+  <div data-drags-parent="1" class="lbl">03 · Compose — drop a “pick a time” link from Calendly</div>
+  <div class="win" style="height:600px;position:relative;">
+    <div style="height:44px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;">
+      <div class="tl"><span style="background:#ff5f57;"></span><span style="background:#febc2e;"></span><span style="background:#28c840;"></span></div>
+      <div style="position:absolute;left:0;right:0;text-align:center;font:600 13px system-ui;color:#9a9aa0;pointer-events:none;">Reply</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;padding:12px 22px;border-bottom:1px solid rgba(0,0,0,.04);"><span style="font:500 12.5px system-ui;color:#9a9aa0;width:48px;">To</span><span style="background:#eef3fc;border-radius:14px;padding:3px 11px;font:500 12.5px system-ui;color:#2f6bdb;">Priya Nair</span></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:12px 22px;border-bottom:1px solid rgba(0,0,0,.04);"><span style="font:500 12.5px system-ui;color:#9a9aa0;width:48px;">Subject</span><span style="font:600 13.5px system-ui;color:#1c1c20;">Re: Partnership terms</span></div>
+    <div style="flex:1;padding:20px 22px;overflow:hidden;position:relative;">
+      <div style="font:400 14px/1.65 system-ui;color:#34343a;">Hi Priya — happy to walk through the terms. Grab whatever time suits you:</div>
+      <!-- inserted scheduling link chip -->
+      <div style="display:inline-flex;align-items:center;gap:10px;margin-top:13px;border:1px solid rgba(0,107,255,.3);background:#f3f8ff;border-radius:10px;padding:10px 14px;">
+        <span class="mk" style="width:30px;height:30px;border-radius:8px;background:#006bff;font-size:12px;">C</span>
+        <div><div style="font:600 13px system-ui;color:#1c1c20;">Book a 30-minute meeting</div><div style="font:500 11.5px ui-monospace,monospace;color:#2f6bdb;">calendly.com/alex/30min</div></div>
+      </div>
+      <div style="font:400 14px/1.65 system-ui;color:#34343a;margin-top:13px;">Talk soon,<br>Alex<span style="border-left:1.5px solid #2f6bdb;margin-left:1px;">&nbsp;</span></div>
+      <!-- insert popover -->
+      <div style="position:absolute;right:22px;bottom:8px;width:300px;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;box-shadow:0 22px 55px rgba(10,12,30,.26);overflow:hidden;">
+        <div style="display:flex;align-items:center;gap:8px;padding:11px 15px 7px;"><span class="mk" style="width:20px;height:20px;border-radius:6px;background:#006bff;font-size:10px;">C</span><span class="chT">Insert Calendly link</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 15px;background:#eef3fc;box-shadow:inset 2px 0 #2f6bdb;"><span style="font:600 13px system-ui;color:#1c1c20;">30 Minute Meeting</span><span style="font:500 11px ui-monospace,monospace;color:#2f6bdb;">/30min</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 15px;border-top:1px solid rgba(0,0,0,.04);"><span style="font:500 13px system-ui;color:#3a3a40;">15 Minute Intro</span><span style="font:500 11px ui-monospace,monospace;color:#a2a2a8;">/intro</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 15px;border-top:1px solid rgba(0,0,0,.04);"><span style="font:500 13px system-ui;color:#3a3a40;">Coffee chat</span><span style="font:500 11px ui-monospace,monospace;color:#a2a2a8;">/coffee</span></div>
+        <div style="display:flex;align-items:flex-start;gap:8px;padding:10px 15px;border-top:1px solid rgba(0,0,0,.06);background:#fafafa;"><span class="di" style="width:6px;height:6px;margin-top:4px;"></span><span style="font:400 11px/1.4 system-ui;color:#9a9aa0;">From your Calendly · only the link is added.</span></div>
+      </div>
+    </div>
+    <div style="flex:none;display:flex;align-items:center;gap:16px;padding:13px 22px;border-top:1px solid rgba(0,0,0,.05);"><span style="font:600 13.5px system-ui;color:#fff;background:#2f6bdb;border-radius:9px;padding:9px 20px;">Send</span><span style="font:400 16px system-ui;color:#9a9aa0;">⎘</span><span style="font:400 16px system-ui;color:#9a9aa0;">◷</span><span style="display:flex;align-items:center;gap:6px;font:600 12.5px system-ui;color:#2f6bdb;background:#eef3fc;border-radius:8px;padding:6px 11px;">↗ Pick a time</span></div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

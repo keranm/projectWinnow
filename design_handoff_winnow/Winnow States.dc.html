@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:system-ui,-apple-system,sans-serif;}
+  .win{border-radius:13px;box-shadow:0 24px 70px rgba(20,22,45,.18),0 2px 6px rgba(0,0,0,.05);overflow:hidden;border:1px solid rgba(0,0,0,.07);background:#fff;display:flex;flex-direction:column;}
+  .lbl{font:600 13px system-ui;color:#3a3a40;margin:0 0 16px 4px;}
+  .tl{display:flex;gap:8px;} .tl span{width:12px;height:12px;border-radius:50%;}
+  .di{display:inline-block;background:#2f6bdb;transform:rotate(45deg);border-radius:1.5px;}
+  .sk{background:#ececef;border-radius:5px;}
+  .ttl{position:absolute;left:0;right:0;text-align:center;font:600 13px system-ui;color:#9a9aa0;pointer-events:none;}
+</style>
+</helmet>
+
+<!-- ===== EMPTY ===== -->
+<div style="position:absolute; left:0; top:0; width:560px;">
+  <div data-drags-parent="1" class="lbl">Empty</div>
+  <div class="win" style="height:520px;">
+    <div style="height:44px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;"><div class="tl"><span style="background:#ff5f57;"></span><span style="background:#febc2e;"></span><span style="background:#28c840;"></span></div><div class="ttl">Receipts</div></div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 60px;">
+      <div style="width:48px;height:48px;border-radius:13px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;"><span style="width:14px;height:14px;border:2px solid #c2c2c8;border-radius:4px;transform:rotate(45deg);"></span></div>
+      <div style="font:600 17px system-ui;color:#3a3a40;margin-top:18px;">Nothing here yet</div>
+      <div style="font:400 13px/1.55 system-ui;color:#9a9aa0;margin-top:8px;max-width:280px;">When Winnow spots a receipt, it'll land in this lane automatically.</div>
+      <div style="font:600 12.5px system-ui;color:#2f6bdb;margin-top:16px;">Adjust what's detected</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== LOADING ===== -->
+<div style="position:absolute; left:640px; top:0; width:760px;">
+  <div data-drags-parent="1" class="lbl">Loading · skeleton</div>
+  <div class="win" style="height:520px;">
+    <div style="height:44px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;"><div class="tl"><span style="background:#ff5f57;"></span><span style="background:#febc2e;"></span><span style="background:#28c840;"></span></div><div class="ttl">Winnow</div></div>
+    <div style="flex:1;display:flex;min-height:0;">
+      <div style="width:300px;flex:none;border-right:1px solid rgba(0,0,0,.05);padding:18px;">
+        <div class="sk" style="height:13px;width:120px;"></div>
+        <div style="margin-top:22px;display:flex;flex-direction:column;gap:20px;">
+          <div><div class="sk" style="height:11px;width:60%;"></div><div class="sk" style="height:10px;width:85%;margin-top:8px;"></div></div>
+          <div><div class="sk" style="height:11px;width:50%;"></div><div class="sk" style="height:10px;width:80%;margin-top:8px;"></div></div>
+          <div><div class="sk" style="height:11px;width:55%;"></div><div class="sk" style="height:10px;width:75%;margin-top:8px;"></div></div>
+          <div><div class="sk" style="height:11px;width:45%;"></div><div class="sk" style="height:10px;width:82%;margin-top:8px;"></div></div>
+        </div>
+      </div>
+      <div style="flex:1;padding:26px;">
+        <div class="sk" style="height:18px;width:70%;"></div>
+        <div class="sk" style="height:11px;width:40%;margin-top:16px;"></div>
+        <div class="sk" style="height:11px;width:92%;margin-top:24px;"></div>
+        <div class="sk" style="height:11px;width:88%;margin-top:10px;"></div>
+        <div class="sk" style="height:11px;width:90%;margin-top:10px;"></div>
+        <div class="sk" style="height:11px;width:60%;margin-top:10px;"></div>
+      </div>
+    </div>
+    <div style="flex:none;padding:10px 0;text-align:center;border-top:1px solid rgba(0,0,0,.05);"><span style="font:500 11.5px system-ui;color:#b2b2b8;">Loading your mailbox…</span></div>
+  </div>
+</div>
+
+<!-- ===== OFFLINE ===== -->
+<div style="position:absolute; left:1480px; top:0; width:760px;">
+  <div data-drags-parent="1" class="lbl">Offline</div>
+  <div class="win" style="height:520px;">
+    <div style="height:44px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;"><div class="tl"><span style="background:#ff5f57;"></span><span style="background:#febc2e;"></span><span style="background:#28c840;"></span></div><div class="ttl">Winnow</div></div>
+    <!-- offline banner -->
+    <div style="flex:none;display:flex;align-items:center;gap:10px;padding:9px 18px;background:#fdf6ee;border-bottom:1px solid rgba(192,138,74,.2);"><span style="width:7px;height:7px;border-radius:50%;background:#c08a4a;"></span><span style="font:500 12.5px system-ui;color:#8a6a3a;flex:1;">You're offline — showing your local mailbox. New mail will sync when you're back.</span><span style="font:600 12px system-ui;color:#2f6bdb;">Retry</span></div>
+    <div style="flex:1;display:flex;min-height:0;">
+      <div style="width:300px;flex:none;border-right:1px solid rgba(0,0,0,.05);padding:14px 18px;">
+        <div style="font:600 14px system-ui;color:#1c1c20;margin-bottom:12px;">Important</div>
+        <div style="opacity:.72;display:flex;flex-direction:column;gap:14px;">
+          <div><div style="font:600 13px system-ui;color:#1c1c20;">Dana Whitfield</div><div style="font:400 12px system-ui;color:#9a9aa0;margin-top:2px;">Re: Q3 launch — final assets</div></div>
+          <div><div style="font:600 13px system-ui;color:#1c1c20;">Marco Lin</div><div style="font:400 12px system-ui;color:#9a9aa0;margin-top:2px;">Lunch Thursday?</div></div>
+          <div><div style="font:500 13px system-ui;color:#55555c;">Priya Nair</div><div style="font:400 12px system-ui;color:#a2a2a8;margin-top:2px;">Re: Contract redlines</div></div>
+        </div>
+      </div>
+      <div style="flex:1;padding:24px;display:flex;flex-direction:column;">
+        <div style="font:600 18px system-ui;color:#171719;">Re: Q3 launch — final assets</div>
+        <div style="font:400 13.5px/1.6 system-ui;color:#34343a;margin-top:14px;">Hi Alex — pushed the revised hero and tightened the headline. Need your sign-off before Friday…</div>
+        <div style="margin-top:auto;display:flex;align-items:center;gap:9px;font:400 12px system-ui;color:#9a9aa0;"><span class="di" style="width:6px;height:6px;"></span>You can still read, search &amp; write — replies queue and send on reconnect.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ERROR ===== -->
+<div style="position:absolute; left:2320px; top:0; width:560px;">
+  <div data-drags-parent="1" class="lbl">Error</div>
+  <div class="win" style="height:520px;">
+    <div style="height:44px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;"><div class="tl"><span style="background:#ff5f57;"></span><span style="background:#febc2e;"></span><span style="background:#28c840;"></span></div><div class="ttl">Winnow</div></div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 56px;">
+      <div style="width:48px;height:48px;border-radius:50%;background:#fbecea;display:flex;align-items:center;justify-content:center;font:600 22px system-ui;color:#d9534f;">!</div>
+      <div style="font:600 17px system-ui;color:#3a3a40;margin-top:18px;">Couldn't reach Gmail</div>
+      <div style="font:400 13px/1.55 system-ui;color:#9a9aa0;margin-top:8px;max-width:300px;">Your sign-in may have expired. Your mail is safe — Winnow's showing the local copy.</div>
+      <div style="display:flex;gap:10px;margin-top:18px;"><span style="font:600 13px system-ui;color:#fff;background:#2f6bdb;border-radius:9px;padding:9px 18px;">Reconnect</span><span style="font:600 13px system-ui;color:#5a5a62;border:1px solid rgba(0,0,0,.12);border-radius:9px;padding:9px 18px;">Details</span></div>
+      <div style="font:500 11.5px ui-monospace,monospace;color:#c2c2c8;margin-top:16px;">token_expired · 401</div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

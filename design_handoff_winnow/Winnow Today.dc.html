@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:#ececed;}
+  .trunc{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .di{display:inline-block;background:#2f6bdb;transform:rotate(45deg);border-radius:1.5px;}
+  .card{background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:13px;}
+  .ch{display:flex;align-items:center;gap:8px;padding:14px 17px 4px;}
+  .chT{font:600 11px system-ui;letter-spacing:.05em;text-transform:uppercase;color:#9aa6bb;}
+  .av{flex:none;width:34px;height:34px;border-radius:50%;font:600 12px system-ui;display:flex;align-items:center;justify-content:center;}
+  .act{font:600 12px system-ui;color:#2f6bdb;border:1px solid rgba(47,107,219,.28);border-radius:15px;padding:5px 13px;white-space:nowrap;}
+  .mono{font-family:ui-monospace,monospace;}
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:34px 28px;">
+  <div style="width:1200px;border-radius:14px;box-shadow:0 30px 80px rgba(20,22,45,.20),0 2px 8px rgba(0,0,0,.06);overflow:hidden;border:1px solid rgba(0,0,0,.08);background:#fff;display:flex;flex-direction:column;">
+
+    <div style="height:46px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;">
+      <div style="display:flex;gap:8px;"><span style="width:12px;height:12px;border-radius:50%;background:#ff5f57;"></span><span style="width:12px;height:12px;border-radius:50%;background:#febc2e;"></span><span style="width:12px;height:12px;border-radius:50%;background:#28c840;"></span></div>
+      <div style="position:absolute;left:0;right:0;text-align:center;font:600 13px system-ui;color:#9a9aa0;pointer-events:none;">Winnow</div>
+    </div>
+
+    <div style="display:flex;align-items:stretch;">
+      <!-- sidebar -->
+      <div style="width:228px;flex:none;background:#fafafa;border-right:1px solid rgba(0,0,0,.05);display:flex;flex-direction:column;padding:14px 10px 12px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:6px 8px 14px;"><div style="width:30px;height:30px;border-radius:50%;background:#e7ecf6;color:#2f6bdb;font:600 12px system-ui;display:flex;align-items:center;justify-content:center;">AM</div><div style="min-width:0;"><div class="trunc" style="font:600 13px system-ui;color:#1c1c20;">Alex Morgan</div><div class="trunc" style="font:400 11px system-ui;color:#9a9aa0;">alex@morgan.studio</div></div></div>
+        <div style="display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:7px;background:#eef3fc;box-shadow:inset 2px 0 #2f6bdb;"><span class="di" style="width:7px;height:7px;"></span><span style="font:600 13px system-ui;color:#1c1c20;flex:1;">Today</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;"><span style="font:500 13px system-ui;color:#55555c;">Important</span><span style="font:600 11px ui-monospace,monospace;color:#b2b2b8;">2</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;"><span style="font:500 13px system-ui;color:#55555c;">Other</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">18</span></div>
+        <div style="display:flex;align-items:center;gap:7px;padding:14px 10px 6px;"><span class="di" style="width:6px;height:6px;"></span><span class="chT">Pulled from mail</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;"><span style="font:500 13px system-ui;color:#55555c;">Trips &amp; deliveries</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">3</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;"><span style="font:500 13px system-ui;color:#55555c;">Quotes</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">3</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;"><span style="font:500 13px system-ui;color:#55555c;">Subscriptions</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">7</span></div>
+        <div style="margin-top:auto;display:flex;align-items:center;gap:7px;padding:10px 10px 4px;border-top:1px solid rgba(0,0,0,.05);"><span style="width:6px;height:6px;border-radius:50%;background:#28c840;"></span><span style="font:500 11px system-ui;color:#9a9aa0;">On-device · synced 2m ago</span></div>
+      </div>
+
+      <!-- TODAY -->
+      <div style="flex:1;min-width:0;padding:28px 34px 30px;">
+        <!-- greeting -->
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;">
+          <div>
+            <div style="font:600 25px/1.2 system-ui;color:#161618;letter-spacing:-.02em;">Good morning, Alex</div>
+            <div style="font:500 13px system-ui;color:#9a9aa0;margin-top:5px;">Monday, June 29</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;border:1px solid rgba(0,0,0,.10);border-radius:9px;padding:8px 13px;"><span style="font:400 13px system-ui;color:#9a9aa0;">Open inbox</span><span style="font:600 11px ui-monospace,monospace;color:#b2b2b8;background:rgba(0,0,0,.05);border-radius:4px;padding:1px 6px;">⌘1</span></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:9px;margin-top:16px;">
+          <span class="di" style="width:7px;height:7px;"></span>
+          <div style="font:400 14px/1.5 system-ui;color:#55555c;"><strong style="font-weight:600;color:#1c1c20;">3 emails</strong> need you, <strong style="font-weight:600;color:#1c1c20;">2</strong> are awaiting replies, and <strong style="font-weight:600;color:#1c1c20;">1 bill</strong> is due this week.</div>
+        </div>
+
+        <!-- HERO: focus mail -->
+        <div class="card" style="margin-top:22px;">
+          <div class="ch" style="padding:16px 19px 6px;"><span style="font:600 14px system-ui;color:#1c1c20;">Needs a reply</span><span style="font:600 11px ui-monospace,monospace;color:#2f6bdb;background:#eef3fc;border-radius:5px;padding:1px 7px;">3</span><span style="flex:1;"></span><span style="font:500 11px system-ui;color:#b2b2b8;">they're waiting on you</span></div>
+          <div style="display:flex;align-items:center;gap:14px;padding:14px 19px;border-top:1px solid rgba(0,0,0,.05);margin-top:6px;">
+            <div class="av" style="background:#fbe7ea;color:#c0566c;">DW</div>
+            <div style="flex:1;min-width:0;"><div style="display:flex;align-items:baseline;gap:9px;"><span style="font:600 14px system-ui;color:#1c1c20;">Dana Whitfield</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">waiting 4h</span></div><div class="trunc" style="font:500 13px system-ui;color:#3a3a40;margin-top:2px;">Re: Q3 launch — final assets</div><div class="trunc" style="font:400 12.5px system-ui;color:#9a9aa0;margin-top:2px;">“…I need your sign-off before Friday so design can lock the page.”</div></div>
+            <sc-if value="{{ assistOn }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;gap:5px;font:600 11px system-ui;color:#2f6bdb;background:#eef3fc;border-radius:15px;padding:6px 12px;white-space:nowrap;"><span class="di" style="width:6px;height:6px;"></span>Draft ready</span></sc-if>
+            <span class="act">Reply</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:14px;padding:14px 19px;border-top:1px solid rgba(0,0,0,.05);">
+            <div class="av" style="background:#e8eafb;color:#5a5fc0;">PN</div>
+            <div style="flex:1;min-width:0;"><div style="display:flex;align-items:baseline;gap:9px;"><span style="font:600 14px system-ui;color:#1c1c20;">Priya Nair</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">waiting 1d</span></div><div class="trunc" style="font:500 13px system-ui;color:#3a3a40;margin-top:2px;">Re: Contract redlines</div><div class="trunc" style="font:400 12.5px system-ui;color:#9a9aa0;margin-top:2px;">“…one open question on the indemnity clause before we sign.”</div></div>
+            <span class="act">Reply</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:14px;padding:14px 19px;border-top:1px solid rgba(0,0,0,.05);">
+            <div class="av" style="background:#e4f0e8;color:#4f9168;">ML</div>
+            <div style="flex:1;min-width:0;"><div style="display:flex;align-items:baseline;gap:9px;"><span style="font:600 14px system-ui;color:#1c1c20;">Marco Lin</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">waiting 2h</span></div><div class="trunc" style="font:500 13px system-ui;color:#3a3a40;margin-top:2px;">Lunch Thursday?</div><div class="trunc" style="font:400 12.5px system-ui;color:#9a9aa0;margin-top:2px;">“…that ramen place we kept meaning to try — you free around 1?”</div></div>
+            <span class="act">Reply</span>
+          </div>
+          <div style="height:8px;"></div>
+        </div>
+
+        <!-- secondary dashboard -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:16px;align-items:start;">
+          <!-- following up -->
+          <div class="card">
+            <div class="ch"><span class="chT">Following up</span></div>
+            <div style="display:flex;align-items:center;gap:11px;padding:10px 16px;border-top:1px solid rgba(0,0,0,.04);margin-top:6px;">
+              <div class="av" style="width:30px;height:30px;background:#f3ece0;color:#a07d3a;">SO</div>
+              <div style="flex:1;min-width:0;"><div class="trunc" style="font:600 13px system-ui;color:#1c1c20;">Sam Ortiz</div><div class="trunc" style="font:400 11.5px system-ui;color:#9a9aa0;margin-top:1px;">Invoice approval</div></div>
+              <span style="font:500 11px system-ui;color:#c08a4a;white-space:nowrap;">3d</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:11px;padding:10px 16px;border-top:1px solid rgba(0,0,0,.04);">
+              <div class="av" style="width:30px;height:30px;background:#eef0f4;color:#6a7184;">AL</div>
+              <div style="flex:1;min-width:0;"><div class="trunc" style="font:600 13px system-ui;color:#1c1c20;">Acme Legal</div><div class="trunc" style="font:400 11.5px system-ui;color:#9a9aa0;margin-top:1px;">Signed NDA?</div></div>
+              <span style="font:500 11px system-ui;color:#c08a4a;white-space:nowrap;">5d</span>
+            </div>
+            <div style="height:8px;"></div>
+          </div>
+          <!-- due soon -->
+          <div class="card">
+            <div class="ch"><span class="di" style="width:6px;height:6px;"></span><span class="chT">Due soon</span><span style="flex:1;"></span><span style="font:600 11px ui-monospace,monospace;color:#34343a;">≈$240</span></div>
+            <div style="display:flex;align-items:center;padding:9px 16px;border-top:1px solid rgba(0,0,0,.04);margin-top:6px;"><div style="flex:1;min-width:0;"><div style="font:600 12.5px system-ui;color:#1c1c20;">iCloud+</div><div style="font:400 11px system-ui;color:#a2a2a8;margin-top:1px;">Jul 1</div></div><span style="font:600 12.5px ui-monospace,monospace;color:#34343a;">$9.99</span></div>
+            <div style="display:flex;align-items:center;padding:9px 16px;border-top:1px solid rgba(0,0,0,.04);"><div style="flex:1;min-width:0;"><div style="font:600 12.5px system-ui;color:#1c1c20;">Figma</div><div style="font:400 11px system-ui;color:#a2a2a8;margin-top:1px;">Jul 2</div></div><span style="font:600 12.5px ui-monospace,monospace;color:#34343a;">$144</span></div>
+            <div style="display:flex;align-items:center;padding:9px 16px;border-top:1px solid rgba(0,0,0,.04);"><div style="flex:1;min-width:0;"><div style="font:600 12.5px system-ui;color:#1c1c20;">PG&amp;E</div><div style="font:400 11px system-ui;color:#c08a4a;margin-top:1px;">Jul 5 · ↑ was $72</div></div><span style="font:600 12.5px ui-monospace,monospace;color:#34343a;">$86.20</span></div>
+            <div style="height:8px;"></div>
+          </div>
+          <!-- trips & deliveries -->
+          <div class="card">
+            <div class="ch"><span class="chT">Trips &amp; deliveries</span></div>
+            <div style="display:flex;align-items:center;gap:11px;padding:10px 16px;border-top:1px solid rgba(0,0,0,.04);margin-top:6px;">
+              <span style="flex:none;width:30px;height:30px;border-radius:8px;background:#dbe6f8;color:#2f6bdb;font:600 13px system-ui;display:flex;align-items:center;justify-content:center;">▣</span>
+              <div style="flex:1;min-width:0;"><div class="trunc" style="font:600 12.5px system-ui;color:#1c1c20;">Arriving tomorrow</div><div class="trunc" style="font:400 11px system-ui;color:#9a9aa0;margin-top:1px;">Northwind #2207</div></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:11px;padding:10px 16px;border-top:1px solid rgba(0,0,0,.04);">
+              <span style="flex:none;width:30px;height:30px;border-radius:8px;background:#f1eddc;color:#a07d1a;font:600 13px system-ui;display:flex;align-items:center;justify-content:center;">✈</span>
+              <div style="flex:1;min-width:0;"><div class="trunc" style="font:600 12.5px system-ui;color:#1c1c20;">New York</div><div class="trunc" style="font:400 11px system-ui;color:#9a9aa0;margin-top:1px;">Jul 3 – 6</div></div>
+            </div>
+            <div style="height:8px;"></div>
+          </div>
+        </div>
+
+        <!-- projects -->
+        <sc-if value="{{ showProjects }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-top:24px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><span class="chT">Projects</span><span style="flex:1;"></span><span style="font:500 11px system-ui;color:#b2b2b8;">grouped from your threads &amp; labels</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+            <div class="card" style="padding:16px 17px;">
+              <div style="font:600 14.5px system-ui;color:#1c1c20;">Q3 site redesign</div>
+              <div style="font:400 12.5px system-ui;color:#8a8a90;margin-top:6px;">3 quotes · median <span class="mono" style="color:#34343a;">$14,500</span></div>
+              <div style="display:flex;align-items:center;gap:7px;margin-top:12px;"><span class="di" style="width:6px;height:6px;"></span><span style="font:500 12.5px system-ui;color:#2f6bdb;">Next: pick a vendor</span></div>
+              <div style="font:400 11px ui-monospace,monospace;color:#b2b2b8;margin-top:12px;padding-top:11px;border-top:1px solid rgba(0,0,0,.05);">6 threads · updated 3h ago</div>
+            </div>
+            <div class="card" style="padding:16px 17px;">
+              <div style="font:600 14.5px system-ui;color:#1c1c20;">Brand photography</div>
+              <div style="font:400 12.5px system-ui;color:#8a8a90;margin-top:6px;">Shotlist in review with studio</div>
+              <div style="display:flex;align-items:center;gap:7px;margin-top:12px;"><span class="di" style="width:6px;height:6px;"></span><span style="font:500 12.5px system-ui;color:#2f6bdb;">Next: confirm shoot date</span></div>
+              <div style="font:400 11px ui-monospace,monospace;color:#b2b2b8;margin-top:12px;padding-top:11px;border-top:1px solid rgba(0,0,0,.05);">4 threads · updated 1d ago</div>
+            </div>
+            <div class="card" style="padding:16px 17px;">
+              <div style="font:600 14.5px system-ui;color:#1c1c20;">Office move</div>
+              <div style="font:400 12.5px system-ui;color:#8a8a90;margin-top:6px;">Lease draft out for signature</div>
+              <div style="display:flex;align-items:center;gap:7px;margin-top:12px;"><span class="di" style="width:6px;height:6px;"></span><span style="font:500 12.5px system-ui;color:#2f6bdb;">Next: review section 7</span></div>
+              <div style="font:400 11px ui-monospace,monospace;color:#b2b2b8;margin-top:12px;padding-top:11px;border-top:1px solid rgba(0,0,0,.05);">2 threads · updated 2d ago</div>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- agent strip -->
+        <sc-if value="{{ suggestMode }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-top:22px;display:flex;align-items:center;gap:11px;background:#f7f9fc;border:1px solid rgba(47,107,219,.10);border-radius:11px;padding:13px 17px;">
+          <span class="di" style="width:8px;height:8px;"></span>
+          <div style="flex:1;font:400 13px/1.5 system-ui;color:#55555c;">This morning Winnow sorted <strong style="font-weight:600;color:#1c1c20;">24 newsletters</strong> into Other and blocked <strong style="font-weight:600;color:#1c1c20;">41 trackers</strong> — all on this Mac.</div>
+          <span style="font:600 12.5px system-ui;color:#2f6bdb;">Review</span>
+        </div>
+        </sc-if>
+        <sc-if value="{{ autoFiled }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:22px;display:flex;align-items:center;gap:11px;background:#f7f9fc;border:1px solid rgba(47,107,219,.10);border-radius:11px;padding:13px 17px;">
+          <span class="di" style="width:8px;height:8px;"></span>
+          <div style="flex:1;font:400 13px/1.5 system-ui;color:#55555c;">Winnow auto-filed <strong style="font-weight:600;color:#1c1c20;">24 newsletters</strong> and <strong style="font-weight:600;color:#1c1c20;">6 receipts</strong>, and drafted <strong style="font-weight:600;color:#1c1c20;">2 replies</strong> for your approval — on this Mac.</div>
+          <span style="font:600 12.5px system-ui;color:#2f6bdb;">Review</span>
+        </div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1264,&quot;height&quot;:1000},&quot;assistMode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Suggest&quot;,&quot;Auto-file&quot;,&quot;Off&quot;],&quot;default&quot;:&quot;Suggest&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Assistance&quot;},&quot;showProjects&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Sections&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const mode = this.props.assistMode ?? 'Suggest';
+    return {
+      assistOn: mode !== 'Off',
+      suggestMode: mode === 'Suggest',
+      autoFiled: mode === 'Auto-file',
+      showProjects: this.props.showProjects ?? true,
+    };
+  }
+}
+</script>
+</body>
+</html>

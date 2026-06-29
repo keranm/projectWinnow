@@ -1,0 +1,61 @@
+import Foundation
+
+public struct MailMessage: Identifiable, Sendable, Hashable {
+    public let id: String
+    public let threadID: String
+    public let accountID: String
+    public var from: Participant
+    public var to: [Participant]
+    public var cc: [Participant]
+    public var subject: String
+    public var snippet: String
+    public var body: MessageBody?
+    public var date: Date
+    public var labels: Set<String>
+    public var isRead: Bool
+
+    public init(
+        id: String,
+        threadID: String,
+        accountID: String,
+        from: Participant,
+        to: [Participant],
+        cc: [Participant] = [],
+        subject: String,
+        snippet: String,
+        body: MessageBody? = nil,
+        date: Date,
+        labels: Set<String> = [],
+        isRead: Bool = false
+    ) {
+        self.id = id
+        self.threadID = threadID
+        self.accountID = accountID
+        self.from = from
+        self.to = to
+        self.cc = cc
+        self.subject = subject
+        self.snippet = snippet
+        self.body = body
+        self.date = date
+        self.labels = labels
+        self.isRead = isRead
+    }
+}
+
+public struct Participant: Sendable, Hashable {
+    public let name: String?
+    public let email: String
+
+    public init(name: String? = nil, email: String) {
+        self.name = name
+        self.email = email
+    }
+
+    public var displayName: String { name ?? email }
+}
+
+public enum MessageBody: Sendable, Hashable {
+    case plain(String)
+    case html(String)
+}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:#0e0e10;}
+  .trunc{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .di{display:inline-block;background:#4f8ef0;transform:rotate(45deg);border-radius:1.5px;}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:34px 28px;">
+  <div style="width:1180px;height:760px;border-radius:14px;box-shadow:0 30px 80px rgba(0,0,0,.5);overflow:hidden;border:1px solid rgba(255,255,255,.08);background:#1c1c1e;display:flex;flex-direction:column;">
+    <div style="height:46px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(255,255,255,.07);position:relative;background:#161617;">
+      <div style="display:flex;gap:8px;"><span style="width:12px;height:12px;border-radius:50%;background:#ff5f57;"></span><span style="width:12px;height:12px;border-radius:50%;background:#febc2e;"></span><span style="width:12px;height:12px;border-radius:50%;background:#28c840;"></span></div>
+      <div style="position:absolute;left:0;right:0;text-align:center;font:600 13px system-ui;color:#6a6a72;pointer-events:none;">Winnow</div>
+    </div>
+    <div style="flex:1;display:flex;min-height:0;">
+      <!-- sidebar -->
+      <div style="width:228px;flex:none;background:#161617;border-right:1px solid rgba(255,255,255,.07);display:flex;flex-direction:column;padding:14px 10px 10px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:6px 8px 14px;"><div style="width:30px;height:30px;border-radius:50%;background:#243349;color:#7fb0f5;font:600 12px system-ui;display:flex;align-items:center;justify-content:center;">AM</div><div style="min-width:0;"><div class="trunc" style="font:600 13px system-ui;color:#f2f2f5;">Alex Morgan</div><div class="trunc" style="font:400 11px system-ui;color:#7a7a82;">alex@morgan.studio</div></div></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border-radius:7px;background:#20304d;box-shadow:inset 2px 0 #4f8ef0;"><span style="font:600 13px system-ui;color:#f2f2f5;">Important</span><span style="font:600 11px ui-monospace,monospace;color:#7fb0f5;">2</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;"><span style="font:500 13px system-ui;color:#a0a0a8;">Other</span><span style="font:500 11px ui-monospace,monospace;color:#6a6a72;">18</span></div>
+        <div style="display:flex;align-items:center;gap:7px;padding:14px 10px 6px;"><span class="di" style="width:6px;height:6px;"></span><span style="font:600 10.5px system-ui;letter-spacing:.06em;color:#7f8aa0;text-transform:uppercase;">Pulled from mail</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;"><span style="font:500 13px system-ui;color:#a0a0a8;">Trips &amp; deliveries</span><span style="font:500 11px ui-monospace,monospace;color:#6a6a72;">3</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;"><span style="font:500 13px system-ui;color:#a0a0a8;">Quotes</span><span style="font:500 11px ui-monospace,monospace;color:#6a6a72;">3</span></div>
+        <div style="margin-top:auto;display:flex;align-items:center;gap:7px;padding:10px 10px 4px;border-top:1px solid rgba(255,255,255,.07);"><span style="width:6px;height:6px;border-radius:50%;background:#28c840;"></span><span style="font:500 11px system-ui;color:#7a7a82;">On-device · synced 2m ago</span></div>
+      </div>
+      <!-- list -->
+      <div style="width:350px;flex:none;border-right:1px solid rgba(255,255,255,.07);display:flex;flex-direction:column;min-height:0;">
+        <div style="flex:none;padding:14px 18px 12px;display:flex;align-items:baseline;justify-content:space-between;"><span style="font:600 16px system-ui;color:#f2f2f5;">Important</span><span style="font:500 11px system-ui;color:#6a6a72;">Today</span></div>
+        <div style="flex:1;overflow:hidden;">
+          <div style="display:flex;gap:11px;padding:12px 18px;background:#20304d;box-shadow:inset 2px 0 #4f8ef0;"><span style="flex:none;width:7px;height:7px;border-radius:50%;background:#4f8ef0;margin-top:5px;"></span><div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;gap:8px;"><span style="font:600 13.5px system-ui;color:#f2f2f5;">Dana Whitfield</span><span style="font:500 11px ui-monospace,monospace;color:#8a8a92;">9:24a</span></div><div class="trunc" style="font:500 13px system-ui;color:#d8d8de;margin-top:2px;">Re: Q3 launch — final assets</div><div class="trunc" style="font:400 12.5px system-ui;color:#8a8a92;margin-top:3px;">Pushed the revised hero + tightened…</div></div></div>
+          <div style="display:flex;gap:11px;padding:12px 18px;border-top:1px solid rgba(255,255,255,.06);"><span style="flex:none;width:7px;height:7px;border-radius:50%;background:#4f8ef0;margin-top:5px;"></span><div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;gap:8px;"><span style="font:600 13.5px system-ui;color:#f2f2f5;">Marco Lin</span><span style="font:500 11px ui-monospace,monospace;color:#8a8a92;">8:51a</span></div><div class="trunc" style="font:500 13px system-ui;color:#d8d8de;margin-top:2px;">Lunch Thursday?</div><div class="trunc" style="font:400 12.5px system-ui;color:#8a8a92;margin-top:3px;">I'm around midtown if you want…</div></div></div>
+          <div style="display:flex;gap:11px;padding:12px 18px;border-top:1px solid rgba(255,255,255,.06);"><span style="flex:none;width:7px;height:7px;border-radius:50%;background:transparent;margin-top:5px;"></span><div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;gap:8px;"><span style="font:500 13.5px system-ui;color:#c0c0c8;">Priya Nair</span><span style="font:500 11px ui-monospace,monospace;color:#6a6a72;">Yest</span></div><div class="trunc" style="font:500 13px system-ui;color:#a0a0a8;margin-top:2px;">Re: Contract redlines</div><div class="trunc" style="font:400 12.5px system-ui;color:#6a6a72;margin-top:3px;">Legal cleared sections 3 and 7…</div></div></div>
+          <div style="display:flex;gap:11px;padding:12px 18px;border-top:1px solid rgba(255,255,255,.06);"><span style="flex:none;width:7px;height:7px;border-radius:50%;background:transparent;margin-top:5px;"></span><div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;gap:8px;"><span style="font:500 13.5px system-ui;color:#c0c0c8;">Northwind</span><span style="font:500 11px ui-monospace,monospace;color:#6a6a72;">Tue</span></div><div class="trunc" style="font:500 13px system-ui;color:#a0a0a8;margin-top:2px;">Your order has shipped · #2207</div></div></div>
+        </div>
+      </div>
+      <!-- reading -->
+      <div style="flex:1;display:flex;flex-direction:column;min-width:0;background:#1c1c1e;">
+        <div style="flex:1;overflow:hidden;padding:26px 34px 0;">
+          <div style="font:600 22px/1.25 system-ui;color:#f4f4f7;letter-spacing:-.01em;">Re: Q3 launch — final assets</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:10px;"><span style="font:500 12px system-ui;color:#8a8a92;">Dana Whitfield, you · 4 messages</span></div>
+          <div style="display:flex;align-items:flex-start;gap:9px;margin:18px 0 22px;padding:11px 14px;background:#1a2030;border:1px solid rgba(79,142,240,.22);border-radius:9px;"><span class="di" style="width:7px;height:7px;margin-top:4px;"></span><div><span style="font:600 10.5px system-ui;letter-spacing:.05em;text-transform:uppercase;color:#7f8aa0;">Summary</span><div style="font:400 13.5px/1.5 system-ui;color:#c8c8d0;margin-top:3px;">Dana shipped the revised hero and tighter headline; she needs your sign-off by <strong style="font-weight:600;color:#f2f2f5;">Friday</strong>.</div></div></div>
+          <div style="display:flex;gap:13px;"><div style="flex:none;width:36px;height:36px;border-radius:50%;background:#4a2c33;color:#e88ca0;font:600 13px system-ui;display:flex;align-items:center;justify-content:center;">DW</div><div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;align-items:baseline;"><span style="font:600 13.5px system-ui;color:#f2f2f5;">Dana Whitfield</span><span style="font:500 11px ui-monospace,monospace;color:#6a6a72;">9:24 AM</span></div><div style="font:400 14px/1.62 system-ui;color:#c8c8d0;margin-top:9px;">Hi Alex — pushed the revised hero and tightened the headline. I need your sign-off before Friday so design can lock the page. Anything you'd change on the subhead?</div></div></div>
+        </div>
+        <div style="flex:none;padding:14px 34px 22px;border-top:1px solid rgba(255,255,255,.07);">
+          <div style="display:flex;gap:8px;margin-bottom:11px;"><span style="font:500 12.5px system-ui;color:#c0c0c8;border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:5px 13px;">Approved — ship it</span><span style="font:500 12.5px system-ui;color:#c0c0c8;border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:5px 13px;">One tweak on the subhead</span></div>
+          <div style="display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:11px 14px;"><span style="flex:1;font:400 13.5px system-ui;color:#6a6a72;">Reply to Dana…</span><span style="font:600 12.5px system-ui;color:#fff;background:#4f8ef0;border-radius:7px;padding:6px 14px;">Send</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

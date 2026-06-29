@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:system-ui,-apple-system,sans-serif;}
+  .trunc{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .win{border-radius:13px;box-shadow:0 24px 70px rgba(20,22,45,.18),0 2px 6px rgba(0,0,0,.05);overflow:hidden;border:1px solid rgba(0,0,0,.07);background:#fff;display:flex;flex-direction:column;}
+  .lbl{font:600 13px system-ui;color:#3a3a40;margin:0 0 16px 4px;}
+  .tl{display:flex;gap:8px;}
+  .tl span{width:12px;height:12px;border-radius:50%;}
+  .di{display:inline-block;background:#2f6bdb;transform:rotate(45deg);border-radius:1.5px;}
+  .chT{font:600 11px system-ui;letter-spacing:.05em;text-transform:uppercase;color:#9aa6bb;}
+  .rsvp{flex:1;text-align:center;font:600 13px system-ui;border-radius:9px;padding:9px 0;border:1px solid rgba(0,0,0,.12);color:#3a3a40;}
+</style>
+</helmet>
+
+<!-- ===== F1 — CALENDAR INVITE + FREE/BUSY ===== -->
+<div style="position:absolute; left:0; top:0; width:1160px;">
+  <div data-drags-parent="1" class="lbl">01 · Calendar invite — RSVP inline, free/busy from Apple Calendar, conflict caught on-device</div>
+  <div class="win" style="height:800px;">
+    <div style="height:46px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;">
+      <div class="tl"><span style="background:#ff5f57;"></span><span style="background:#febc2e;"></span><span style="background:#28c840;"></span></div>
+      <div style="position:absolute;left:0;right:0;text-align:center;font:600 13px system-ui;color:#9a9aa0;pointer-events:none;">Winnow</div>
+    </div>
+    <div style="flex:1;display:flex;min-height:0;">
+      <!-- sidebar -->
+      <div style="width:212px;flex:none;background:#fafafa;border-right:1px solid rgba(0,0,0,.05);display:flex;flex-direction:column;padding:14px 10px 10px;">
+        <div style="display:flex;align-items:center;gap:10px;padding:6px 8px 14px;"><div style="width:30px;height:30px;border-radius:50%;background:#e7ecf6;color:#2f6bdb;font:600 12px system-ui;display:flex;align-items:center;justify-content:center;">AM</div><div style="min-width:0;"><div class="trunc" style="font:600 13px system-ui;color:#1c1c20;">Alex Morgan</div></div></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;"><span style="font:500 13px system-ui;color:#55555c;">Today</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border-radius:7px;background:#eef3fc;box-shadow:inset 2px 0 #2f6bdb;"><span style="font:600 13px system-ui;color:#1c1c20;">Important</span><span style="font:600 11px ui-monospace,monospace;color:#2f6bdb;">2</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;"><span style="font:500 13px system-ui;color:#55555c;">Other</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">18</span></div>
+        <div style="display:flex;align-items:center;gap:7px;padding:14px 10px 6px;"><span class="di" style="width:6px;height:6px;"></span><span class="chT">Pulled from mail</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;"><span style="font:500 13px system-ui;color:#55555c;">Calendar</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">2</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;"><span style="font:500 13px system-ui;color:#55555c;">Trips &amp; deliveries</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">3</span></div>
+        <div style="margin-top:auto;display:flex;align-items:center;gap:7px;padding:10px 10px 4px;border-top:1px solid rgba(0,0,0,.05);"><span style="width:6px;height:6px;border-radius:50%;background:#28c840;"></span><span style="font:500 11px system-ui;color:#9a9aa0;">On-device · synced 2m ago</span></div>
+      </div>
+      <!-- list -->
+      <div style="width:316px;flex:none;border-right:1px solid rgba(0,0,0,.05);display:flex;flex-direction:column;min-height:0;">
+        <div style="flex:none;padding:14px 18px 12px;"><span style="font:600 16px system-ui;color:#1c1c20;">Important</span></div>
+        <div style="flex:1;overflow:hidden;">
+          <div style="display:flex;gap:11px;padding:12px 18px;background:#eef3fc;box-shadow:inset 2px 0 #2f6bdb;"><span style="flex:none;width:28px;height:28px;border-radius:7px;background:#e7eefb;color:#2f6bdb;font:600 12px system-ui;display:flex;align-items:center;justify-content:center;">31</span><div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;gap:8px;"><span style="font:600 13.5px system-ui;color:#1c1c20;">Dana Whitfield</span><span style="font:500 11px ui-monospace,monospace;color:#9a9aa0;">9:24a</span></div><div class="trunc" style="font:500 13px system-ui;color:#2a2a2e;margin-top:2px;">Invitation: Q3 hero review</div><div class="trunc" style="font:400 12px system-ui;color:#7a8295;margin-top:2px;">Fri Jul 11 · 12:00 – 1:00 PM</div></div></div>
+          <div style="display:flex;gap:11px;padding:12px 18px;border-top:1px solid rgba(0,0,0,.04);"><span style="flex:none;width:28px;height:28px;border-radius:50%;background:#e4f0e8;color:#4f9168;font:600 12px system-ui;display:flex;align-items:center;justify-content:center;">ML</span><div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;gap:8px;"><span style="font:600 13.5px system-ui;color:#1c1c20;">Marco Lin</span><span style="font:500 11px ui-monospace,monospace;color:#9a9aa0;">8:51a</span></div><div class="trunc" style="font:500 13px system-ui;color:#2a2a2e;margin-top:2px;">Lunch Thursday?</div></div></div>
+          <div style="display:flex;gap:11px;padding:12px 18px;border-top:1px solid rgba(0,0,0,.04);"><span style="flex:none;width:28px;height:28px;border-radius:50%;background:#e8eafb;color:#5a5fc0;font:600 12px system-ui;display:flex;align-items:center;justify-content:center;">PN</span><div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;gap:8px;"><span style="font:500 13.5px system-ui;color:#3a3a40;">Priya Nair</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">Yest</span></div><div class="trunc" style="font:500 13px system-ui;color:#55555c;margin-top:2px;">Re: Contract redlines</div></div></div>
+        </div>
+      </div>
+      <!-- reading: invite -->
+      <div style="flex:1;display:flex;flex-direction:column;min-width:0;background:#fff;">
+        <div style="flex:1;overflow:hidden;display:flex;">
+          <!-- invite details -->
+          <div style="flex:1.25;min-width:0;padding:26px 26px 0;border-right:1px solid rgba(0,0,0,.05);">
+            <div style="display:flex;align-items:center;gap:8px;"><span class="di" style="width:7px;height:7px;"></span><span class="chT">Calendar invitation</span></div>
+            <div style="display:flex;align-items:center;gap:14px;margin-top:14px;">
+              <div style="flex:none;width:52px;height:56px;border-radius:11px;border:1px solid rgba(0,0,0,.10);overflow:hidden;text-align:center;"><div style="background:#e0533d;color:#fff;font:600 9px system-ui;letter-spacing:.06em;padding:3px 0;">JUL</div><div style="font:600 24px system-ui;color:#1c1c20;line-height:32px;">11</div></div>
+              <div><div style="font:600 20px/1.2 system-ui;color:#161618;letter-spacing:-.01em;">Q3 hero review</div><div style="font:500 13px system-ui;color:#8a8a90;margin-top:4px;">Fri Jul 11 · 12:00 – 1:00 PM</div></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:13px;margin-top:22px;">
+              <div style="display:flex;gap:12px;"><span style="font:500 12px system-ui;color:#a2a2a8;width:64px;flex:none;">Where</span><span style="font:500 13px system-ui;color:#34343a;">Google Meet · meet.google.com/q3-hero</span></div>
+              <div style="display:flex;gap:12px;"><span style="font:500 12px system-ui;color:#a2a2a8;width:64px;flex:none;">Organizer</span><span style="font:500 13px system-ui;color:#34343a;">Dana Whitfield</span></div>
+              <div style="display:flex;gap:12px;"><span style="font:500 12px system-ui;color:#a2a2a8;width:64px;flex:none;">Guests</span><span style="font:400 13px/1.5 system-ui;color:#34343a;">Dana Whitfield · you · Priya Nair · 2 more</span></div>
+            </div>
+            <!-- conflict assist -->
+            <div style="display:flex;align-items:flex-start;gap:10px;margin-top:22px;padding:13px 15px;background:#fdf6ee;border:1px solid rgba(192,138,74,.22);border-radius:11px;">
+              <span style="flex:none;width:8px;height:8px;background:#c08a4a;transform:rotate(45deg);border-radius:1.5px;margin-top:4px;"></span>
+              <div><div style="font:600 13px system-ui;color:#1c1c20;">This overlaps your 1:1 with Sam (12:00).</div><div style="font:400 12.5px/1.5 system-ui;color:#7a6a52;margin-top:3px;">You and the organizer are both free at <strong style="color:#3a3a40;">2:00 PM</strong>. Reply with a new time?</div><div style="display:flex;gap:8px;margin-top:10px;"><span style="font:600 12px system-ui;color:#fff;background:#2f6bdb;border-radius:8px;padding:6px 13px;">Propose 2:00 PM</span><span style="font:600 12px system-ui;color:#5a5a62;border:1px solid rgba(0,0,0,.12);border-radius:8px;padding:6px 13px;">Keep 12:00</span></div></div>
+            </div>
+            <!-- rsvp -->
+            <div style="margin-top:22px;"><div class="chT" style="margin-bottom:9px;">Going?</div><div style="display:flex;gap:8px;"><span class="rsvp" style="border-color:rgba(47,158,111,.4);color:#2f9e6f;background:#eef7f1;">Yes</span><span class="rsvp">Maybe</span><span class="rsvp">No</span></div><div style="font:500 12.5px system-ui;color:#2f6bdb;margin-top:11px;">＋ Add a note</div></div>
+          </div>
+          <!-- free/busy rail -->
+          <div style="flex:1;min-width:230px;padding:26px 22px 0;display:flex;flex-direction:column;">
+            <div style="display:flex;align-items:center;gap:7px;"><span class="di" style="width:6px;height:6px;"></span><span style="font:600 13px system-ui;color:#1c1c20;">Your Friday</span></div>
+            <div style="font:400 11.5px system-ui;color:#9a9aa0;margin-top:3px;">from Apple Calendar · on-device</div>
+            <!-- timeline -->
+            <div style="position:relative;margin-top:16px;height:336px;">
+              <!-- hour lines + labels -->
+              <div style="position:absolute;left:0;top:0;height:1px;width:100%;background:rgba(0,0,0,.06);"></div>
+              <div style="position:absolute;left:0;top:0;font:500 10px ui-monospace,monospace;color:#b2b2b8;transform:translateY(-50%);background:#fff;padding-right:4px;">11a</div>
+              <div style="position:absolute;left:0;top:56px;height:1px;width:100%;background:rgba(0,0,0,.06);"></div>
+              <div style="position:absolute;left:0;top:56px;font:500 10px ui-monospace,monospace;color:#b2b2b8;transform:translateY(-50%);background:#fff;padding-right:4px;">12p</div>
+              <div style="position:absolute;left:0;top:112px;height:1px;width:100%;background:rgba(0,0,0,.06);"></div>
+              <div style="position:absolute;left:0;top:112px;font:500 10px ui-monospace,monospace;color:#b2b2b8;transform:translateY(-50%);background:#fff;padding-right:4px;">1p</div>
+              <div style="position:absolute;left:0;top:168px;height:1px;width:100%;background:rgba(0,0,0,.06);"></div>
+              <div style="position:absolute;left:0;top:168px;font:500 10px ui-monospace,monospace;color:#b2b2b8;transform:translateY(-50%);background:#fff;padding-right:4px;">2p</div>
+              <div style="position:absolute;left:0;top:224px;height:1px;width:100%;background:rgba(0,0,0,.06);"></div>
+              <div style="position:absolute;left:0;top:224px;font:500 10px ui-monospace,monospace;color:#b2b2b8;transform:translateY(-50%);background:#fff;padding-right:4px;">3p</div>
+              <div style="position:absolute;left:0;top:280px;height:1px;width:100%;background:rgba(0,0,0,.06);"></div>
+              <div style="position:absolute;left:0;top:280px;font:500 10px ui-monospace,monospace;color:#b2b2b8;transform:translateY(-50%);background:#fff;padding-right:4px;">4p</div>
+              <!-- existing 1:1 (conflict) -->
+              <div style="position:absolute;left:34px;top:57px;width:48%;height:26px;background:#fbe9e6;border-left:3px solid #e0533d;border-radius:5px;padding:3px 7px;overflow:hidden;"><div class="trunc" style="font:600 11px system-ui;color:#b3402c;">1:1 · Sam</div></div>
+              <!-- proposed invite (overlap, dashed) -->
+              <div style="position:absolute;right:0;top:57px;width:48%;height:54px;background:repeating-linear-gradient(45deg,#eef3fc,#eef3fc 6px,#e3ecfb 6px,#e3ecfb 12px);border:1.5px dashed #2f6bdb;border-radius:5px;padding:4px 7px;overflow:hidden;"><div class="trunc" style="font:600 11px system-ui;color:#2f6bdb;">Q3 hero review</div><div class="trunc" style="font:500 9.5px system-ui;color:#5a7fc0;">invite</div></div>
+              <!-- suggested free slot -->
+              <div style="position:absolute;left:34px;top:169px;right:0;height:54px;background:#eef7f1;border:1.5px solid rgba(47,158,111,.4);border-radius:5px;padding:5px 8px;"><div style="font:600 11px system-ui;color:#2f9e6f;">2:00 — you're free</div><div style="font:500 9.5px system-ui;color:#5a9b78;">suggested</div></div>
+              <!-- interview -->
+              <div style="position:absolute;left:34px;top:225px;right:0;height:42px;background:#eef3fc;border-left:3px solid #2f6bdb;border-radius:5px;padding:4px 8px;overflow:hidden;"><div class="trunc" style="font:600 11px system-ui;color:#2f6bdb;">Candidate interview</div></div>
+            </div>
+          </div>
+        </div>
+        <div style="flex:none;padding:13px 26px 20px;border-top:1px solid rgba(0,0,0,.05);display:flex;align-items:center;gap:10px;"><span style="flex:1;font:400 12px system-ui;color:#9a9aa0;">Free/busy read from Apple Calendar on this Mac — no Google Calendar account or server needed.</span><span style="font:600 12.5px system-ui;color:#2f6bdb;">Open in Calendar</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== F2 — FIND A TIME (COMPOSE) ===== -->
+<div style="position:absolute; left:1280px; top:0; width:720px;">
+  <div data-drags-parent="1" class="lbl">02 · “Find a time” — propose slots from your real availability</div>
+  <div class="win" style="height:600px;position:relative;">
+    <div style="height:44px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;">
+      <div class="tl"><span style="background:#ff5f57;"></span><span style="background:#febc2e;"></span><span style="background:#28c840;"></span></div>
+      <div style="position:absolute;left:0;right:0;text-align:center;font:600 13px system-ui;color:#9a9aa0;pointer-events:none;">Reply</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;padding:12px 22px;border-bottom:1px solid rgba(0,0,0,.04);"><span style="font:500 12.5px system-ui;color:#9a9aa0;width:48px;">To</span><span style="background:#eef3fc;border-radius:14px;padding:3px 11px;font:500 12.5px system-ui;color:#2f6bdb;">Marco Lin</span></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:12px 22px;border-bottom:1px solid rgba(0,0,0,.04);"><span style="font:500 12.5px system-ui;color:#9a9aa0;width:48px;">Subject</span><span style="font:600 13.5px system-ui;color:#1c1c20;">Re: Lunch Thursday?</span></div>
+    <div style="flex:1;padding:20px 22px;overflow:hidden;">
+      <div style="font:400 14px/1.65 system-ui;color:#34343a;">Thursday works! Here are a few times I'm free:</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:13px;">
+        <div style="display:flex;align-items:center;gap:11px;border:1px solid rgba(47,107,219,.25);background:#fbfcfe;border-radius:10px;padding:11px 14px;"><span style="width:9px;height:9px;border-radius:50%;background:#2f9e6f;"></span><span style="font:600 13.5px system-ui;color:#1c1c20;flex:1;">Thu Jul 10 · 12:30 PM</span><span style="font:500 12px system-ui;color:#9a9aa0;">45 min</span></div>
+        <div style="display:flex;align-items:center;gap:11px;border:1px solid rgba(0,0,0,.10);border-radius:10px;padding:11px 14px;"><span style="width:9px;height:9px;border-radius:50%;background:#2f9e6f;"></span><span style="font:600 13.5px system-ui;color:#1c1c20;flex:1;">Thu Jul 10 · 1:30 PM</span><span style="font:500 12px system-ui;color:#9a9aa0;">45 min</span></div>
+        <div style="display:flex;align-items:center;gap:11px;border:1px solid rgba(0,0,0,.10);border-radius:10px;padding:11px 14px;"><span style="width:9px;height:9px;border-radius:50%;background:#2f9e6f;"></span><span style="font:600 13.5px system-ui;color:#1c1c20;flex:1;">Fri Jul 11 · 12:00 PM</span><span style="font:500 12px system-ui;color:#9a9aa0;">45 min</span></div>
+      </div>
+      <div style="display:inline-flex;align-items:center;gap:7px;margin-top:14px;padding:5px 11px;background:#f7f9fc;border:1px solid rgba(47,107,219,.10);border-radius:8px;"><span class="di" style="width:6px;height:6px;"></span><span style="font:500 12px system-ui;color:#7a7a82;">Times you're free, from Apple Calendar — on device</span></div>
+    </div>
+    <div style="flex:none;display:flex;align-items:center;gap:14px;padding:13px 22px;border-top:1px solid rgba(0,0,0,.05);"><span style="font:600 13.5px system-ui;color:#fff;background:#2f6bdb;border-radius:9px;padding:9px 20px;">Send</span><span style="display:flex;align-items:center;gap:6px;font:600 12.5px system-ui;color:#2f6bdb;border:1px solid rgba(47,107,219,.28);border-radius:9px;padding:8px 13px;"><span class="di" style="width:6px;height:6px;"></span>Find a time</span></div>
+  </div>
+</div>
+
+<!-- ===== F3 — CALENDAR SETTINGS ===== -->
+<div style="position:absolute; left:2080px; top:0; width:720px;">
+  <div data-drags-parent="1" class="lbl">03 · Settings → Calendar — one Apple Calendar source</div>
+  <div class="win" style="height:620px;">
+    <div style="height:44px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;">
+      <div class="tl"><span style="background:#ff5f57;"></span><span style="background:#febc2e;"></span><span style="background:#28c840;"></span></div>
+      <div style="position:absolute;left:0;right:0;text-align:center;font:600 13px system-ui;color:#9a9aa0;pointer-events:none;">Settings — Calendar</div>
+    </div>
+    <div style="flex:1;padding:26px 30px;overflow:hidden;">
+      <div style="font:600 20px system-ui;color:#161618;letter-spacing:-.01em;">Calendar</div>
+      <div style="font:400 12.5px/1.5 system-ui;color:#8a8a90;margin-top:5px;">Winnow reads your schedule from Apple Calendar — which already syncs Google, iCloud &amp; Exchange. One permission, everything local.</div>
+      <!-- source -->
+      <div style="display:flex;align-items:center;gap:13px;margin-top:18px;padding:14px 16px;border:1px solid rgba(47,107,219,.14);background:#f7f9fc;border-radius:11px;">
+        <span style="flex:none;width:34px;height:34px;border-radius:9px;background:#e0533d;color:#fff;font:600 15px system-ui;display:flex;align-items:center;justify-content:center;">31</span>
+        <div style="flex:1;"><div style="font:600 13.5px system-ui;color:#1c1c20;">Apple Calendar · EventKit</div><div style="font:400 12px system-ui;color:#8a8a90;margin-top:2px;">Connected · free/busy + invites read on this Mac</div></div>
+        <span style="font:600 10.5px system-ui;letter-spacing:.04em;text-transform:uppercase;color:#2f9e6f;background:#e8f4ee;border-radius:5px;padding:3px 8px;">Active</span>
+      </div>
+      <!-- calendars -->
+      <div class="chT" style="margin-top:22px;">Show these calendars</div>
+      <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:9px 20px;">
+        <div style="display:flex;align-items:center;gap:10px;"><span style="width:13px;height:13px;border-radius:4px;background:#2f6bdb;"></span><span style="font:500 13px system-ui;color:#1c1c20;flex:1;">Work</span><span style="width:18px;height:18px;border-radius:5px;background:#2f6bdb;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;">✓</span></div>
+        <div style="display:flex;align-items:center;gap:10px;"><span style="width:13px;height:13px;border-radius:4px;background:#2f9e6f;"></span><span style="font:500 13px system-ui;color:#1c1c20;flex:1;">Personal</span><span style="width:18px;height:18px;border-radius:5px;background:#2f6bdb;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;">✓</span></div>
+        <div style="display:flex;align-items:center;gap:10px;"><span style="width:13px;height:13px;border-radius:4px;background:#e0533d;"></span><span style="font:500 13px system-ui;color:#1c1c20;flex:1;">Family</span><span style="width:18px;height:18px;border-radius:5px;background:#2f6bdb;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;">✓</span></div>
+        <div style="display:flex;align-items:center;gap:10px;"><span style="width:13px;height:13px;border-radius:4px;background:#c08a4a;"></span><span style="font:500 13px system-ui;color:#9a9aa0;flex:1;">Holidays</span><span style="width:18px;height:18px;border-radius:5px;border:1.5px solid #c2c2c8;"></span></div>
+      </div>
+      <!-- working hours + toggles -->
+      <div class="chT" style="margin-top:22px;">Availability</div>
+      <div style="margin-top:10px;border:1px solid rgba(0,0,0,.07);border-radius:11px;overflow:hidden;">
+        <div style="display:flex;align-items:center;padding:12px 15px;"><div style="flex:1;"><div style="font:600 13px system-ui;color:#1c1c20;">Working hours</div><div style="font:400 11.5px system-ui;color:#a2a2a8;margin-top:1px;">“Find a time” only suggests inside these</div></div><span style="font:500 12.5px ui-monospace,monospace;color:#34343a;">Mon–Fri · 9–6</span></div>
+        <div style="display:flex;align-items:center;padding:12px 15px;border-top:1px solid rgba(0,0,0,.05);"><div style="flex:1;"><div style="font:600 13px system-ui;color:#1c1c20;">Show free/busy beside invites</div></div><div style="flex:none;width:38px;height:22px;border-radius:11px;background:#2f6bdb;position:relative;"><span style="position:absolute;top:2px;left:18px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);"></span></div></div>
+        <div style="display:flex;align-items:center;padding:12px 15px;border-top:1px solid rgba(0,0,0,.05);"><div style="flex:1;"><div style="font:600 13px system-ui;color:#1c1c20;">Flag conflicts on incoming invites</div></div><div style="flex:none;width:38px;height:22px;border-radius:11px;background:#2f6bdb;position:relative;"><span style="position:absolute;top:2px;left:18px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);"></span></div></div>
+      </div>
+      <div style="margin-top:16px;display:flex;align-items:flex-start;gap:8px;"><span class="di" style="width:7px;height:7px;margin-top:3px;"></span><span style="font:400 12px/1.5 system-ui;color:#8a8a90;">RSVPs send through the invite's own account. Winnow never asks for a separate Google Calendar permission.</span></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

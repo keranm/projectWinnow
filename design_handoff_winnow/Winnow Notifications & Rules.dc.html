@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:system-ui,-apple-system,sans-serif;}
+  .trunc{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .win{border-radius:13px;box-shadow:0 24px 70px rgba(20,22,45,.18),0 2px 6px rgba(0,0,0,.05);overflow:hidden;border:1px solid rgba(0,0,0,.07);background:#fff;display:flex;flex-direction:column;}
+  .lbl{font:600 13px system-ui;color:#3a3a40;margin:0 0 16px 4px;}
+  .tl{display:flex;gap:8px;} .tl span{width:12px;height:12px;border-radius:50%;}
+  .di{display:inline-block;background:#2f6bdb;transform:rotate(45deg);border-radius:1.5px;}
+  .chT{font:600 11px system-ui;letter-spacing:.05em;text-transform:uppercase;color:#9aa6bb;}
+  .togOn{flex:none;width:38px;height:22px;border-radius:11px;background:#2f6bdb;position:relative;}
+  .togOn i{position:absolute;top:2px;left:18px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);}
+  .togOff{flex:none;width:38px;height:22px;border-radius:11px;background:#d8d8de;position:relative;}
+  .togOff i{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2);}
+  .pill{display:inline-flex;align-items:center;gap:6px;font:600 12.5px system-ui;border-radius:8px;padding:6px 12px;}
+</style>
+</helmet>
+
+<!-- ===== F1 — NOTIFICATION SETTINGS ===== -->
+<div style="position:absolute; left:0; top:0; width:660px;">
+  <div data-drags-parent="1" class="lbl">01 · Notifications — quiet by default, loud only when it counts</div>
+  <div class="win" style="height:700px;">
+    <div style="height:44px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;"><div class="tl"><span style="background:#ff5f57;"></span><span style="background:#febc2e;"></span><span style="background:#28c840;"></span></div><div style="position:absolute;left:0;right:0;text-align:center;font:600 13px system-ui;color:#9a9aa0;pointer-events:none;">Settings — Notifications</div></div>
+    <div style="flex:1;padding:26px 30px;overflow:hidden;">
+      <div style="font:600 20px system-ui;color:#161618;letter-spacing:-.01em;">Notifications</div>
+      <div style="font:400 12.5px/1.5 system-ui;color:#8a8a90;margin-top:5px;">Winnow uses its on-device importance model to decide what's worth interrupting you for.</div>
+      <!-- segmented -->
+      <div style="display:flex;background:rgba(0,0,0,.05);border-radius:10px;padding:3px;margin-top:18px;">
+        <span style="flex:1;text-align:center;font:500 12.5px system-ui;color:#6a6a70;padding:8px 0;">Everything</span>
+        <span style="flex:1;text-align:center;font:600 12.5px system-ui;color:#1c1c20;background:#fff;border-radius:7px;padding:8px 0;box-shadow:0 1px 2px rgba(0,0,0,.12);">Important only</span>
+        <span style="flex:1;text-align:center;font:500 12.5px system-ui;color:#6a6a70;padding:8px 0;">None</span>
+      </div>
+      <div style="margin-top:18px;border:1px solid rgba(0,0,0,.07);border-radius:12px;overflow:hidden;">
+        <div style="display:flex;align-items:center;gap:13px;padding:13px 16px;"><span style="flex:none;width:20px;text-align:center;font-size:11px;"><span class="di" style="width:8px;height:8px;"></span></span><div style="flex:1;"><div style="font:600 13px system-ui;color:#1c1c20;">Needs-a-reply &amp; important people</div><div style="font:400 11.5px system-ui;color:#a2a2a8;margin-top:1px;">The model's best guess at what matters</div></div><div class="togOn"><i></i></div></div>
+        <div style="display:flex;align-items:center;gap:13px;padding:13px 16px;border-top:1px solid rgba(0,0,0,.05);"><span style="flex:none;width:20px;text-align:center;color:#c0566c;font-size:13px;">★</span><div style="flex:1;"><div style="font:600 13px system-ui;color:#1c1c20;">VIPs — always notify</div><div style="font:400 11.5px system-ui;color:#a2a2a8;margin-top:1px;">Dana, Priya, +3</div></div><div class="togOn"><i></i></div></div>
+        <div style="display:flex;align-items:center;gap:13px;padding:13px 16px;border-top:1px solid rgba(0,0,0,.05);"><span style="flex:none;width:20px;text-align:center;color:#8a8a90;font-size:13px;">◐</span><div style="flex:1;"><div style="font:600 13px system-ui;color:#1c1c20;">Stay silent for newsletters &amp; receipts</div></div><div class="togOn"><i></i></div></div>
+        <div style="display:flex;align-items:center;gap:13px;padding:13px 16px;border-top:1px solid rgba(0,0,0,.05);"><span style="flex:none;width:20px;text-align:center;color:#8a8a90;font-size:13px;">☾</span><div style="flex:1;"><div style="font:600 13px system-ui;color:#1c1c20;">Honour macOS Focus</div><div style="font:400 11.5px system-ui;color:#a2a2a8;margin-top:1px;">Mute Work profile during personal Focus</div></div><div class="togOn"><i></i></div></div>
+      </div>
+      <div class="chT" style="margin-top:22px;">Quiet hours</div>
+      <div style="margin-top:10px;border:1px solid rgba(0,0,0,.07);border-radius:11px;display:flex;align-items:center;padding:13px 16px;"><div style="flex:1;font:600 13px system-ui;color:#1c1c20;">No notifications</div><span style="font:500 12.5px ui-monospace,monospace;color:#34343a;">9:00 PM – 7:30 AM</span></div>
+      <div style="margin-top:16px;display:flex;align-items:flex-start;gap:9px;"><span class="di" style="width:7px;height:7px;margin-top:3px;"></span><span style="font:400 12px/1.5 system-ui;color:#8a8a90;">Importance is scored on this Mac — no message metadata leaves the device to decide whether to ping you.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== F2 — SAMPLE NOTIFICATION ===== -->
+<div style="position:absolute; left:740px; top:0; width:520px;">
+  <div data-drags-parent="1" class="lbl">02 · The interruption itself — actionable, rare</div>
+  <div style="height:700px;border-radius:16px;background:linear-gradient(150deg,#3a4a6b,#5a6b8c);box-shadow:0 24px 70px rgba(20,22,45,.18);padding:26px;display:flex;flex-direction:column;gap:16px;">
+    <div style="font:500 12px system-ui;color:rgba(255,255,255,.7);text-align:center;">macOS notification</div>
+    <!-- glass notification -->
+    <div style="background:rgba(250,250,252,.82);backdrop-filter:blur(20px);border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,.28);padding:15px 16px;">
+      <div style="display:flex;align-items:center;gap:11px;">
+        <div style="flex:none;width:38px;height:38px;border-radius:9px;background:#1c1c20;color:#fff;display:flex;align-items:center;justify-content:center;"><span class="di" style="width:12px;height:12px;background:#fff;"></span></div>
+        <div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;"><span style="font:600 13px system-ui;color:#1c1c20;">Winnow</span><span style="font:500 11px system-ui;color:#7a7a82;">now</span></div><div style="font:600 13px system-ui;color:#1c1c20;margin-top:2px;">Dana Whitfield · needs a reply</div></div>
+      </div>
+      <div style="font:400 13px/1.5 system-ui;color:#3a3a40;margin-top:9px;">“I need your sign-off before Friday so design can lock the page.”</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:11px;"><span style="display:inline-flex;align-items:center;gap:5px;font:600 11px system-ui;color:#2f6bdb;background:rgba(47,107,219,.12);border-radius:13px;padding:4px 10px;"><span class="di" style="width:5px;height:5px;"></span>Draft ready</span></div>
+      <div style="display:flex;gap:8px;margin-top:12px;"><span style="flex:1;text-align:center;font:600 12px system-ui;color:#1c1c20;background:rgba(0,0,0,.06);border-radius:9px;padding:8px 0;">Reply</span><span style="flex:1;text-align:center;font:600 12px system-ui;color:#1c1c20;background:rgba(0,0,0,.06);border-radius:9px;padding:8px 0;">Snooze</span><span style="flex:1;text-align:center;font:600 12px system-ui;color:#1c1c20;background:rgba(0,0,0,.06);border-radius:9px;padding:8px 0;">Archive</span></div>
+    </div>
+    <div style="background:rgba(255,255,255,.12);border-radius:14px;padding:14px 16px;margin-top:auto;"><div style="display:flex;align-items:flex-start;gap:9px;"><span class="di" style="width:7px;height:7px;background:#fff;margin-top:4px;"></span><span style="font:400 12.5px/1.5 system-ui;color:rgba(255,255,255,.92);">Most newsletters, receipts and updates this morning made <strong style="font-weight:600;">zero</strong> sound. You were pinged twice — both worth it.</span></div></div>
+  </div>
+</div>
+
+<!-- ===== F3 — RULES / FILTER BUILDER ===== -->
+<div style="position:absolute; left:1340px; top:0; width:760px;">
+  <div data-drags-parent="1" class="lbl">03 · Rules — a clean builder (can also write Gmail filters)</div>
+  <div class="win" style="height:700px;">
+    <div style="height:44px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;"><div class="tl"><span style="background:#ff5f57;"></span><span style="background:#febc2e;"></span><span style="background:#28c840;"></span></div><div style="position:absolute;left:0;right:0;text-align:center;font:600 13px system-ui;color:#9a9aa0;pointer-events:none;">Settings — Rules</div></div>
+    <div style="flex:1;padding:26px 30px;overflow:hidden;">
+      <div style="font:600 20px system-ui;color:#161618;letter-spacing:-.01em;">New rule</div>
+      <!-- WHEN -->
+      <div class="chT" style="margin-top:18px;">When a message…</div>
+      <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;align-items:center;gap:9px;"><span class="pill" style="background:#f0f0f2;color:#3a3a40;">From ▾</span><span style="flex:1;border:1px solid rgba(0,0,0,.12);border-radius:8px;padding:8px 12px;font:500 12.5px ui-monospace,monospace;color:#34343a;">notifications@calendly.com</span></div>
+        <div style="display:flex;align-items:center;gap:9px;"><span style="font:500 11px system-ui;color:#9a9aa0;width:34px;text-align:center;">and</span><span class="pill" style="background:#f0f0f2;color:#3a3a40;">Subject contains ▾</span><span style="flex:1;border:1px solid rgba(0,0,0,.12);border-radius:8px;padding:8px 12px;font:500 12.5px system-ui;color:#34343a;">new event</span></div>
+        <div style="font:600 12.5px system-ui;color:#2f6bdb;padding-left:43px;">＋ Add condition</div>
+      </div>
+      <!-- THEN -->
+      <div class="chT" style="margin-top:20px;">Then…</div>
+      <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;align-items:center;gap:9px;"><span class="pill" style="background:#eef3fc;color:#2f6bdb;"><span class="di" style="width:6px;height:6px;"></span>Apply label</span><span style="font:600 12px system-ui;color:#7c5cc4;background:#efeaf9;border-radius:6px;padding:4px 10px;">Calendly</span></div>
+        <div style="display:flex;align-items:center;gap:9px;"><span class="pill" style="background:#eef3fc;color:#2f6bdb;"><span class="di" style="width:6px;height:6px;"></span>Skip Inbox →</span><span style="font:500 12.5px system-ui;color:#55555c;">Other</span></div>
+        <div style="display:flex;align-items:center;gap:9px;"><span class="pill" style="background:#eef3fc;color:#2f6bdb;"><span class="di" style="width:6px;height:6px;"></span>Never notify</span></div>
+        <div style="font:600 12.5px system-ui;color:#2f6bdb;padding-left:2px;">＋ Add action</div>
+      </div>
+      <!-- sync toggle -->
+      <div style="margin-top:22px;display:flex;align-items:center;gap:13px;padding:13px 15px;border:1px solid rgba(0,0,0,.08);border-radius:11px;"><div style="flex:1;"><div style="font:600 13px system-ui;color:#1c1c20;">Also save as a Gmail filter</div><div style="font:400 11.5px system-ui;color:#a2a2a8;margin-top:1px;">Runs server-side too, so it applies on the web &amp; phone</div></div><div class="togOn"><i></i></div></div>
+      <div style="display:flex;gap:10px;margin-top:20px;"><span style="font:600 13px system-ui;color:#fff;background:#2f6bdb;border-radius:9px;padding:9px 18px;">Save rule</span><span style="font:600 13px system-ui;color:#5a5a62;border:1px solid rgba(0,0,0,.12);border-radius:9px;padding:9px 18px;">Run on existing mail</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== F4 — VACATION RESPONDER ===== -->
+<div style="position:absolute; left:2180px; top:0; width:660px;">
+  <div data-drags-parent="1" class="lbl">04 · Vacation responder</div>
+  <div class="win" style="height:700px;">
+    <div style="height:44px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;"><div class="tl"><span style="background:#ff5f57;"></span><span style="background:#febc2e;"></span><span style="background:#28c840;"></span></div><div style="position:absolute;left:0;right:0;text-align:center;font:600 13px system-ui;color:#9a9aa0;pointer-events:none;">Settings — Auto-reply</div></div>
+    <div style="flex:1;padding:26px 30px;overflow:hidden;">
+      <div style="display:flex;align-items:center;gap:13px;"><div style="flex:1;"><div style="font:600 20px system-ui;color:#161618;letter-spacing:-.01em;">Vacation responder</div><div style="font:400 12.5px system-ui;color:#8a8a90;margin-top:4px;">Auto-reply once per sender while you're away.</div></div><div class="togOn"><i></i></div></div>
+      <div style="display:flex;gap:12px;margin-top:20px;">
+        <div style="flex:1;border:1px solid rgba(0,0,0,.08);border-radius:10px;padding:11px 14px;"><div style="font:500 11px system-ui;color:#a2a2a8;">First day</div><div style="font:600 13.5px ui-monospace,monospace;color:#1c1c20;margin-top:3px;">Jul 11</div></div>
+        <div style="flex:1;border:1px solid rgba(0,0,0,.08);border-radius:10px;padding:11px 14px;"><div style="font:500 11px system-ui;color:#a2a2a8;">Last day</div><div style="font:600 13.5px ui-monospace,monospace;color:#1c1c20;margin-top:3px;">Jul 14</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:14px;padding:11px 14px;border:1px solid rgba(0,0,0,.08);border-radius:10px;"><span style="font:500 12.5px system-ui;color:#3a3a40;flex:1;">Send to</span><span style="font:600 12.5px system-ui;color:#1c1c20;">Contacts only ▾</span></div>
+      <div class="chT" style="margin-top:20px;">Subject</div>
+      <div style="margin-top:8px;border:1px solid rgba(0,0,0,.10);border-radius:9px;padding:10px 13px;font:600 13.5px system-ui;color:#1c1c20;">Away until July 14</div>
+      <div class="chT" style="margin-top:16px;">Message</div>
+      <div style="margin-top:8px;border:1px solid rgba(0,0,0,.10);border-radius:11px;padding:14px 15px;font:400 13.5px/1.6 system-ui;color:#34343a;">
+        Hi <span style="font:600 11.5px ui-monospace,monospace;color:#2f6bdb;background:#eef3fc;border-radius:5px;padding:1px 6px;">first name</span>,<br><br>
+        I'm away until <span style="font:600 11.5px ui-monospace,monospace;color:#2f6bdb;background:#eef3fc;border-radius:5px;padding:1px 6px;">last day</span> with limited email. For anything urgent, contact the studio at hello@morgan.studio.<br><br>— Alex
+      </div>
+      <div style="margin-top:14px;display:flex;align-items:flex-start;gap:9px;"><span class="di" style="width:7px;height:7px;margin-top:3px;"></span><span style="font:400 12px/1.5 system-ui;color:#8a8a90;">Pulls the same tokens as your signatures &amp; snippets. Turns itself off after the last day.</span></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

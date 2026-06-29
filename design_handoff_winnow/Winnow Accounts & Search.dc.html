@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:system-ui,-apple-system,sans-serif;}
+  .trunc{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .win{border-radius:13px;box-shadow:0 24px 70px rgba(20,22,45,.18),0 2px 6px rgba(0,0,0,.05);overflow:hidden;border:1px solid rgba(0,0,0,.07);background:#fff;display:flex;flex-direction:column;}
+  .lbl{font:600 13px system-ui;color:#3a3a40;margin:0 0 16px 4px;}
+  .tl{display:flex;gap:8px;} .tl span{width:12px;height:12px;border-radius:50%;}
+  .di{display:inline-block;background:#2f6bdb;transform:rotate(45deg);border-radius:1.5px;}
+  .chT{font:600 11px system-ui;letter-spacing:.05em;text-transform:uppercase;color:#9aa6bb;}
+  .dot{width:8px;height:8px;border-radius:50%;flex:none;}
+</style>
+</helmet>
+
+<!-- ===== F1 — UNIFIED INBOX ===== -->
+<div style="position:absolute; left:0; top:0; width:1160px;">
+  <div data-drags-parent="1" class="lbl">01 · Unified inbox — every account in one list, colour-tagged</div>
+  <div class="win" style="height:760px;">
+    <div style="height:46px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;"><div class="tl"><span style="background:#ff5f57;"></span><span style="background:#febc2e;"></span><span style="background:#28c840;"></span></div><div style="position:absolute;left:0;right:0;text-align:center;font:600 13px system-ui;color:#9a9aa0;pointer-events:none;">Winnow</div></div>
+    <div style="flex:1;display:flex;min-height:0;">
+      <!-- sidebar -->
+      <div style="width:216px;flex:none;background:#fafafa;border-right:1px solid rgba(0,0,0,.05);display:flex;flex-direction:column;padding:14px 10px 10px;">
+        <div class="chT" style="padding:4px 10px 8px;">All accounts</div>
+        <div style="display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:7px;background:#eef3fc;box-shadow:inset 2px 0 #2f6bdb;"><span style="font:600 13px system-ui;color:#1c1c20;flex:1;">Unified Inbox</span><span style="font:600 11px ui-monospace,monospace;color:#2f6bdb;">6</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;"><span style="font:500 13px system-ui;color:#55555c;">Important</span></div>
+        <div class="chT" style="padding:14px 10px 6px;">Accounts</div>
+        <div style="display:flex;align-items:center;gap:9px;padding:6px 10px;"><span class="dot" style="background:#2f6bdb;"></span><span style="font:500 13px system-ui;color:#55555c;flex:1;">Personal</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">2</span></div>
+        <div style="display:flex;align-items:center;gap:9px;padding:6px 10px;"><span class="dot" style="background:#2f9e6f;"></span><span style="font:500 13px system-ui;color:#55555c;flex:1;">Studio</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">3</span></div>
+        <div style="display:flex;align-items:center;gap:9px;padding:6px 10px;"><span class="dot" style="background:#c08a4a;"></span><span style="font:500 13px system-ui;color:#55555c;flex:1;">College</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">1</span></div>
+        <div style="margin-top:auto;display:flex;align-items:center;gap:7px;padding:10px 10px 4px;border-top:1px solid rgba(0,0,0,.05);"><span class="dot" style="background:#28c840;"></span><span style="font:500 11px system-ui;color:#9a9aa0;">On-device · synced 2m ago</span></div>
+      </div>
+      <!-- list -->
+      <div style="width:356px;flex:none;border-right:1px solid rgba(0,0,0,.05);display:flex;flex-direction:column;min-height:0;">
+        <div style="flex:none;padding:14px 18px 12px;"><span style="font:600 16px system-ui;color:#1c1c20;">Unified Inbox</span></div>
+        <div style="flex:1;overflow:hidden;">
+          <div style="display:flex;gap:10px;padding:12px 18px;background:#eef3fc;box-shadow:inset 2px 0 #2f6bdb;"><span class="dot" style="background:#2f9e6f;margin-top:6px;"></span><div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;gap:8px;"><span style="font:600 13.5px system-ui;color:#1c1c20;">Dana Whitfield</span><span style="font:500 11px ui-monospace,monospace;color:#9a9aa0;">9:24a</span></div><div class="trunc" style="font:500 13px system-ui;color:#2a2a2e;margin-top:2px;">Re: Q3 launch — final assets</div><div class="trunc" style="font:400 11.5px system-ui;color:#7a8295;margin-top:2px;">Studio</div></div></div>
+          <div style="display:flex;gap:10px;padding:12px 18px;border-top:1px solid rgba(0,0,0,.04);"><span class="dot" style="background:#2f6bdb;margin-top:6px;"></span><div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;gap:8px;"><span style="font:600 13.5px system-ui;color:#1c1c20;">Marco Lin</span><span style="font:500 11px ui-monospace,monospace;color:#9a9aa0;">8:51a</span></div><div class="trunc" style="font:500 13px system-ui;color:#2a2a2e;margin-top:2px;">Lunch Thursday?</div><div class="trunc" style="font:400 11.5px system-ui;color:#7a8295;margin-top:2px;">Personal</div></div></div>
+          <div style="display:flex;gap:10px;padding:12px 18px;border-top:1px solid rgba(0,0,0,.04);"><span class="dot" style="background:#c08a4a;margin-top:6px;"></span><div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;gap:8px;"><span style="font:500 13.5px system-ui;color:#3a3a40;">Prof. Adebayo</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">Yest</span></div><div class="trunc" style="font:500 13px system-ui;color:#55555c;margin-top:2px;">Thesis feedback</div><div class="trunc" style="font:400 11.5px system-ui;color:#a99a7c;margin-top:2px;">College</div></div></div>
+          <div style="display:flex;gap:10px;padding:12px 18px;border-top:1px solid rgba(0,0,0,.04);"><span class="dot" style="background:#2f9e6f;margin-top:6px;"></span><div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;gap:8px;"><span style="font:500 13.5px system-ui;color:#3a3a40;">Brightwork Studio</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">Jun 22</span></div><div class="trunc" style="font:500 13px system-ui;color:#55555c;margin-top:2px;">Proposal &amp; quote</div><div class="trunc" style="font:400 11.5px system-ui;color:#7a9a85;margin-top:2px;">Studio</div></div></div>
+          <div style="display:flex;gap:10px;padding:12px 18px;border-top:1px solid rgba(0,0,0,.04);"><span class="dot" style="background:#2f6bdb;margin-top:6px;"></span><div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;gap:8px;"><span style="font:500 13.5px system-ui;color:#3a3a40;">Northwind</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">Tue</span></div><div class="trunc" style="font:500 13px system-ui;color:#55555c;margin-top:2px;">Your order has shipped</div><div class="trunc" style="font:400 11.5px system-ui;color:#7a8295;margin-top:2px;">Personal</div></div></div>
+        </div>
+      </div>
+      <!-- reading -->
+      <div style="flex:1;display:flex;flex-direction:column;min-width:0;background:#fff;padding:26px 32px;">
+        <div style="display:flex;align-items:center;gap:8px;"><span class="dot" style="background:#2f9e6f;"></span><span style="font:500 12px system-ui;color:#8a8a90;">Studio · alex@studio.co</span></div>
+        <div style="font:600 22px/1.25 system-ui;color:#171719;letter-spacing:-.01em;margin-top:10px;">Re: Q3 launch — final assets</div>
+        <div style="display:flex;gap:13px;margin-top:20px;"><div style="flex:none;width:36px;height:36px;border-radius:50%;background:#fbe7ea;color:#c0566c;font:600 13px system-ui;display:flex;align-items:center;justify-content:center;">DW</div><div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;align-items:baseline;"><span style="font:600 13.5px system-ui;color:#1c1c20;">Dana Whitfield</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">9:24 AM</span></div><div style="font:400 14px/1.62 system-ui;color:#34343a;margin-top:9px;">Hi Alex — pushed the revised hero and tightened the headline. Need your sign-off before Friday…</div></div></div>
+        <div style="margin-top:auto;display:flex;align-items:center;gap:8px;font:400 12px system-ui;color:#9a9aa0;"><span class="di" style="width:6px;height:6px;"></span>Reply goes out from your Studio identity automatically.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== F2 — ACCOUNTS SETTINGS ===== -->
+<div style="position:absolute; left:1280px; top:0; width:840px;">
+  <div data-drags-parent="1" class="lbl">02 · Settings → Accounts — colours, profiles, working hours</div>
+  <div class="win" style="height:680px;">
+    <div style="height:44px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;"><div class="tl"><span style="background:#ff5f57;"></span><span style="background:#febc2e;"></span><span style="background:#28c840;"></span></div><div style="position:absolute;left:0;right:0;text-align:center;font:600 13px system-ui;color:#9a9aa0;pointer-events:none;">Settings — Accounts</div></div>
+    <div style="flex:1;padding:26px 30px;overflow:hidden;">
+      <div style="font:600 20px system-ui;color:#161618;letter-spacing:-.01em;">Accounts</div>
+      <div style="display:flex;align-items:center;gap:14px;margin-top:14px;padding:12px 15px;background:#f7f9fc;border:1px solid rgba(47,107,219,.12);border-radius:11px;"><div style="flex:1;"><div style="font:600 13.5px system-ui;color:#1c1c20;">Unified Inbox</div><div style="font:400 12px system-ui;color:#8a8a90;margin-top:1px;">Merge all accounts into one list — or keep them separate.</div></div><div style="flex:none;width:38px;height:22px;border-radius:11px;background:#2f6bdb;position:relative;"><span style="position:absolute;top:2px;left:18px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);"></span></div></div>
+      <div style="margin-top:18px;border:1px solid rgba(0,0,0,.07);border-radius:12px;overflow:hidden;">
+        <div style="display:flex;align-items:center;gap:13px;padding:14px 16px;"><span style="flex:none;width:34px;height:34px;border-radius:50%;background:#e7ecf6;color:#2f6bdb;font:600 12px system-ui;display:flex;align-items:center;justify-content:center;">AM</span><div style="flex:1;min-width:0;"><div style="font:600 13.5px system-ui;color:#1c1c20;">Personal</div><div style="font:400 12px ui-monospace,monospace;color:#8a8a90;margin-top:1px;">alex.morgan@gmail.com · Gmail</div></div><span style="font:500 11px system-ui;color:#9a9aa0;">Personal profile</span><span class="dot" style="background:#2f6bdb;width:14px;height:14px;border-radius:4px;"></span></div>
+        <div style="display:flex;align-items:center;gap:13px;padding:14px 16px;border-top:1px solid rgba(0,0,0,.05);"><span style="flex:none;width:34px;height:34px;border-radius:50%;background:#e4f0e8;color:#2f9e6f;font:600 12px system-ui;display:flex;align-items:center;justify-content:center;">MS</span><div style="flex:1;min-width:0;"><div style="font:600 13.5px system-ui;color:#1c1c20;">Studio</div><div style="font:400 12px ui-monospace,monospace;color:#8a8a90;margin-top:1px;">alex@studio.co · Fastmail IMAP</div></div><span style="font:500 11px system-ui;color:#9a9aa0;">Work profile</span><span class="dot" style="background:#2f9e6f;width:14px;height:14px;border-radius:4px;"></span></div>
+        <div style="display:flex;align-items:center;gap:13px;padding:14px 16px;border-top:1px solid rgba(0,0,0,.05);"><span style="flex:none;width:34px;height:34px;border-radius:50%;background:#f3ece0;color:#a07d3a;font:600 12px system-ui;display:flex;align-items:center;justify-content:center;">C</span><div style="flex:1;min-width:0;"><div style="font:600 13.5px system-ui;color:#1c1c20;">College</div><div style="font:400 12px ui-monospace,monospace;color:#8a8a90;margin-top:1px;">a.morgan@university.edu · Gmail</div></div><span style="font:500 11px system-ui;color:#9a9aa0;">Personal profile</span><span class="dot" style="background:#c08a4a;width:14px;height:14px;border-radius:4px;"></span></div>
+      </div>
+      <div style="margin-top:12px;font:600 12.5px system-ui;color:#2f6bdb;">＋ Add account</div>
+      <div class="chT" style="margin-top:22px;">Work profile · quiet outside hours</div>
+      <div style="margin-top:10px;border:1px solid rgba(0,0,0,.07);border-radius:11px;overflow:hidden;">
+        <div style="display:flex;align-items:center;padding:12px 15px;"><div style="flex:1;font:600 13px system-ui;color:#1c1c20;">Working hours</div><span style="font:500 12.5px ui-monospace,monospace;color:#34343a;">Mon–Fri · 9–6</span></div>
+        <div style="display:flex;align-items:center;padding:12px 15px;border-top:1px solid rgba(0,0,0,.05);"><div style="flex:1;font:600 13px system-ui;color:#1c1c20;">Mute Studio during a Focus</div><div style="flex:none;width:38px;height:22px;border-radius:11px;background:#2f6bdb;position:relative;"><span style="position:absolute;top:2px;left:18px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);"></span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== F3 — SEARCH ===== -->
+<div style="position:absolute; left:2240px; top:0; width:980px;">
+  <div data-drags-parent="1" class="lbl">03 · Search — instant, Gmail-backed, grouped</div>
+  <div class="win" style="height:720px;">
+    <div style="height:44px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;"><div class="tl"><span style="background:#ff5f57;"></span><span style="background:#febc2e;"></span><span style="background:#28c840;"></span></div></div>
+    <div style="flex:none;padding:16px 26px 12px;border-bottom:1px solid rgba(0,0,0,.05);">
+      <div style="display:flex;align-items:center;gap:11px;border:1px solid rgba(47,107,219,.3);border-radius:11px;padding:11px 15px;background:#fbfcfe;"><span style="font:400 16px system-ui;color:#9a9aa0;">⌕</span><span style="flex:1;font:500 15px system-ui;color:#1c1c20;">invoice<span style="border-left:1.5px solid #2f6bdb;margin-left:1px;">&nbsp;</span></span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">42 results · 0.02s</span></div>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+        <span style="font:600 12px system-ui;color:#fff;background:#2f6bdb;border-radius:15px;padding:5px 12px;">Has attachment</span>
+        <span style="font:500 12px system-ui;color:#55555c;border:1px solid rgba(0,0,0,.12);border-radius:15px;padding:5px 12px;">From: Sam</span>
+        <span style="font:500 12px system-ui;color:#55555c;border:1px solid rgba(0,0,0,.12);border-radius:15px;padding:5px 12px;">This year</span>
+        <span style="font:500 12px system-ui;color:#55555c;border:1px solid rgba(0,0,0,.12);border-radius:15px;padding:5px 12px;">Studio</span>
+        <span style="font:500 12px system-ui;color:#9a9aa0;border:1px dashed rgba(0,0,0,.15);border-radius:15px;padding:5px 12px;">＋ Filter</span>
+      </div>
+    </div>
+    <div style="flex:1;overflow:hidden;padding:16px 26px;">
+      <div class="chT">People</div>
+      <div style="display:flex;gap:10px;margin-top:10px;">
+        <div style="display:flex;align-items:center;gap:9px;border:1px solid rgba(0,0,0,.08);border-radius:20px;padding:5px 13px 5px 5px;"><span style="width:26px;height:26px;border-radius:50%;background:#f3ece0;color:#a07d3a;font:600 11px system-ui;display:flex;align-items:center;justify-content:center;">SO</span><span style="font:600 12.5px system-ui;color:#1c1c20;">Sam Ortiz</span></div>
+        <div style="display:flex;align-items:center;gap:9px;border:1px solid rgba(0,0,0,.08);border-radius:20px;padding:5px 13px 5px 5px;"><span style="width:26px;height:26px;border-radius:50%;background:#e8eafb;color:#5a5fc0;font:600 11px system-ui;display:flex;align-items:center;justify-content:center;">NW</span><span style="font:600 12.5px system-ui;color:#1c1c20;">Northwind</span></div>
+      </div>
+      <div class="chT" style="margin-top:18px;">Messages</div>
+      <div style="margin-top:10px;border:1px solid rgba(0,0,0,.07);border-radius:11px;overflow:hidden;">
+        <div style="display:flex;gap:11px;padding:12px 15px;"><span class="dot" style="background:#f3ece0;width:28px;height:28px;border-radius:7px;"></span><div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;"><span style="font:600 13px system-ui;color:#1c1c20;">Sam Ortiz</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">Jun 26</span></div><div class="trunc" style="font:500 12.5px system-ui;color:#3a3a40;margin-top:2px;">Invoice approval — <mark style="background:#fff3c4;color:#34343a;">invoice</mark> #2207</div></div></div>
+        <div style="display:flex;gap:11px;padding:12px 15px;border-top:1px solid rgba(0,0,0,.05);"><span class="dot" style="background:#e7eefb;width:28px;height:28px;border-radius:7px;"></span><div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;"><span style="font:600 13px system-ui;color:#1c1c20;">Northwind</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">Tue</span></div><div class="trunc" style="font:500 12.5px system-ui;color:#3a3a40;margin-top:2px;">Receipt &amp; <mark style="background:#fff3c4;color:#34343a;">invoice</mark> · #2207</div></div></div>
+      </div>
+      <div class="chT" style="margin-top:18px;">Attachments</div>
+      <div style="display:flex;gap:10px;margin-top:10px;">
+        <div style="display:flex;align-items:center;gap:9px;border:1px solid rgba(0,0,0,.08);border-radius:9px;padding:8px 11px;"><span style="width:24px;height:28px;border-radius:4px;background:#fdeceb;color:#d9534f;font:700 8px system-ui;display:flex;align-items:center;justify-content:center;">PDF</span><div><div style="font:600 12px system-ui;color:#1c1c20;">invoice-2207.pdf</div><div style="font:500 10.5px ui-monospace,monospace;color:#a2a2a8;">48 KB</div></div></div>
+        <div style="display:flex;align-items:center;gap:9px;border:1px solid rgba(0,0,0,.08);border-radius:9px;padding:8px 11px;"><span style="width:24px;height:28px;border-radius:4px;background:#fdeceb;color:#d9534f;font:700 8px system-ui;display:flex;align-items:center;justify-content:center;">PDF</span><div><div style="font:600 12px system-ui;color:#1c1c20;">brightwork-quote.pdf</div><div style="font:500 10.5px ui-monospace,monospace;color:#a2a2a8;">112 KB</div></div></div>
+      </div>
+      <div style="margin-top:18px;display:flex;align-items:center;gap:8px;"><span class="di" style="width:6px;height:6px;"></span><span style="font:400 12px system-ui;color:#9a9aa0;">Same query syntax as Gmail · index lives on this Mac, so it's instant offline.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== F4 — PERSON VIEW ===== -->
+<div style="position:absolute; left:3300px; top:0; width:720px;">
+  <div data-drags-parent="1" class="lbl">04 · Person — everything from one contact</div>
+  <div class="win" style="height:680px;">
+    <div style="height:44px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;"><div class="tl"><span style="background:#ff5f57;"></span><span style="background:#febc2e;"></span><span style="background:#28c840;"></span></div></div>
+    <div style="flex:1;overflow:hidden;padding:28px 30px;">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div style="flex:none;width:60px;height:60px;border-radius:50%;background:#fbe7ea;color:#c0566c;font:600 22px system-ui;display:flex;align-items:center;justify-content:center;">DW</div>
+        <div style="flex:1;min-width:0;"><div style="font:600 21px system-ui;color:#161618;letter-spacing:-.01em;">Dana Whitfield</div><div style="font:400 13px ui-monospace,monospace;color:#8a8a90;margin-top:3px;">dana@brightwork.studio</div></div>
+        <span style="font:600 12.5px system-ui;color:#fff;background:#2f6bdb;border-radius:9px;padding:8px 14px;">Email</span>
+      </div>
+      <div style="display:flex;gap:0;margin-top:20px;border:1px solid rgba(0,0,0,.08);border-radius:12px;overflow:hidden;">
+        <div style="flex:1;padding:13px 16px;"><div style="font:600 18px ui-monospace,monospace;color:#161618;">38</div><div style="font:500 11px system-ui;color:#9a9aa0;margin-top:2px;">threads</div></div>
+        <div style="flex:1;padding:13px 16px;border-left:1px solid rgba(0,0,0,.06);"><div style="font:600 18px ui-monospace,monospace;color:#161618;">2</div><div style="font:500 11px system-ui;color:#9a9aa0;margin-top:2px;">shared projects</div></div>
+        <div style="flex:1;padding:13px 16px;border-left:1px solid rgba(0,0,0,.06);"><div style="font:600 18px system-ui;color:#161618;">9:24a</div><div style="font:500 11px system-ui;color:#9a9aa0;margin-top:2px;">last email</div></div>
+      </div>
+      <div class="chT" style="margin-top:22px;">Recent threads</div>
+      <div style="margin-top:9px;border:1px solid rgba(0,0,0,.07);border-radius:11px;overflow:hidden;">
+        <div style="display:flex;justify-content:space-between;padding:11px 15px;"><span class="trunc" style="font:500 13px system-ui;color:#3a3a40;">Re: Q3 launch — final assets</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">9:24a</span></div>
+        <div style="display:flex;justify-content:space-between;padding:11px 15px;border-top:1px solid rgba(0,0,0,.05);"><span class="trunc" style="font:500 13px system-ui;color:#3a3a40;">Proposal &amp; quote</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">Jun 22</span></div>
+        <div style="display:flex;justify-content:space-between;padding:11px 15px;border-top:1px solid rgba(0,0,0,.05);"><span class="trunc" style="font:500 13px system-ui;color:#3a3a40;">Initial hero options</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">Mon</span></div>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:18px;">
+        <div style="flex:1;"><div class="chT">Shared files</div><div style="display:flex;align-items:center;gap:8px;margin-top:9px;"><span style="width:22px;height:26px;border-radius:4px;background:#fdeceb;color:#d9534f;font:700 7px system-ui;display:flex;align-items:center;justify-content:center;">PDF</span><span class="trunc" style="font:500 12px system-ui;color:#34343a;">launch-hero-final.pdf</span></div></div>
+        <div style="flex:1;"><div class="chT">Shared projects</div><div style="display:flex;align-items:center;gap:7px;margin-top:9px;"><span class="di" style="width:6px;height:6px;"></span><span style="font:500 12px system-ui;color:#2f6bdb;">Q3 site redesign</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

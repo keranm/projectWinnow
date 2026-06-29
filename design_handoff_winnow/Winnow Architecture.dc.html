@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:#ececed;}
+  .di{display:inline-block;background:#2f6bdb;transform:rotate(45deg);border-radius:1.5px;}
+  .chT{font:600 11px system-ui;letter-spacing:.06em;text-transform:uppercase;color:#9aa6bb;}
+  .mono{font-family:ui-monospace,monospace;}
+  .box{background:#fff;border:1px solid rgba(0,0,0,.09);border-radius:13px;}
+  .pill{font:600 11px system-ui;border-radius:6px;padding:2px 8px;}
+  .arrow{display:flex;flex-direction:column;align-items:center;gap:5px;flex:none;width:120px;}
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:40px 28px;">
+  <div style="width:1080px;background:#fff;border-radius:16px;box-shadow:0 30px 80px rgba(20,22,45,.18),0 2px 8px rgba(0,0,0,.05);border:1px solid rgba(0,0,0,.07);overflow:hidden;">
+
+    <!-- header -->
+    <div style="padding:38px 48px 26px;border-bottom:1px solid rgba(0,0,0,.06);">
+      <div style="display:flex;align-items:center;gap:9px;"><span class="di" style="width:9px;height:9px;"></span><span style="font:600 12px system-ui;letter-spacing:.04em;text-transform:uppercase;color:#9aa6bb;">Winnow · architecture</span></div>
+      <div style="font:600 30px/1.2 system-ui;color:#161618;letter-spacing:-.02em;margin-top:14px;">How Winnow connects</div>
+      <div style="font:400 15px/1.55 system-ui;color:#6a6a70;margin-top:9px;max-width:680px;">A Gmail-first client that keeps mail on the device. The Gmail API does the heavy lifting; IMAP/SMTP is a pluggable adapter for everything else. No servers sit between you and your inbox.</div>
+    </div>
+
+    <!-- diagram -->
+    <div style="padding:34px 48px;display:flex;align-items:stretch;gap:0;">
+      <!-- device -->
+      <div class="box" style="flex:1;padding:18px 18px;display:flex;flex-direction:column;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:13px;"><span class="chT">Your device</span></div>
+        <div style="font:600 14px system-ui;color:#1c1c20;">Mac &amp; iPhone</div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">
+          <div style="display:flex;align-items:center;gap:9px;padding:9px 11px;background:#fafafa;border-radius:9px;"><span class="di" style="width:6px;height:6px;"></span><span style="font:500 12.5px system-ui;color:#3a3a40;">Local encrypted store</span></div>
+          <div style="display:flex;align-items:center;gap:9px;padding:9px 11px;background:#fafafa;border-radius:9px;"><span class="di" style="width:6px;height:6px;"></span><span style="font:500 12.5px system-ui;color:#3a3a40;">On-device intelligence</span></div>
+          <div style="display:flex;align-items:center;gap:9px;padding:9px 11px;background:#fafafa;border-radius:9px;"><span style="width:6px;height:6px;border-radius:50%;background:#28c840;"></span><span style="font:500 12.5px system-ui;color:#3a3a40;">OAuth tokens · Keychain</span></div>
+        </div>
+      </div>
+
+      <!-- arrow -->
+      <div class="arrow" style="justify-content:center;">
+        <span style="font:500 11px system-ui;color:#9a9aa0;text-align:center;">OAuth 2.0 · PKCE</span>
+        <span style="font:400 22px system-ui;color:#2f6bdb;">→</span>
+        <span style="font:500 11px system-ui;color:#9a9aa0;text-align:center;">requests straight<br>from the device</span>
+      </div>
+
+      <!-- engine -->
+      <div class="box" style="flex:1.15;padding:18px 18px;display:flex;flex-direction:column;border-color:rgba(47,107,219,.25);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:13px;"><span class="chT">Sync engine</span><span style="flex:1;"></span><span style="font:400 11px system-ui;color:#b2b2b8;">provider-agnostic</span></div>
+        <div style="border:1px solid rgba(47,107,219,.3);background:#fbfcfe;border-radius:10px;padding:13px 13px;">
+          <div style="display:flex;align-items:center;gap:8px;"><span class="pill" style="color:#fff;background:#2f6bdb;">Primary</span><span style="font:600 13.5px system-ui;color:#1c1c20;">Gmail API</span></div>
+          <div style="font:400 12px/1.5 system-ui;color:#7a7a82;margin-top:7px;">Labels, threads, search, fetch &amp; send — native.</div>
+        </div>
+        <div style="border:1px solid rgba(0,0,0,.1);border-radius:10px;padding:13px 13px;margin-top:10px;">
+          <div style="display:flex;align-items:center;gap:8px;"><span class="pill" style="color:#6a6a70;background:#eee;">Secondary</span><span style="font:600 13.5px system-ui;color:#1c1c20;">IMAP / SMTP</span></div>
+          <div style="font:400 12px/1.5 system-ui;color:#7a7a82;margin-top:7px;">Adapter for non-Gmail accounts.</div>
+        </div>
+      </div>
+
+      <!-- arrow -->
+      <div class="arrow" style="justify-content:center;">
+        <span style="font:400 22px system-ui;color:#2f6bdb;">→</span>
+      </div>
+
+      <!-- accounts -->
+      <div class="box" style="flex:1;padding:18px 18px;display:flex;flex-direction:column;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:13px;"><span class="chT">Accounts</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 11px;background:#fafafa;border-radius:9px;"><span style="font:600 13px system-ui;color:#1c1c20;">Gmail</span><span style="font:500 11px ui-monospace,monospace;color:#2f6bdb;">API</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 11px;background:#fafafa;border-radius:9px;margin-top:8px;"><span style="font:600 13px system-ui;color:#1c1c20;">Fastmail</span><span style="font:500 11px ui-monospace,monospace;color:#9a9aa0;">IMAP</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 11px;background:#fafafa;border-radius:9px;margin-top:8px;"><span style="font:600 13px system-ui;color:#1c1c20;">iCloud · Outlook</span><span style="font:500 11px ui-monospace,monospace;color:#9a9aa0;">IMAP</span></div>
+      </div>
+    </div>
+
+    <!-- flows -->
+    <div style="padding:6px 48px 8px;"><span class="chT">How each operation works</span></div>
+    <div style="padding:10px 48px 30px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;">
+      <div class="box" style="padding:16px 17px;">
+        <div style="font:600 14px system-ui;color:#1c1c20;">Sync</div>
+        <div style="font:400 12.5px/1.6 system-ui;color:#6a6a70;margin-top:7px;">Incremental deltas via <span class="mono" style="color:#2f6bdb;">users.history.list</span> against a stored <span class="mono" style="color:#34343a;">historyId</span>. Headers first, bodies on open.</div>
+      </div>
+      <div class="box" style="padding:16px 17px;">
+        <div style="font:600 14px system-ui;color:#1c1c20;">Send</div>
+        <div style="font:400 12.5px/1.6 system-ui;color:#6a6a70;margin-top:7px;"><span class="mono" style="color:#2f6bdb;">messages.send</span> for Gmail identities — honors verified send-as aliases &amp; threading. SMTP for non-Gmail.</div>
+      </div>
+      <div class="box" style="padding:16px 17px;">
+        <div style="font:600 14px system-ui;color:#1c1c20;">Search</div>
+        <div style="font:400 12.5px/1.6 system-ui;color:#6a6a70;margin-top:7px;">Same <span class="mono" style="color:#2f6bdb;">q=</span> syntax as Gmail web, so results match what users already know.</div>
+      </div>
+    </div>
+
+    <!-- caveats -->
+    <div style="display:flex;gap:0;border-top:1px solid rgba(0,0,0,.06);">
+      <div style="flex:1;padding:22px 48px;border-right:1px solid rgba(0,0,0,.06);">
+        <div style="display:flex;align-items:center;gap:8px;"><span class="di" style="width:7px;height:7px;"></span><span style="font:600 13px system-ui;color:#1c1c20;">Push without a server</span></div>
+        <div style="font:400 12.5px/1.6 system-ui;color:#6a6a70;margin-top:8px;">Gmail's instant push (Cloud Pub/Sub <span class="mono">watch</span>) needs a webhook — a server. Winnow <strong style="color:#1c1c20;font-weight:600;">polls</strong> <span class="mono">history.list</span> on foreground, a timer, and iOS background refresh instead. Slightly less instant, fully serverless.</div>
+      </div>
+      <div style="flex:1;padding:22px 48px;">
+        <div style="display:flex;align-items:center;gap:8px;"><span style="width:7px;height:7px;border-radius:50%;background:#c08a4a;"></span><span style="font:600 13px system-ui;color:#1c1c20;">Plan for: scope review</span></div>
+        <div style="font:400 12.5px/1.6 system-ui;color:#6a6a70;margin-top:8px;">Restricted scopes (<span class="mono">gmail.modify</span>, <span class="mono">https://mail.google.com/</span>) require Google OAuth verification <strong style="color:#1c1c20;font-weight:600;">plus an annual CASA audit</strong> before public release — true for any Gmail client, either transport.</div>
+      </div>
+    </div>
+
+    <!-- footer principle -->
+    <div style="padding:18px 48px;background:#f7f9fc;border-top:1px solid rgba(47,107,219,.10);display:flex;align-items:center;gap:10px;">
+      <span class="di" style="width:8px;height:8px;"></span>
+      <span style="font:500 13px system-ui;color:#55555c;">Tokens in the Keychain · requests from the device · no Winnow servers in the path — the privacy promise holds at the network layer, not just the UI.</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

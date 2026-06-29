@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:system-ui,-apple-system,sans-serif;}
+  .trunc{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .win{border-radius:13px;box-shadow:0 24px 70px rgba(20,22,45,.18),0 2px 6px rgba(0,0,0,.05);overflow:hidden;border:1px solid rgba(0,0,0,.07);background:#fff;display:flex;flex-direction:column;}
+  .lbl{font:600 13px system-ui;color:#3a3a40;margin:0 0 16px 4px;}
+  .tl{display:flex;gap:8px;}
+  .tl span{width:12px;height:12px;border-radius:50%;}
+  .di{display:inline-block;background:#2f6bdb;transform:rotate(45deg);border-radius:1.5px;}
+  .chT{font:600 11px system-ui;letter-spacing:.05em;text-transform:uppercase;color:#9aa6bb;}
+  .ph{font:500 12.5px ui-monospace,monospace;color:#2f6bdb;background:#eef3fc;border-radius:5px;padding:1px 5px;}
+  .fld{display:flex;align-items:center;gap:10px;padding:12px 22px;border-bottom:1px solid rgba(0,0,0,.04);}
+  .fldL{font:500 12.5px system-ui;color:#9a9aa0;width:48px;flex:none;}
+</style>
+</helmet>
+
+<!-- ===== F1 — COMPOSE: ALIAS ROUTING ===== -->
+<div style="position:absolute; left:0; top:0; width:720px;">
+  <div data-drags-parent="1" class="lbl">01 · Reply — alias auto-matched to the address it was sent to</div>
+  <div class="win" style="height:600px;position:relative;">
+    <div style="height:44px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;">
+      <div class="tl"><span style="background:#ff5f57;"></span><span style="background:#febc2e;"></span><span style="background:#28c840;"></span></div>
+      <div style="position:absolute;left:0;right:0;text-align:center;font:600 13px system-ui;color:#9a9aa0;pointer-events:none;">Reply</div>
+    </div>
+    <div class="fld" style="position:relative;z-index:5;">
+      <span class="fldL">From</span>
+      <span style="display:flex;align-items:center;gap:8px;border:1px solid rgba(47,107,219,.30);border-radius:8px;padding:6px 11px;background:#fbfcfe;"><span style="width:7px;height:7px;border-radius:50%;background:#2f6bdb;"></span><span style="font:600 12.5px system-ui;color:#1c1c20;">hello@winnow.app</span><span style="font:400 12px system-ui;color:#9a9aa0;">⌄</span></span>
+      <span style="display:flex;align-items:center;gap:6px;font:500 11.5px system-ui;color:#7a8295;"><span class="di" style="width:5px;height:5px;"></span>matched — this message was sent to hello@winnow.app</span>
+    </div>
+    <div class="fld"><span class="fldL">To</span><span style="display:flex;align-items:center;gap:7px;background:#eef3fc;border-radius:14px;padding:3px 11px;"><span style="font:500 12.5px system-ui;color:#2f6bdb;">Priya Nair</span></span></div>
+    <div class="fld"><span class="fldL">Subject</span><span style="font:600 13.5px system-ui;color:#1c1c20;">Re: Partnership terms</span></div>
+    <div style="flex:1;padding:20px 22px;overflow:hidden;">
+      <div style="font:400 14px/1.65 system-ui;color:#34343a;">Hi Priya — thanks for the note. Happy to walk through the terms this week…</div>
+      <div style="margin-top:20px;padding-top:14px;border-top:1px solid rgba(0,0,0,.05);">
+        <div style="font:600 13px system-ui;color:#34343a;">Alex Morgan</div>
+        <div style="font:400 12px system-ui;color:#9a9aa0;margin-top:2px;">Winnow · hello@winnow.app</div>
+      </div>
+    </div>
+    <div style="flex:none;display:flex;align-items:center;gap:14px;padding:13px 22px;border-top:1px solid rgba(0,0,0,.05);"><span style="font:600 13.5px system-ui;color:#fff;background:#2f6bdb;border-radius:9px;padding:9px 20px;">Send</span><span style="font:400 16px system-ui;color:#9a9aa0;">⎘</span><span style="font:400 16px system-ui;color:#9a9aa0;">◷</span></div>
+    <!-- from dropdown -->
+    <div style="position:absolute;left:66px;top:78px;width:330px;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;box-shadow:0 24px 60px rgba(10,12,30,.28);overflow:hidden;z-index:10;">
+      <div style="padding:11px 15px 6px;"><span class="chT">Send from</span></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:9px 15px;background:#eef3fc;box-shadow:inset 2px 0 #2f6bdb;"><span style="width:7px;height:7px;border-radius:50%;background:#2f6bdb;"></span><div style="flex:1;"><div style="font:600 13px system-ui;color:#1c1c20;">hello@winnow.app</div><div style="font:400 11px system-ui;color:#8a8a90;">Winnow · via Gmail alias</div></div><span style="font:600 9.5px system-ui;letter-spacing:.04em;text-transform:uppercase;color:#2f6bdb;">Matched</span></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:9px 15px;border-top:1px solid rgba(0,0,0,.04);"><span style="width:7px;height:7px;border-radius:50%;border:1.5px solid #c2c2c8;"></span><div style="flex:1;"><div style="font:500 13px system-ui;color:#3a3a40;">alex@morgan.studio</div><div style="font:400 11px system-ui;color:#a2a2a8;">Personal · via Gmail</div></div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:9px 15px;border-top:1px solid rgba(0,0,0,.04);"><span style="width:7px;height:7px;border-radius:50%;border:1.5px solid #c2c2c8;"></span><div style="flex:1;"><div style="font:500 13px system-ui;color:#3a3a40;">alex@studio.co</div><div style="font:400 11px system-ui;color:#a2a2a8;">Studio · via Fastmail</div></div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:9px 15px;border-top:1px solid rgba(0,0,0,.04);"><span style="width:7px;height:7px;border-radius:50%;border:1.5px solid #c2c2c8;"></span><div style="flex:1;"><div style="font:500 13px system-ui;color:#3a3a40;">alex.morgan@gmail.com</div><div style="font:400 11px system-ui;color:#a2a2a8;">Gmail</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== F2 — SETTINGS: IDENTITIES & ALIASES ===== -->
+<div style="position:absolute; left:840px; top:0; width:900px;">
+  <div data-drags-parent="1" class="lbl">02 · Settings → Accounts — identities &amp; alias routing</div>
+  <div class="win" style="height:620px;">
+    <div style="height:44px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;">
+      <div class="tl"><span style="background:#ff5f57;"></span><span style="background:#febc2e;"></span><span style="background:#28c840;"></span></div>
+      <div style="position:absolute;left:0;right:0;text-align:center;font:600 13px system-ui;color:#9a9aa0;pointer-events:none;">Settings — Accounts</div>
+    </div>
+    <div style="flex:1;padding:26px 32px;overflow:hidden;">
+      <div style="font:600 20px system-ui;color:#161618;letter-spacing:-.01em;">Identities &amp; aliases</div>
+      <div style="font:400 12.5px/1.5 system-ui;color:#8a8a90;margin-top:5px;">Each address keeps its own outgoing route and signature. Winnow picks the right one automatically.</div>
+      <!-- auto-route toggle -->
+      <div style="display:flex;align-items:center;gap:14px;margin-top:18px;padding:13px 16px;border:1px solid rgba(47,107,219,.14);background:#f7f9fc;border-radius:11px;">
+        <div style="flex:1;"><div style="font:600 13.5px system-ui;color:#1c1c20;">Reply from the address a message was sent to</div><div style="font:400 12px system-ui;color:#8a8a90;margin-top:2px;">Incoming address → matching identity, every time. Override per message in compose.</div></div>
+        <div style="flex:none;width:40px;height:23px;border-radius:12px;background:#2f6bdb;position:relative;"><span style="position:absolute;top:2px;left:19px;width:19px;height:19px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);"></span></div>
+      </div>
+      <!-- table -->
+      <div style="margin-top:18px;border:1px solid rgba(0,0,0,.07);border-radius:12px;overflow:hidden;">
+        <div style="display:flex;padding:9px 16px;background:#fafafa;border-bottom:1px solid rgba(0,0,0,.06);"><span style="flex:2;font:600 10.5px system-ui;letter-spacing:.04em;text-transform:uppercase;color:#a2a2a8;">Address</span><span style="flex:1.3;font:600 10.5px system-ui;letter-spacing:.04em;text-transform:uppercase;color:#a2a2a8;">Sends via</span><span style="flex:1.4;font:600 10.5px system-ui;letter-spacing:.04em;text-transform:uppercase;color:#a2a2a8;">Signature</span><span style="width:60px;"></span></div>
+        <div style="display:flex;align-items:center;padding:13px 16px;"><div style="flex:2;min-width:0;"><div style="font:600 13px system-ui;color:#1c1c20;">alex@morgan.studio</div><div style="font:400 11px system-ui;color:#a2a2a8;margin-top:1px;">Personal</div></div><span style="flex:1.3;font:500 12.5px system-ui;color:#55555c;">Gmail SMTP</span><span style="flex:1.4;font:400 12.5px system-ui;color:#8a8a90;" class="trunc">“Alex Morgan”</span><span style="width:60px;font:600 9.5px system-ui;letter-spacing:.04em;text-transform:uppercase;color:#2f9e6f;">Default</span></div>
+        <div style="display:flex;align-items:center;padding:13px 16px;border-top:1px solid rgba(0,0,0,.05);"><div style="flex:2;min-width:0;"><div style="font:600 13px system-ui;color:#1c1c20;">hello@winnow.app</div><div style="font:400 11px system-ui;color:#a2a2a8;margin-top:1px;">Winnow</div></div><span style="flex:1.3;font:500 12.5px system-ui;color:#55555c;">Gmail alias</span><span style="flex:1.4;font:400 12.5px system-ui;color:#8a8a90;" class="trunc">“Team Winnow”</span><span style="width:60px;font:600 12px system-ui;color:#2f6bdb;">Edit</span></div>
+        <div style="display:flex;align-items:center;padding:13px 16px;border-top:1px solid rgba(0,0,0,.05);"><div style="flex:2;min-width:0;"><div style="font:600 13px system-ui;color:#1c1c20;">alex@studio.co</div><div style="font:400 11px system-ui;color:#a2a2a8;margin-top:1px;">Studio</div></div><span style="flex:1.3;font:500 12.5px system-ui;color:#55555c;">Fastmail SMTP</span><span style="flex:1.4;font:400 12.5px system-ui;color:#8a8a90;" class="trunc">“Alex · Studio”</span><span style="width:60px;font:600 12px system-ui;color:#2f6bdb;">Edit</span></div>
+        <div style="display:flex;align-items:center;padding:13px 16px;border-top:1px solid rgba(0,0,0,.05);"><div style="flex:2;min-width:0;"><div style="font:600 13px system-ui;color:#1c1c20;">alex.morgan@gmail.com</div><div style="font:400 11px system-ui;color:#a2a2a8;margin-top:1px;">Gmail</div></div><span style="flex:1.3;font:500 12.5px system-ui;color:#55555c;">Gmail SMTP</span><span style="flex:1.4;font:400 12.5px system-ui;color:#8a8a90;" class="trunc">— none —</span><span style="width:60px;font:600 12px system-ui;color:#2f6bdb;">Edit</span></div>
+      </div>
+      <div style="margin-top:13px;display:flex;align-items:center;gap:8px;"><span style="font:600 12.5px system-ui;color:#2f6bdb;">＋ Add identity</span><span style="flex:1;"></span><span style="display:flex;align-items:center;gap:6px;font:400 11.5px system-ui;color:#9a9aa0;"><span class="di" style="width:5px;height:5px;"></span>Routing stays on this Mac · credentials in the macOS Keychain</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== F3 — SNIPPETS MANAGER ===== -->
+<div style="position:absolute; left:1860px; top:0; width:820px;">
+  <div data-drags-parent="1" class="lbl">03 · Snippets — templates with placeholders</div>
+  <div class="win" style="height:620px;">
+    <div style="height:44px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;">
+      <div class="tl"><span style="background:#ff5f57;"></span><span style="background:#febc2e;"></span><span style="background:#28c840;"></span></div>
+      <div style="position:absolute;left:0;right:0;text-align:center;font:600 13px system-ui;color:#9a9aa0;pointer-events:none;">Snippets</div>
+    </div>
+    <div style="flex:1;display:flex;min-height:0;">
+      <!-- list -->
+      <div style="width:248px;flex:none;border-right:1px solid rgba(0,0,0,.05);background:#fafafa;padding:12px 9px;display:flex;flex-direction:column;gap:1px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 11px;border-radius:7px;background:#eef3fc;box-shadow:inset 2px 0 #2f6bdb;"><span style="font:600 13px system-ui;color:#1c1c20;">First reply</span><span style="font:600 11px ui-monospace,monospace;color:#2f6bdb;">;intro</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 11px;"><span style="font:500 13px system-ui;color:#55555c;">Propose a time</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">;sched</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 11px;"><span style="font:500 13px system-ui;color:#55555c;">Invoice follow-up</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">;invoice</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 11px;"><span style="font:500 13px system-ui;color:#55555c;">Gentle nudge</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">;nudge</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 11px;"><span style="font:500 13px system-ui;color:#55555c;">Out of office</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">;ooo</span></div>
+        <div style="margin-top:6px;padding:9px 11px;font:600 12.5px system-ui;color:#2f6bdb;">＋ New snippet</div>
+      </div>
+      <!-- editor -->
+      <div style="flex:1;min-width:0;padding:22px 24px;display:flex;flex-direction:column;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="flex:1;"><div style="font:600 12px system-ui;color:#a2a2a8;letter-spacing:.04em;text-transform:uppercase;">Name</div><div style="font:600 16px system-ui;color:#161618;margin-top:3px;">First reply</div></div>
+          <div><div style="font:600 12px system-ui;color:#a2a2a8;letter-spacing:.04em;text-transform:uppercase;">Shortcut</div><div style="display:flex;align-items:center;gap:7px;margin-top:5px;"><span style="font:600 13px ui-monospace,monospace;color:#2f6bdb;background:#eef3fc;border-radius:6px;padding:4px 10px;">;intro</span><span style="font:400 11px system-ui;color:#9a9aa0;">type to expand</span></div></div>
+        </div>
+        <div style="margin-top:18px;display:flex;align-items:center;gap:8px;"><span style="font:600 12px system-ui;color:#a2a2a8;letter-spacing:.04em;text-transform:uppercase;">Body</span><span style="flex:1;"></span><span style="font:400 11px system-ui;color:#9a9aa0;">Insert:</span><span class="ph">first name</span><span class="ph">date</span><span class="ph">calendar link</span></div>
+        <div style="margin-top:9px;flex:1;border:1px solid rgba(0,0,0,.10);border-radius:11px;padding:16px 17px;font:400 14px/1.7 system-ui;color:#34343a;">
+          Hi <span class="ph">first name</span>,<br><br>
+          Thanks for reaching out — great to connect. I'd love to find time to talk this through. You can grab a slot on my <span class="ph">calendar link</span>, or let me know what suits and I'll send an invite.<br><br>
+          Best,<br>Alex
+        </div>
+        <div style="margin-top:14px;display:flex;align-items:center;gap:8px;"><span class="di" style="width:6px;height:6px;"></span><span style="font:400 12px system-ui;color:#9a9aa0;">Placeholders fill from the recipient &amp; your calendar as you type — all on this Mac.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== F4 — COMPOSE: INLINE EXPANSION ===== -->
+<div style="position:absolute; left:2800px; top:0; width:720px;">
+  <div data-drags-parent="1" class="lbl">04 · Compose — type a shortcut, it expands inline</div>
+  <div class="win" style="height:600px;position:relative;">
+    <div style="height:44px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;">
+      <div class="tl"><span style="background:#ff5f57;"></span><span style="background:#febc2e;"></span><span style="background:#28c840;"></span></div>
+      <div style="position:absolute;left:0;right:0;text-align:center;font:600 13px system-ui;color:#9a9aa0;pointer-events:none;">New Message</div>
+    </div>
+    <div class="fld"><span class="fldL">To</span><span style="display:flex;align-items:center;gap:7px;background:#eef3fc;border-radius:14px;padding:3px 11px;"><span style="font:500 12.5px system-ui;color:#2f6bdb;">Dana Whitfield</span></span></div>
+    <div class="fld"><span class="fldL">Subject</span><span style="font:600 13.5px system-ui;color:#1c1c20;">Intro &amp; next steps</span></div>
+    <div style="flex:1;padding:20px 22px;overflow:hidden;position:relative;">
+      <!-- already-expanded paragraph -->
+      <div style="font:400 14px/1.7 system-ui;color:#34343a;">Hi <span style="background:#fff7e6;border-radius:3px;padding:0 2px;">Dana</span>,</div>
+      <div style="font:400 14px/1.7 system-ui;color:#34343a;margin-top:11px;">Thanks for reaching out — great to connect. I'd love to find time to talk this through.</div>
+      <!-- typing line + autocomplete -->
+      <div style="font:400 14px/1.7 system-ui;color:#34343a;margin-top:11px;position:relative;">
+        <span style="font-family:ui-monospace,monospace;color:#2f6bdb;background:#eef3fc;border-radius:4px;padding:1px 4px;">;sched</span><span style="border-left:1.5px solid #2f6bdb;margin-left:1px;">&nbsp;</span>
+        <!-- autocomplete -->
+        <div style="position:absolute;left:0;top:30px;width:340px;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:11px;box-shadow:0 20px 50px rgba(10,12,30,.26);overflow:hidden;z-index:10;">
+          <div style="display:flex;align-items:center;gap:11px;padding:10px 14px;background:#eef3fc;box-shadow:inset 2px 0 #2f6bdb;"><span style="font:600 12px ui-monospace,monospace;color:#2f6bdb;width:62px;">;sched</span><div style="flex:1;min-width:0;"><div style="font:600 12.5px system-ui;color:#1c1c20;">Propose a time</div><div class="trunc" style="font:400 11px system-ui;color:#8a8a90;">Here are a few times that work…</div></div></div>
+          <div style="display:flex;align-items:center;gap:11px;padding:10px 14px;border-top:1px solid rgba(0,0,0,.04);"><span style="font:600 12px ui-monospace,monospace;color:#b2b2b8;width:62px;">;sign</span><div style="flex:1;min-width:0;"><div style="font:600 12.5px system-ui;color:#3a3a40;">Sign-off request</div></div></div>
+          <div style="display:flex;align-items:flex-start;gap:8px;padding:9px 14px;border-top:1px solid rgba(0,0,0,.06);background:#fafafa;"><span class="di" style="width:5px;height:5px;margin-top:4px;"></span><span style="font:400 11px/1.4 system-ui;color:#9a9aa0;">↵ to insert · placeholders fill automatically</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="flex:none;display:flex;align-items:center;gap:14px;padding:13px 22px;border-top:1px solid rgba(0,0,0,.05);"><span style="font:600 13.5px system-ui;color:#fff;background:#2f6bdb;border-radius:9px;padding:9px 20px;">Send</span><span style="font:400 16px system-ui;color:#9a9aa0;">⎘</span><span style="font:400 16px system-ui;color:#9a9aa0;">◷</span></div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

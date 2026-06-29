@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:#ececed;}
+  .di{display:inline-block;background:#2f6bdb;transform:rotate(45deg);border-radius:1.5px;}
+  .chT{font:600 11px system-ui;letter-spacing:.06em;text-transform:uppercase;color:#9aa6bb;}
+  .mono{font-family:ui-monospace,monospace;}
+  .sw{border-radius:10px;height:56px;border:1px solid rgba(0,0,0,.06);}
+  .swL{font:600 11.5px system-ui;color:#1c1c20;margin-top:7px;}
+  .swH{font:500 11px ui-monospace,monospace;color:#9a9aa0;margin-top:1px;}
+  .sec{padding:30px 48px;border-top:1px solid rgba(0,0,0,.06);}
+  .kbd{font:600 11px ui-monospace,monospace;color:#55555c;background:#fff;border:1px solid rgba(0,0,0,.16);border-bottom-width:2px;border-radius:6px;padding:3px 7px;}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:40px 28px;">
+  <div style="width:1080px;background:#fff;border-radius:16px;box-shadow:0 30px 80px rgba(20,22,45,.18),0 2px 8px rgba(0,0,0,.05);border:1px solid rgba(0,0,0,.07);overflow:hidden;">
+    <!-- header -->
+    <div style="padding:38px 48px 26px;">
+      <div style="display:flex;align-items:center;gap:9px;"><span class="di" style="width:9px;height:9px;"></span><span style="font:600 12px system-ui;letter-spacing:.04em;text-transform:uppercase;color:#9aa6bb;">Winnow · design spec</span></div>
+      <div style="font:600 30px/1.2 system-ui;color:#161618;letter-spacing:-.02em;margin-top:14px;">The “Quiet” system</div>
+      <div style="font:400 15px/1.55 system-ui;color:#6a6a70;margin-top:9px;max-width:680px;">Near-monochrome, lots of whitespace, hairline dividers. Colour and motion are rare on purpose — so the few accents (and the assist diamond) carry meaning.</div>
+    </div>
+
+    <!-- colour -->
+    <div class="sec">
+      <span class="chT">Colour</span>
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-top:14px;">
+        <div><div class="sw" style="background:#1c1c20;"></div><div class="swL">Text</div><div class="swH">#1C1C20</div></div>
+        <div><div class="sw" style="background:#55555c;"></div><div class="swL">Secondary</div><div class="swH">#55555C</div></div>
+        <div><div class="sw" style="background:#9a9aa0;"></div><div class="swL">Tertiary</div><div class="swH">#9A9AA0</div></div>
+        <div><div class="sw" style="background:#fafafa;"></div><div class="swL">Sidebar</div><div class="swH">#FAFAFA</div></div>
+        <div><div class="sw" style="background:#fff;"></div><div class="swL">Surface</div><div class="swH">#FFFFFF</div></div>
+        <div><div class="sw" style="background:#ececed;"></div><div class="swL">Stage</div><div class="swH">#ECECED</div></div>
+        <div><div class="sw" style="background:#2f6bdb;"></div><div class="swL">Accent</div><div class="swH">#2F6BDB</div></div>
+        <div><div class="sw" style="background:#eef3fc;"></div><div class="swL">Accent tint</div><div class="swH">#EEF3FC</div></div>
+        <div><div class="sw" style="background:#2f9e6f;"></div><div class="swL">Success</div><div class="swH">#2F9E6F</div></div>
+        <div><div class="sw" style="background:#c08a4a;"></div><div class="swL">Caution</div><div class="swH">#C08A4A</div></div>
+        <div><div class="sw" style="background:#d9534f;"></div><div class="swL">Alert</div><div class="swH">#D9534F</div></div>
+        <div><div class="sw" style="background:#4f8ef0;"></div><div class="swL">Accent · dark</div><div class="swH">#4F8EF0</div></div>
+      </div>
+      <div style="font:400 12px/1.5 system-ui;color:#9a9aa0;margin-top:14px;">Borders: <span class="mono" style="color:#55555c;">rgba(0,0,0,.05–.08)</span> hairlines. Accent is used sparingly — selection, primary action, links, and the assist diamond only.</div>
+    </div>
+
+    <!-- type -->
+    <div class="sec">
+      <span class="chT">Type · system-ui (mono: ui-monospace)</span>
+      <div style="margin-top:16px;display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;align-items:baseline;gap:18px;"><span style="width:120px;font:500 11px ui-monospace,monospace;color:#9a9aa0;flex:none;">Display · 30/600</span><span style="font:600 30px system-ui;color:#161618;letter-spacing:-.02em;">You're at zero</span></div>
+        <div style="display:flex;align-items:baseline;gap:18px;"><span style="width:120px;font:500 11px ui-monospace,monospace;color:#9a9aa0;flex:none;">Title · 22/600</span><span style="font:600 22px system-ui;color:#171719;">Re: Q3 launch</span></div>
+        <div style="display:flex;align-items:baseline;gap:18px;"><span style="width:120px;font:500 11px ui-monospace,monospace;color:#9a9aa0;flex:none;">Body · 14/400</span><span style="font:400 14px system-ui;color:#34343a;">I need your sign-off before Friday so design can lock the page.</span></div>
+        <div style="display:flex;align-items:baseline;gap:18px;"><span style="width:120px;font:500 11px ui-monospace,monospace;color:#9a9aa0;flex:none;">Label · 13/500</span><span style="font:500 13px system-ui;color:#55555c;">Dana Whitfield</span></div>
+        <div style="display:flex;align-items:baseline;gap:18px;"><span style="width:120px;font:500 11px ui-monospace,monospace;color:#9a9aa0;flex:none;">Section · 11/600</span><span class="chT">Needs a reply</span></div>
+        <div style="display:flex;align-items:baseline;gap:18px;"><span style="width:120px;font:500 11px ui-monospace,monospace;color:#9a9aa0;flex:none;">Meta · 11 mono</span><span style="font:500 11px ui-monospace,monospace;color:#9a9aa0;">9:24a · $14,500 · 1Z 999 AA1</span></div>
+      </div>
+      <div style="font:400 12px/1.5 system-ui;color:#9a9aa0;margin-top:16px;">Always <span class="mono" style="color:#55555c;">system-ui</span> (never <span class="mono">-apple-system</span> alone — renders serif in Chromium). Monospace for times, amounts, tracking numbers, shortcuts &amp; technical strings.</div>
+    </div>
+
+    <!-- radius/space + diamond -->
+    <div class="sec" style="display:flex;gap:48px;">
+      <div style="flex:1;">
+        <span class="chT">Radius &amp; spacing</span>
+        <div style="display:flex;align-items:flex-end;gap:16px;margin-top:14px;">
+          <div style="text-align:center;"><div style="width:54px;height:40px;background:#eef3fc;border:1px solid rgba(47,107,219,.2);border-radius:7px;"></div><div class="swH" style="margin-top:6px;">7 · rows</div></div>
+          <div style="text-align:center;"><div style="width:54px;height:40px;background:#eef3fc;border:1px solid rgba(47,107,219,.2);border-radius:11px;"></div><div class="swH" style="margin-top:6px;">11–13 · cards</div></div>
+          <div style="text-align:center;"><div style="width:54px;height:40px;background:#eef3fc;border:1px solid rgba(47,107,219,.2);border-radius:16px;"></div><div class="swH" style="margin-top:6px;">16 · sheets</div></div>
+        </div>
+        <div style="font:400 12px/1.5 system-ui;color:#9a9aa0;margin-top:14px;">Rhythm in 4px steps. Row padding 11–14px; card padding 14–18px; window/section padding 26–34px.</div>
+      </div>
+      <div style="flex:1;border-left:1px solid rgba(0,0,0,.06);padding-left:48px;">
+        <span class="chT">The assist diamond</span>
+        <div style="display:flex;align-items:center;gap:12px;margin-top:14px;"><span class="di" style="width:10px;height:10px;"></span><span style="font:500 13px system-ui;color:#3a3a40;">marks anything the on-device intelligence produced</span></div>
+        <div style="margin-top:14px;"><span class="chT">Selected state</span><div style="margin-top:8px;display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:7px;background:#eef3fc;box-shadow:inset 2px 0 #2f6bdb;"><span style="font:600 13px system-ui;color:#1c1c20;">Important</span><span style="font:600 11px ui-monospace,monospace;color:#2f6bdb;">2</span></div><div class="swH" style="margin-top:7px;">bg <span class="mono">#EEF3FC</span> · <span class="mono">inset 2px 0 #2F6BDB</span></div></div>
+      </div>
+    </div>
+
+    <!-- components -->
+    <div class="sec">
+      <span class="chT">Component inventory</span>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px;">
+        <!-- list row -->
+        <div style="border:1px solid rgba(0,0,0,.08);border-radius:11px;padding:13px 15px;"><div style="font:600 11px system-ui;color:#b2b2b8;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px;">List row</div><div style="display:flex;gap:11px;"><span style="flex:none;width:7px;height:7px;border-radius:50%;background:#2f6bdb;margin-top:5px;"></span><div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;"><span style="font:600 13.5px system-ui;color:#1c1c20;">Dana Whitfield</span><span style="font:500 11px ui-monospace,monospace;color:#9a9aa0;">9:24a</span></div><div style="font:400 12.5px system-ui;color:#8a8a90;margin-top:3px;">Re: Q3 launch — final assets</div></div></div></div>
+        <!-- toggle + kbd -->
+        <div style="border:1px solid rgba(0,0,0,.08);border-radius:11px;padding:13px 15px;display:flex;align-items:center;gap:18px;"><div><div style="font:600 11px system-ui;color:#b2b2b8;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px;">Toggle</div><div style="display:flex;gap:8px;"><div style="width:40px;height:23px;border-radius:12px;background:#2f6bdb;position:relative;"><span style="position:absolute;top:2px;left:19px;width:19px;height:19px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);"></span></div><div style="width:40px;height:23px;border-radius:12px;background:#d8d8de;position:relative;"><span style="position:absolute;top:2px;left:2px;width:19px;height:19px;border-radius:50%;background:#fff;"></span></div></div></div><div><div style="font:600 11px system-ui;color:#b2b2b8;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px;">Keys</div><span class="kbd">⌘K</span> <span class="kbd">E</span> <span class="kbd">S</span></div></div>
+        <!-- chips -->
+        <div style="border:1px solid rgba(0,0,0,.08);border-radius:11px;padding:13px 15px;"><div style="font:600 11px system-ui;color:#b2b2b8;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px;">Chips &amp; tokens</div><div style="display:flex;gap:8px;flex-wrap:wrap;"><span style="font:600 12px system-ui;color:#fff;background:#2f6bdb;border-radius:15px;padding:5px 12px;">Primary</span><span style="font:500 12px system-ui;color:#5a5a62;border:1px solid rgba(0,0,0,.12);border-radius:15px;padding:5px 12px;">Quiet</span><span style="display:inline-flex;align-items:center;gap:5px;font:600 11.5px ui-monospace,monospace;color:#2f6bdb;background:#eef3fc;border-radius:6px;padding:3px 9px;"><span class="di" style="width:5px;height:5px;"></span>token</span></div></div>
+        <!-- card header -->
+        <div style="border:1px solid rgba(0,0,0,.08);border-radius:11px;padding:13px 15px;"><div style="font:600 11px system-ui;color:#b2b2b8;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px;">Card + section header</div><div style="display:flex;align-items:center;gap:8px;"><span class="di" style="width:6px;height:6px;"></span><span class="chT">Pulled from mail</span><span style="flex:1;"></span><span style="font:600 11px ui-monospace,monospace;color:#2f6bdb;background:#eef3fc;border-radius:5px;padding:1px 7px;">3</span></div></div>
+      </div>
+    </div>
+
+    <!-- principles footer -->
+    <div style="padding:20px 48px;background:#f7f9fc;border-top:1px solid rgba(47,107,219,.10);">
+      <div style="display:flex;align-items:flex-start;gap:10px;"><span class="di" style="width:8px;height:8px;margin-top:4px;"></span><span style="font:500 13px/1.6 system-ui;color:#55555c;">Inline styles only · no gradients, no emoji · hairlines over heavy borders · one accent · motion is rare and short · the diamond always means “on-device intelligence.” Dark mode swaps neutrals to <span class="mono">#1C1C1E/#161617</span> and accent to <span class="mono">#4F8EF0</span>.</span></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
