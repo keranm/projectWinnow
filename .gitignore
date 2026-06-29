@@ -51,6 +51,8 @@ Icon?
 *.plist.secret
 Secrets/
 Config/Secrets.swift
+**/Secrets.swift
+client_secret*.json
 GoogleService-Info.plist
 
 # Editor

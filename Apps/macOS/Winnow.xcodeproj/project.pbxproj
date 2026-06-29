@@ -11,8 +11,10 @@
 		20F3228A7974B704A4B39A5B /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2F75367F63C93D25CE6036 /* RootView.swift */; };
 		25C96B799C27D18C72B85E92 /* MailContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D6D77278B8FF8C4563D3813 /* MailContentView.swift */; };
 		5AB5AACD27EAE80BFF7C5382 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1D6B8EECA4F740F52A2325 /* MockData.swift */; };
+		858788E3B2BD5BAD0A7ED8F7 /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC6E20B05066B194BB1E2F2 /* Secrets.swift */; };
 		A2A9617E1CE561233D3C1158 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9001E3F8A44E8C83F5621D55 /* TodayView.swift */; };
 		A3E80596F802901F4DB8D667 /* ReadingPaneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 475EB32FAE5A75CBE6674C50 /* ReadingPaneView.swift */; };
+		B1E374C66DB634A57B4B987B /* ConnectAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CD17D4A0EBC30F47478B8E /* ConnectAccountView.swift */; };
 		BD3DA47C794B12A5FC41508D /* WinnowUI in Frameworks */ = {isa = PBXBuildFile; productRef = 51BB0E31B28E644545F84B9D /* WinnowUI */; };
 		C60F1AC83C0586BD0DD93129 /* ThreadRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2D1A3D8A4CC83CE18DFC152 /* ThreadRowView.swift */; };
 		CBB8F21BD721799A3BD0A3C7 /* EmptySelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99B35E428690A0A8F77D7292 /* EmptySelectionView.swift */; };
@@ -34,8 +36,10 @@
 		6D6D77278B8FF8C4563D3813 /* MailContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailContentView.swift; sourceTree = "<group>"; };
 		9001E3F8A44E8C83F5621D55 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		99B35E428690A0A8F77D7292 /* EmptySelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptySelectionView.swift; sourceTree = "<group>"; };
+		AEC6E20B05066B194BB1E2F2 /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		C1ABC2DCAE9CED9599FD7DF7 /* WinnowUI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = WinnowUI; path = ../../Packages/WinnowUI; sourceTree = SOURCE_ROOT; };
 		CAED9DDBB02AB395DEB79C9F /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
+		D3CD17D4A0EBC30F47478B8E /* ConnectAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectAccountView.swift; sourceTree = "<group>"; };
 		E2D1A3D8A4CC83CE18DFC152 /* ThreadRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadRowView.swift; sourceTree = "<group>"; };
 		EA59891F23B37056683DE2D1 /* WinnowCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = WinnowCore; path = ../../Packages/WinnowCore; sourceTree = SOURCE_ROOT; };
 		EC1D6B8EECA4F740F52A2325 /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
@@ -60,6 +64,7 @@
 				99B35E428690A0A8F77D7292 /* EmptySelectionView.swift */,
 				5C2F75367F63C93D25CE6036 /* RootView.swift */,
 				79FDD361E2286C7DE3492DB2 /* Mail */,
+				C59DCE4569D60AB04A5BE690 /* Onboarding */,
 				9E0C081C09DA06544B2FA8EF /* Sidebar */,
 				2D67CB88151A045CFD70A72C /* Today */,
 			);
@@ -119,12 +124,21 @@
 			path = Sidebar;
 			sourceTree = "<group>";
 		};
+		C59DCE4569D60AB04A5BE690 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				D3CD17D4A0EBC30F47478B8E /* ConnectAccountView.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
 		E83D80F2CAC89AB8C28BDD80 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
 				614F311C47862DEB5F65ED36 /* AppState.swift */,
 				EC1D6B8EECA4F740F52A2325 /* MockData.swift */,
 				2848D76D6E58005ECB79B5FD /* NavItem.swift */,
+				AEC6E20B05066B194BB1E2F2 /* Secrets.swift */,
 				0CFE9036DBC5CD37B4073240 /* WinnowApp.swift */,
 				1C171D93C12869780CCA161E /* Views */,
 			);
@@ -194,12 +208,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				E6E3D8AA952BD661732393BB /* AppState.swift in Sources */,
+				B1E374C66DB634A57B4B987B /* ConnectAccountView.swift in Sources */,
 				CBB8F21BD721799A3BD0A3C7 /* EmptySelectionView.swift in Sources */,
 				25C96B799C27D18C72B85E92 /* MailContentView.swift in Sources */,
 				5AB5AACD27EAE80BFF7C5382 /* MockData.swift in Sources */,
 				DE82217E69D34EFA50A38E26 /* NavItem.swift in Sources */,
 				A3E80596F802901F4DB8D667 /* ReadingPaneView.swift in Sources */,
 				20F3228A7974B704A4B39A5B /* RootView.swift in Sources */,
+				858788E3B2BD5BAD0A7ED8F7 /* Secrets.swift in Sources */,
 				EAD294BD56CC91BE96C359DA /* SidebarView.swift in Sources */,
 				1D93D66BE2E6E15FA7135A55 /* ThreadListView.swift in Sources */,
 				C60F1AC83C0586BD0DD93129 /* ThreadRowView.swift in Sources */,

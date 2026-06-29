@@ -1,15 +1,24 @@
 import SwiftUI
+import AppKit
 import WinnowCore
 
 @Observable
 @MainActor
 final class AppState {
+    // Navigation
+    var selectedNavItem: NavItem = .today
+    var selectedThreadID: String?
+
+    // Data
     var threads: [MailThread] = []
     var accounts: [Account] = []
-    var selectedNavItem: NavItem = .today
-    var selectedThreadID: String? = nil
-    var syncStatus: SyncStatus = .synced
 
+    // Auth / sync state
+    var isAuthenticated: Bool = false
+    var isLoading: Bool = false
+    var syncError: String?
+
+    // Derived
     var selectedThread: MailThread? {
         guard let id = selectedThreadID else { return nil }
         return threads.first { $0.id == id }
@@ -18,62 +27,142 @@ final class AppState {
     var visibleThreads: [MailThread] {
         switch selectedNavItem {
         case .today, .important:
-            return threads.filter { $0.labels.contains("IMPORTANT") }
+            return threads.filter { $0.labels.contains("IMPORTANT") || $0.needsReply }
         case .trips:
-            return threads.filter { thread in
-                thread.intelligenceResults.contains { if case .flightInfo = $0 { return true } else if case .packageTracking = $0 { return true }; return false }
-            }
+            return threads.filter { $0.intelligenceResults.contains { if case .flightInfo = $0 { return true }; if case .packageTracking = $0 { return true }; return false } }
         case .subscriptions:
-            return threads.filter { thread in
-                thread.intelligenceResults.contains { if case .bill = $0 { return true }; return false }
-            }
+            return threads.filter { $0.intelligenceResults.contains { if case .bill = $0 { return true }; return false } }
         default:
             return threads.filter { $0.labels.contains("INBOX") }
         }
     }
 
-    enum SyncStatus {
-        case syncing, synced, offline, error(String)
-    }
+    // Internal
+    private var gmailClient: GmailAPIClient?
+    private let keychain = KeychainStore()
+    private let tokenKey = "oauth_tokens_primary"
 
-    init() {
-        #if DEBUG
-        threads = MockData.threads
-        accounts = MockData.accounts
-        selectedThreadID = MockData.threads.first?.id
-        #endif
-    }
+    // MARK: - Lifecycle
 
-    func selectThread(_ id: String?) {
-        withAnimation(.easeInOut(duration: 0.12)) {
-            selectedThreadID = id
+    func bootstrap() async {
+        if let data = try? keychain.getData(forKey: tokenKey),
+           let tokens = try? JSONDecoder().decode(OAuthTokens.self, from: data) {
+            await connectClient(tokens: tokens)
+        } else {
+            loadMockData()
         }
     }
 
+    // MARK: - Auth
+
+    func signInWithGmail() async {
+        isLoading = true
+        syncError = nil
+
+        do {
+            let service = AuthService(clientID: Secrets.gmailClientID, clientSecret: Secrets.gmailClientSecret)
+            let tokens = try await service.authenticate { url in
+                Task { @MainActor in NSWorkspace.shared.open(url) }
+            }
+            try? keychain.setData(JSONEncoder().encode(tokens), forKey: tokenKey)
+            await connectClient(tokens: tokens)
+        } catch {
+            syncError = error.localizedDescription
+        }
+
+        isLoading = false
+    }
+
+    func signOut() {
+        keychain.delete(forKey: tokenKey)
+        gmailClient = nil
+        isAuthenticated = false
+        threads = []
+        accounts = []
+        selectedThreadID = nil
+        loadMockData()
+    }
+
+    // MARK: - Sync
+
+    func syncInbox() async {
+        guard let client = gmailClient else { return }
+        isLoading = true
+        syncError = nil
+
+        do {
+            let profile = try await client.getProfile()
+            accounts = [Account(
+                id: "primary",
+                email: profile.emailAddress,
+                displayName: profile.emailAddress.components(separatedBy: "@").first?.capitalized,
+                provider: .gmail,
+                color: .blue
+            )]
+
+            let fetched = try await client.syncInbox()
+            threads = fetched
+            if selectedThreadID == nil { selectedThreadID = threads.first?.id }
+
+            // Persist refreshed tokens back to Keychain
+            let updated = await client.currentTokens()
+            try? keychain.setData(JSONEncoder().encode(updated), forKey: tokenKey)
+        } catch {
+            syncError = error.localizedDescription
+        }
+
+        isLoading = false
+    }
+
+    // MARK: - Thread actions
+
+    func selectThread(_ id: String?) {
+        withAnimation(.easeInOut(duration: 0.12)) { selectedThreadID = id }
+    }
+
     func advance() {
-        guard let currentID = selectedThreadID,
-              let idx = visibleThreads.firstIndex(where: { $0.id == currentID }),
+        guard let id = selectedThreadID,
+              let idx = visibleThreads.firstIndex(where: { $0.id == id }),
               idx + 1 < visibleThreads.count
         else { return }
         selectedThreadID = visibleThreads[idx + 1].id
     }
 
     func retreat() {
-        guard let currentID = selectedThreadID,
-              let idx = visibleThreads.firstIndex(where: { $0.id == currentID }),
+        guard let id = selectedThreadID,
+              let idx = visibleThreads.firstIndex(where: { $0.id == id }),
               idx > 0
         else { return }
         selectedThreadID = visibleThreads[idx - 1].id
     }
 
     func markRead(_ id: String) {
-        if let idx = threads.firstIndex(where: { $0.id == id }) {
-            threads[idx].isRead = true
-        }
+        if let i = threads.firstIndex(where: { $0.id == id }) { threads[i].isRead = true }
     }
 
     func archive(_ id: String) {
         threads.removeAll { $0.id == id }
-        // TODO: send gmail.modify patch via GmailAPIClient
+    }
+
+    // MARK: - Private helpers
+
+    private func connectClient(tokens: OAuthTokens) async {
+        let client = GmailAPIClient(
+            tokens: tokens,
+            clientID: Secrets.gmailClientID,
+            clientSecret: Secrets.gmailClientSecret,
+            accountID: "primary"
+        )
+        gmailClient = client
+        isAuthenticated = true
+        await syncInbox()
+    }
+
+    private func loadMockData() {
+        #if DEBUG
+        threads = MockData.threads
+        accounts = MockData.accounts
+        selectedThreadID = MockData.threads.first?.id
+        #endif
     }
 }
