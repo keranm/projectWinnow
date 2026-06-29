@@ -11,6 +11,15 @@ public struct MailThread: Identifiable, Sendable {
     public var isStarred: Bool
     public var lastMessageDate: Date
 
+    // Triage
+    public var needsReply: Bool
+    public var hasDraftReady: Bool
+
+    // On-device intelligence (tier 2/3 outputs)
+    public var summary: String?
+    public var suggestedReplies: [String]
+    public var intelligenceResults: [IntelligenceResult]
+
     public init(
         id: String,
         accountID: String,
@@ -20,7 +29,12 @@ public struct MailThread: Identifiable, Sendable {
         labels: Set<String> = [],
         isRead: Bool = false,
         isStarred: Bool = false,
-        lastMessageDate: Date
+        lastMessageDate: Date,
+        needsReply: Bool = false,
+        hasDraftReady: Bool = false,
+        summary: String? = nil,
+        suggestedReplies: [String] = [],
+        intelligenceResults: [IntelligenceResult] = []
     ) {
         self.id = id
         self.accountID = accountID
@@ -31,5 +45,10 @@ public struct MailThread: Identifiable, Sendable {
         self.isRead = isRead
         self.isStarred = isStarred
         self.lastMessageDate = lastMessageDate
+        self.needsReply = needsReply
+        self.hasDraftReady = hasDraftReady
+        self.summary = summary
+        self.suggestedReplies = suggestedReplies
+        self.intelligenceResults = intelligenceResults
     }
 }

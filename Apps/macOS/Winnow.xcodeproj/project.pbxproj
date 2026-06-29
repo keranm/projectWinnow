@@ -1,0 +1,425 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1D93D66BE2E6E15FA7135A55 /* ThreadListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 599FF8EA65BD502CED244223 /* ThreadListView.swift */; };
+		20F3228A7974B704A4B39A5B /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2F75367F63C93D25CE6036 /* RootView.swift */; };
+		25C96B799C27D18C72B85E92 /* MailContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D6D77278B8FF8C4563D3813 /* MailContentView.swift */; };
+		5AB5AACD27EAE80BFF7C5382 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1D6B8EECA4F740F52A2325 /* MockData.swift */; };
+		A2A9617E1CE561233D3C1158 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9001E3F8A44E8C83F5621D55 /* TodayView.swift */; };
+		A3E80596F802901F4DB8D667 /* ReadingPaneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 475EB32FAE5A75CBE6674C50 /* ReadingPaneView.swift */; };
+		BD3DA47C794B12A5FC41508D /* WinnowUI in Frameworks */ = {isa = PBXBuildFile; productRef = 51BB0E31B28E644545F84B9D /* WinnowUI */; };
+		C60F1AC83C0586BD0DD93129 /* ThreadRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2D1A3D8A4CC83CE18DFC152 /* ThreadRowView.swift */; };
+		CBB8F21BD721799A3BD0A3C7 /* EmptySelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99B35E428690A0A8F77D7292 /* EmptySelectionView.swift */; };
+		D03FC023CB5E2B0DE4AE8D84 /* WinnowCore in Frameworks */ = {isa = PBXBuildFile; productRef = 485B8EC29AB4A84D0D841C5B /* WinnowCore */; };
+		D8AF38196F6ACA4E80A44B3B /* WinnowApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CFE9036DBC5CD37B4073240 /* WinnowApp.swift */; };
+		DE82217E69D34EFA50A38E26 /* NavItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2848D76D6E58005ECB79B5FD /* NavItem.swift */; };
+		E6E3D8AA952BD661732393BB /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614F311C47862DEB5F65ED36 /* AppState.swift */; };
+		EAD294BD56CC91BE96C359DA /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAED9DDBB02AB395DEB79C9F /* SidebarView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		07378EC9CE2C7D6FD73EE4F1 /* Winnow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Winnow.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0CFE9036DBC5CD37B4073240 /* WinnowApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WinnowApp.swift; sourceTree = "<group>"; };
+		2848D76D6E58005ECB79B5FD /* NavItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavItem.swift; sourceTree = "<group>"; };
+		475EB32FAE5A75CBE6674C50 /* ReadingPaneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPaneView.swift; sourceTree = "<group>"; };
+		599FF8EA65BD502CED244223 /* ThreadListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadListView.swift; sourceTree = "<group>"; };
+		5C2F75367F63C93D25CE6036 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		614F311C47862DEB5F65ED36 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		6D6D77278B8FF8C4563D3813 /* MailContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailContentView.swift; sourceTree = "<group>"; };
+		9001E3F8A44E8C83F5621D55 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
+		99B35E428690A0A8F77D7292 /* EmptySelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptySelectionView.swift; sourceTree = "<group>"; };
+		C1ABC2DCAE9CED9599FD7DF7 /* WinnowUI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = WinnowUI; path = ../../Packages/WinnowUI; sourceTree = SOURCE_ROOT; };
+		CAED9DDBB02AB395DEB79C9F /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
+		E2D1A3D8A4CC83CE18DFC152 /* ThreadRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadRowView.swift; sourceTree = "<group>"; };
+		EA59891F23B37056683DE2D1 /* WinnowCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = WinnowCore; path = ../../Packages/WinnowCore; sourceTree = SOURCE_ROOT; };
+		EC1D6B8EECA4F740F52A2325 /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		93EF1370B4B1A570EBCC5C31 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D03FC023CB5E2B0DE4AE8D84 /* WinnowCore in Frameworks */,
+				BD3DA47C794B12A5FC41508D /* WinnowUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1C171D93C12869780CCA161E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				99B35E428690A0A8F77D7292 /* EmptySelectionView.swift */,
+				5C2F75367F63C93D25CE6036 /* RootView.swift */,
+				79FDD361E2286C7DE3492DB2 /* Mail */,
+				9E0C081C09DA06544B2FA8EF /* Sidebar */,
+				2D67CB88151A045CFD70A72C /* Today */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2D67CB88151A045CFD70A72C /* Today */ = {
+			isa = PBXGroup;
+			children = (
+				9001E3F8A44E8C83F5621D55 /* TodayView.swift */,
+			);
+			path = Today;
+			sourceTree = "<group>";
+		};
+		6E7511C92E00174257DD96F9 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				EA59891F23B37056683DE2D1 /* WinnowCore */,
+				C1ABC2DCAE9CED9599FD7DF7 /* WinnowUI */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		79FDD361E2286C7DE3492DB2 /* Mail */ = {
+			isa = PBXGroup;
+			children = (
+				6D6D77278B8FF8C4563D3813 /* MailContentView.swift */,
+				475EB32FAE5A75CBE6674C50 /* ReadingPaneView.swift */,
+				599FF8EA65BD502CED244223 /* ThreadListView.swift */,
+				E2D1A3D8A4CC83CE18DFC152 /* ThreadRowView.swift */,
+			);
+			path = Mail;
+			sourceTree = "<group>";
+		};
+		82F6AC2B376FC580297DB904 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				07378EC9CE2C7D6FD73EE4F1 /* Winnow.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8A6836204117A0B052E83048 = {
+			isa = PBXGroup;
+			children = (
+				6E7511C92E00174257DD96F9 /* Packages */,
+				E83D80F2CAC89AB8C28BDD80 /* Sources */,
+				82F6AC2B376FC580297DB904 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9E0C081C09DA06544B2FA8EF /* Sidebar */ = {
+			isa = PBXGroup;
+			children = (
+				CAED9DDBB02AB395DEB79C9F /* SidebarView.swift */,
+			);
+			path = Sidebar;
+			sourceTree = "<group>";
+		};
+		E83D80F2CAC89AB8C28BDD80 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				614F311C47862DEB5F65ED36 /* AppState.swift */,
+				EC1D6B8EECA4F740F52A2325 /* MockData.swift */,
+				2848D76D6E58005ECB79B5FD /* NavItem.swift */,
+				0CFE9036DBC5CD37B4073240 /* WinnowApp.swift */,
+				1C171D93C12869780CCA161E /* Views */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D6436125C91D3F13BD3188A2 /* Winnow */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2EEF686FAAFF6D6BCF9CC89E /* Build configuration list for PBXNativeTarget "Winnow" */;
+			buildPhases = (
+				E8345941BD83E2639B9514B4 /* Sources */,
+				93EF1370B4B1A570EBCC5C31 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Winnow;
+			packageProductDependencies = (
+				485B8EC29AB4A84D0D841C5B /* WinnowCore */,
+				51BB0E31B28E644545F84B9D /* WinnowUI */,
+			);
+			productName = Winnow;
+			productReference = 07378EC9CE2C7D6FD73EE4F1 /* Winnow.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5FC5024A51102264CC023049 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 80993737B8C67880D29C999F /* Build configuration list for PBXProject "Winnow" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 8A6836204117A0B052E83048;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				9FE668A24E75B2E771CF6178 /* XCLocalSwiftPackageReference "../../Packages/WinnowCore" */,
+				235E278124D12036FF3F3DE0 /* XCLocalSwiftPackageReference "../../Packages/WinnowUI" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 82F6AC2B376FC580297DB904 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D6436125C91D3F13BD3188A2 /* Winnow */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E8345941BD83E2639B9514B4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E6E3D8AA952BD661732393BB /* AppState.swift in Sources */,
+				CBB8F21BD721799A3BD0A3C7 /* EmptySelectionView.swift in Sources */,
+				25C96B799C27D18C72B85E92 /* MailContentView.swift in Sources */,
+				5AB5AACD27EAE80BFF7C5382 /* MockData.swift in Sources */,
+				DE82217E69D34EFA50A38E26 /* NavItem.swift in Sources */,
+				A3E80596F802901F4DB8D667 /* ReadingPaneView.swift in Sources */,
+				20F3228A7974B704A4B39A5B /* RootView.swift in Sources */,
+				EAD294BD56CC91BE96C359DA /* SidebarView.swift in Sources */,
+				1D93D66BE2E6E15FA7135A55 /* ThreadListView.swift in Sources */,
+				C60F1AC83C0586BD0DD93129 /* ThreadRowView.swift in Sources */,
+				A2A9617E1CE561233D3C1158 /* TodayView.swift in Sources */,
+				D8AF38196F6ACA4E80A44B3B /* WinnowApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2BE45AE98575571879BEF126 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Resources/Winnow.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_TESTABILITY = YES;
+				INFOPLIST_FILE = Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.keranm.winnow;
+				PRODUCT_NAME = Winnow;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		592386A5CEFF7CC6FDE02FD8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		C18FA0FE13CA4D99A7A63996 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		E0A11754C9932733CB581AFC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Resources/Winnow.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.keranm.winnow;
+				PRODUCT_NAME = Winnow;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2EEF686FAAFF6D6BCF9CC89E /* Build configuration list for PBXNativeTarget "Winnow" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2BE45AE98575571879BEF126 /* Debug */,
+				E0A11754C9932733CB581AFC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		80993737B8C67880D29C999F /* Build configuration list for PBXProject "Winnow" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C18FA0FE13CA4D99A7A63996 /* Debug */,
+				592386A5CEFF7CC6FDE02FD8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		235E278124D12036FF3F3DE0 /* XCLocalSwiftPackageReference "../../Packages/WinnowUI" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Packages/WinnowUI;
+		};
+		9FE668A24E75B2E771CF6178 /* XCLocalSwiftPackageReference "../../Packages/WinnowCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Packages/WinnowCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		485B8EC29AB4A84D0D841C5B /* WinnowCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = WinnowCore;
+		};
+		51BB0E31B28E644545F84B9D /* WinnowUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = WinnowUI;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 5FC5024A51102264CC023049 /* Project object */;
+}

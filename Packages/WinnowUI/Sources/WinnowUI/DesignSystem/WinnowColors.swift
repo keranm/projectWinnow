@@ -1,37 +1,85 @@
 import SwiftUI
+#if os(macOS)
+import AppKit
+#else
+import UIKit
+#endif
 
 public extension Color {
     // MARK: - Text
-    static let winnowText = Color(hex: "1C1C20")
-    static let winnowTextSecondary = Color(hex: "55555C")
-    static let winnowTextTertiary = Color(hex: "9A9AA0")
+    static let winnowText           = adaptive(light: "1C1C20", dark: "F2F2F5")
+    static let winnowTextSecondary  = adaptive(light: "55555C", dark: "A0A0A8")
+    static let winnowTextTertiary   = adaptive(light: "9A9AA0", dark: "6A6A72")
 
     // MARK: - Backgrounds
-    static let winnowSidebar = Color(hex: "FAFAFA")
-    static let winnowSurface = Color(hex: "FFFFFF")
-    static let winnowStage = Color(hex: "ECECED")
+    static let winnowSidebar        = adaptive(light: "FAFAFA", dark: "161617")
+    static let winnowSurface        = adaptive(light: "FFFFFF", dark: "1C1C1E")
+    static let winnowStage          = adaptive(light: "ECECED", dark: "0E0E10")
 
     // MARK: - Accent
-    static let winnowAccent = Color(hex: "2F6BDB")
-    static let winnowAccentTint = Color(hex: "EEF3FC")
+    static let winnowAccent         = adaptive(light: "2F6BDB", dark: "4F8EF0")
+    static let winnowAccentTint     = adaptive(light: "EEF3FC", dark: "20304D")
 
     // MARK: - Semantic
-    static let winnowSuccess = Color(hex: "2F9E6F")
-    static let winnowCaution = Color(hex: "C08A4A")
-    static let winnowAlert = Color(hex: "D9534F")
+    static let winnowSuccess        = adaptive(light: "2F9E6F", dark: "3DB87F")
+    static let winnowCaution        = adaptive(light: "C08A4A", dark: "D4A562")
+    static let winnowAlert          = adaptive(light: "D9534F", dark: "E86560")
 
     // MARK: - Controls
-    static let winnowToggleOff = Color(hex: "D8D8DE")
+    static let winnowToggleOff      = adaptive(light: "D8D8DE", dark: "48484A")
+
+    // MARK: - Hex initializer
+    init(hex: String) {
+        let clean = hex.hasPrefix("#") ? String(hex.dropFirst()) : hex
+        let scanner = Scanner(string: clean)
+        var rgb: UInt64 = 0
+        scanner.scanHexInt64(&rgb)
+        self.init(
+            red:   Double((rgb >> 16) & 0xFF) / 255,
+            green: Double((rgb >> 8)  & 0xFF) / 255,
+            blue:  Double( rgb        & 0xFF) / 255
+        )
+    }
 }
 
-extension Color {
-    init(hex: String) {
+// Adaptive helper — avoids the NSColor/UIColor closure capture problem by
+// resolving the NSColor/UIColor values before entering the dynamic-provider block.
+private extension Color {
+    static func adaptive(light lightHex: String, dark darkHex: String) -> Color {
+        #if os(macOS)
+        let light = platformColor(hex: lightHex)
+        let dark  = platformColor(hex: darkHex)
+        return Color(NSColor(name: nil) { $0.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua ? dark : light })
+        #else
+        let light = platformColor(hex: lightHex)
+        let dark  = platformColor(hex: darkHex)
+        return Color(UIColor { $0.userInterfaceStyle == .dark ? dark : light })
+        #endif
+    }
+
+    #if os(macOS)
+    static func platformColor(hex: String) -> NSColor {
         let scanner = Scanner(string: hex)
         var rgb: UInt64 = 0
         scanner.scanHexInt64(&rgb)
-        let r = Double((rgb >> 16) & 0xFF) / 255
-        let g = Double((rgb >> 8) & 0xFF) / 255
-        let b = Double(rgb & 0xFF) / 255
-        self.init(red: r, green: g, blue: b)
+        return NSColor(
+            red:   Double((rgb >> 16) & 0xFF) / 255,
+            green: Double((rgb >> 8)  & 0xFF) / 255,
+            blue:  Double( rgb        & 0xFF) / 255,
+            alpha: 1
+        )
     }
+    #else
+    static func platformColor(hex: String) -> UIColor {
+        let scanner = Scanner(string: hex)
+        var rgb: UInt64 = 0
+        scanner.scanHexInt64(&rgb)
+        return UIColor(
+            red:   Double((rgb >> 16) & 0xFF) / 255,
+            green: Double((rgb >> 8)  & 0xFF) / 255,
+            blue:  Double( rgb        & 0xFF) / 255,
+            alpha: 1
+        )
+    }
+    #endif
 }
