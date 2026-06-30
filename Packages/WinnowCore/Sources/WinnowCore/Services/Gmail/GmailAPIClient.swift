@@ -30,11 +30,13 @@ public actor GmailAPIClient {
     }
 
     func getThread(_ id: String, format: String = "metadata") async throws -> GmailThread {
-        var params = ["format": format]
-        if format == "metadata" {
-            params["metadataHeaders"] = "From,To,Subject,Date"
-        }
-        return try await get("threads/\(id)", params: params, as: GmailThread.self)
+        try await get("threads/\(id)", params: ["format": format], as: GmailThread.self)
+    }
+
+    /// Fetches a thread with full body content for rendering in the reading pane.
+    public func getFullThread(_ id: String) async throws -> MailThread {
+        let thread: GmailThread = try await get("threads/\(id)", params: ["format": "full"], as: GmailThread.self)
+        return GmailMessageMapper.mapThread(thread, accountID: accountID)
     }
 
     /// High-level: lists threads then fetches metadata for each in parallel.

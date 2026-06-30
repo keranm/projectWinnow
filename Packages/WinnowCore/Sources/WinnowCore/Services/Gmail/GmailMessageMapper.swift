@@ -16,7 +16,7 @@ enum GmailMessageMapper {
             id: gmailThread.id,
             accountID: accountID,
             subject: subject,
-            snippet: gmailThread.messages?.last?.snippet ?? "",
+            snippet: (gmailThread.messages?.last?.snippet ?? "").decodingHTMLEntities,
             messages: messages,
             labels: labels,
             isRead: !labels.contains("UNREAD"),
@@ -30,7 +30,10 @@ enum GmailMessageMapper {
         let sub  = m.header("Subject") ?? "(No Subject)"
         let date = m.internalDate.flatMap(Double.init).map { Date(timeIntervalSince1970: $0 / 1000) } ?? Date()
 
-        let body: MessageBody? = m.plainTextBody.map { .plain($0) }
+        let body: MessageBody?
+        if let html = m.htmlBody      { body = .html(html) }
+        else if let plain = m.plainTextBody { body = .plain(plain) }
+        else                                { body = nil }
 
         return MailMessage(
             id: m.id,
@@ -39,7 +42,7 @@ enum GmailMessageMapper {
             from: from,
             to: to,
             subject: sub,
-            snippet: m.snippet ?? "",
+            snippet: (m.snippet ?? "").decodingHTMLEntities,
             body: body,
             date: date,
             labels: Set(m.labelIds ?? []),

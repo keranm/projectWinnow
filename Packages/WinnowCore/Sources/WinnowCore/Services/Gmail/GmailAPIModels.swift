@@ -54,18 +54,17 @@ struct GmailMessage: Decodable {
         payload?.headers?.first { $0.name.caseInsensitiveCompare(name) == .orderedSame }?.value
     }
 
-    /// Recursively extracts plain-text body from message parts.
-    var plainTextBody: String? {
-        extractPlainText(from: payload)
-    }
+    var plainTextBody: String? { extractBody(from: payload, mimeType: "text/plain") }
+    var htmlBody: String?      { extractBody(from: payload, mimeType: "text/html") }
 
-    private func extractPlainText(from part: Part?) -> String? {
+    private func extractBody(from part: Part?, mimeType: String) -> String? {
         guard let part else { return nil }
-        if part.mimeType == "text/plain", let data = part.body?.data {
+        if part.mimeType?.hasPrefix(mimeType) == true,
+           let data = part.body?.data, !data.isEmpty {
             return Data(base64URLEncoded: data).flatMap { String(data: $0, encoding: .utf8) }
         }
         for sub in part.parts ?? [] {
-            if let text = extractPlainText(from: sub) { return text }
+            if let result = extractBody(from: sub, mimeType: mimeType) { return result }
         }
         return nil
     }
@@ -77,6 +76,22 @@ public struct GmailProfile: Decodable, Sendable {
     public let emailAddress: String
     public let messagesTotal: Int?
     public let historyId: String?
+}
+
+// MARK: - HTML entity decoding
+
+extension String {
+    var decodingHTMLEntities: String {
+        guard contains("&") else { return self }
+        return self
+            .replacingOccurrences(of: "&amp;",  with: "&")
+            .replacingOccurrences(of: "&lt;",   with: "<")
+            .replacingOccurrences(of: "&gt;",   with: ">")
+            .replacingOccurrences(of: "&quot;", with: "\"")
+            .replacingOccurrences(of: "&#39;",  with: "'")
+            .replacingOccurrences(of: "&apos;", with: "'")
+            .replacingOccurrences(of: "&nbsp;", with: " ")
+    }
 }
 
 // MARK: - Data base64url helper

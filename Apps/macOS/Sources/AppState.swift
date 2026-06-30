@@ -42,6 +42,7 @@ final class AppState {
     private var gmailClient: GmailAPIClient?
     private let keychain = KeychainStore()
     private let tokenKey = "oauth_tokens_primary"
+    private var fullBodyLoadedIDs: Set<String> = []
 
     // MARK: - Lifecycle
 
@@ -141,6 +142,16 @@ final class AppState {
 
     func archive(_ id: String) {
         threads.removeAll { $0.id == id }
+    }
+
+    /// Fetches the full thread body on demand. Safe to call repeatedly — no-ops if already loaded.
+    func loadFullThread(_ id: String) async {
+        guard let client = gmailClient, !fullBodyLoadedIDs.contains(id) else { return }
+        guard let full = try? await client.getFullThread(id) else { return }
+        if let i = threads.firstIndex(where: { $0.id == id }) {
+            threads[i] = full
+        }
+        fullBodyLoadedIDs.insert(id)
     }
 
     // MARK: - Private helpers
