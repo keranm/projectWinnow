@@ -45,12 +45,10 @@ final class AppState {
     // MARK: - Lifecycle
 
     func bootstrap() async {
-        if let data = try? keychain.getData(forKey: tokenKey),
-           let tokens = try? JSONDecoder().decode(OAuthTokens.self, from: data) {
-            await connectClient(tokens: tokens)
-        } else {
-            loadMockData()
-        }
+        guard let data = try? keychain.getData(forKey: tokenKey),
+              let tokens = try? JSONDecoder().decode(OAuthTokens.self, from: data)
+        else { return }
+        await connectClient(tokens: tokens)
     }
 
     // MARK: - Auth
@@ -80,7 +78,6 @@ final class AppState {
         threads = []
         accounts = []
         selectedThreadID = nil
-        loadMockData()
     }
 
     // MARK: - Sync

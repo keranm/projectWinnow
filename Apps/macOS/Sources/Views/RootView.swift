@@ -7,7 +7,7 @@ struct RootView: View {
 
     var body: some View {
         Group {
-            if !appState.isAuthenticated && appState.threads.isEmpty {
+            if !appState.isAuthenticated {
                 ConnectAccountView()
                     .frame(minWidth: 500, minHeight: 400)
             } else {
