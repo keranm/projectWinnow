@@ -23,8 +23,7 @@ public actor GmailAPIClient {
 
     func listThreads(maxResults: Int = 25, labelIDs: [String] = ["INBOX"], pageToken: String? = nil) async throws -> GmailThreadsList {
         var params: [String: String] = ["maxResults": "\(maxResults)"]
-        for id in labelIDs { params["labelIds"] = id } // last wins — fine for single label
-        if !labelIDs.isEmpty { params["labelIds"] = labelIDs.joined(separator: "&labelIds=") }
+        if let label = labelIDs.first { params["labelIds"] = label }
         if let t = pageToken { params["pageToken"] = t }
         return try await get("threads", params: params, as: GmailThreadsList.self)
     }
@@ -40,11 +39,33 @@ public actor GmailAPIClient {
     }
 
     /// High-level: lists threads then fetches metadata for each in parallel.
-    public func syncInbox() async throws -> [MailThread] {
+    /// Returns (threads, nextPageToken) — pass the token to loadMoreThreads() to paginate.
+    public func syncInbox() async throws -> ([MailThread], nextPageToken: String?) {
         let listing = try await listThreads(maxResults: 25)
-        let stubs = listing.threads ?? []
-        guard !stubs.isEmpty else { return [] }
+        return (try await fetchThreads(stubs: listing.threads ?? []), listing.nextPageToken)
+    }
 
+    /// Fetches the next page of inbox threads.
+    public func loadMoreThreads(pageToken: String) async throws -> ([MailThread], nextPageToken: String?) {
+        let listing = try await listThreads(maxResults: 25, pageToken: pageToken)
+        return (try await fetchThreads(stubs: listing.threads ?? []), listing.nextPageToken)
+    }
+
+    /// Sends a new outbound message (not threaded — use sendReply for replies).
+    public func sendNew(from: String, to: [String], subject: String, plainBody: String) async throws {
+        let mime = [
+            "From: \(from)",
+            "To: \(to.joined(separator: ", "))",
+            "Subject: \(subject)",
+            "MIME-Version: 1.0",
+            "Content-Type: text/plain; charset=UTF-8"
+        ].joined(separator: "\r\n") + "\r\n\r\n" + plainBody
+        struct SendBody: Encodable { let raw: String }
+        try await postJSON("messages/send", body: SendBody(raw: Data(mime.utf8).base64URLEncoded()))
+    }
+
+    private func fetchThreads(stubs: [GmailThreadsList.GmailThreadStub]) async throws -> [MailThread] {
+        guard !stubs.isEmpty else { return [] }
         var results: [MailThread] = []
         try await withThrowingTaskGroup(of: MailThread.self) { group in
             for stub in stubs {
@@ -53,9 +74,7 @@ public actor GmailAPIClient {
                     return GmailMessageMapper.mapThread(t, accountID: self.accountID)
                 }
             }
-            for try await thread in group {
-                results.append(thread)
-            }
+            for try await thread in group { results.append(thread) }
         }
         return results.sorted { $0.lastMessageDate > $1.lastMessageDate }
     }

@@ -9,7 +9,7 @@ struct ThreadListView: View {
 
             Divider()
 
-            if appState.visibleThreads.isEmpty {
+            if appState.visibleThreads.isEmpty && !appState.isLoading {
                 emptyState
             } else {
                 ScrollView {
@@ -22,6 +22,11 @@ struct ThreadListView: View {
                                 appState.markRead(thread.id)
                             }
                             Divider().padding(.leading, 36).opacity(0.5)
+                        }
+
+                        // Load more footer
+                        if appState.hasMoreThreads {
+                            loadMoreRow
                         }
                     }
                 }
@@ -42,15 +47,52 @@ struct ThreadListView: View {
             Text(appState.selectedNavItem.title)
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(Color.winnowText)
+
             Spacer()
-            if appState.visibleThreads.contains(where: { !$0.isRead }) {
-                Text("\(appState.visibleThreads.filter { !$0.isRead }.count)")
+
+            let unread = appState.visibleThreads.filter { !$0.isRead }.count
+            if unread > 0 {
+                Text("\(unread)")
                     .font(.system(size: 11, weight: .medium, design: .monospaced))
                     .foregroundStyle(Color.winnowAccent)
             }
+
+            Button {
+                Task { await appState.syncInbox() }
+            } label: {
+                Image(systemName: appState.isLoading ? "arrow.clockwise" : "arrow.clockwise")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(Color.winnowTextTertiary)
+                    .rotationEffect(appState.isLoading ? .degrees(360) : .zero)
+                    .animation(appState.isLoading
+                        ? .linear(duration: 1).repeatForever(autoreverses: false)
+                        : .default, value: appState.isLoading)
+            }
+            .buttonStyle(.plain)
+            .help("Refresh (⌘R)")
+            .padding(.leading, 4)
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 11)
+    }
+
+    private var loadMoreRow: some View {
+        Button {
+            Task { await appState.loadMore() }
+        } label: {
+            HStack(spacing: 8) {
+                if appState.isLoadingMore {
+                    ProgressView().scaleEffect(0.65)
+                }
+                Text(appState.isLoadingMore ? "Loading…" : "Load more")
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundStyle(Color.winnowTextSecondary)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 14)
+        }
+        .buttonStyle(.plain)
+        .disabled(appState.isLoadingMore)
     }
 
     private var emptyState: some View {

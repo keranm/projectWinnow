@@ -18,7 +18,8 @@ struct RootView: View {
     }
 
     private var mainLayout: some View {
-        NavigationSplitView(columnVisibility: $columnVisibility) {
+        @Bindable var state = appState
+        return NavigationSplitView(columnVisibility: $columnVisibility) {
             SidebarView()
                 .navigationSplitViewColumnWidth(min: 212, ideal: 220, max: 228)
         } detail: {
@@ -31,13 +32,12 @@ struct RootView: View {
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(Color.winnowTextTertiary)
             }
-            ToolbarItem(placement: .status) {
-                if appState.isLoading {
-                    ProgressView().scaleEffect(0.6)
-                }
-            }
         }
         .background(Color.winnowStage)
+        .sheet(isPresented: $state.isComposing) {
+            ComposeView(isPresented: $state.isComposing)
+                .environment(appState)
+        }
     }
 
     @ViewBuilder

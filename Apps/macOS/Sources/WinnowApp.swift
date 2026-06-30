@@ -15,22 +15,54 @@ struct WinnowApp: App {
         .defaultPosition(.center)
         .commands {
             CommandGroup(replacing: .newItem) {}
-            CommandMenu("Mail") {
-                Button("Compose") {}
-                    .keyboardShortcut("n", modifiers: .command)
+
+            CommandGroup(after: .appInfo) {
                 Divider()
-                Button("Archive") {}
-                    .keyboardShortcut("e", modifiers: [])
-                Button("Reply") {}
-                    .keyboardShortcut("r", modifiers: [])
+                Button("Sign Out") { appState.signOut() }
             }
+
+            CommandMenu("Mail") {
+                Button("Compose New") { appState.isComposing = true }
+                    .keyboardShortcut("n", modifiers: .command)
+
+                Divider()
+
+                Button("Refresh") { Task { await appState.syncInbox() } }
+                    .keyboardShortcut("r", modifiers: .command)
+
+                Divider()
+
+                Button("Archive") {
+                    if let id = appState.selectedThreadID { appState.archive(id) }
+                }
+                .keyboardShortcut("e", modifiers: [])
+
+                Button("Mark as Read") {
+                    if let id = appState.selectedThreadID { appState.markRead(id) }
+                }
+                .keyboardShortcut("m", modifiers: [])
+            }
+
             CommandMenu("Navigate") {
-                Button("Next Thread") {}
+                Button("Today") { appState.selectedNavItem = .today }
+                    .keyboardShortcut("1", modifiers: .command)
+
+                Button("Inbox") { appState.selectedNavItem = .other }
+                    .keyboardShortcut("2", modifiers: .command)
+
+                Button("Trips & Deliveries") { appState.selectedNavItem = .trips }
+                    .keyboardShortcut("3", modifiers: .command)
+
+                Button("Subscriptions") { appState.selectedNavItem = .subscriptions }
+                    .keyboardShortcut("4", modifiers: .command)
+
+                Divider()
+
+                Button("Next Thread") { appState.advance() }
                     .keyboardShortcut("j", modifiers: [])
-                Button("Previous Thread") {}
+
+                Button("Previous Thread") { appState.retreat() }
                     .keyboardShortcut("k", modifiers: [])
-                Button("Back to List") {}
-                    .keyboardShortcut("u", modifiers: [])
             }
         }
     }
