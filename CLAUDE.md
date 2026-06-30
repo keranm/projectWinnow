@@ -35,6 +35,29 @@ See `docs/architecture.md` for the full picture. Key rules:
 - Apple Foundation Models / MLX (tier 3, off by default)
 - EventKit for calendar free/busy
 
+## Current implementation status (as of 2026-06-30)
+
+**Working end-to-end:**
+- Gmail OAuth PKCE → Keychain → live inbox sync every 5 min
+- 3-pane mail layout: sidebar nav, thread list, reading pane with HTML rendering
+- Reply (with threading) and compose new (⌘N)
+- Archive (`e`), mark-read (`m`), pagination, keyboard navigation (j/k)
+- Today screen: greeting, needs-reply, due-soon, trips/deliveries cards
+- Intelligence Tier 1: `PackageExtractor`, `FlightExtractor`, `BillExtractor` (regex-based, on-device)
+- Settings window (⌘,): Accounts/Identities, Signatures, Snippets, Intelligence, General, Shortcuts, Lab
+- Signatures: auto-appended in compose and on first reply-field focus
+- Signing config locked in `project.yml` — no provisioning-profile errors after xcodegen
+
+**Not yet built (priority order):**
+1. Search (`Winnow Accounts & Search.dc.html`)
+2. Snooze (`Winnow Snooze & Projects.dc.html`)
+3. Rules / smart routing (`Winnow Notifications & Rules.dc.html`)
+4. Calendar free/busy — EventKit scope already planned (ADR 003)
+5. Dark mode — token system supports it; dark variants may be incomplete
+6. iOS companion target
+7. Push notifications
+8. iCloud KV Store for settings (currently UserDefaults — CLAUDE.md says KV Store)
+
 ## Design language — "Quiet"
 
 Near-monochrome, generous whitespace, hairline dividers, minimal colour, rare motion.
@@ -44,6 +67,7 @@ Near-monochrome, generous whitespace, hairline dividers, minimal colour, rare mo
 - Selected row: `accentTint` background + 2px accent bar on the leading edge
 - SF Pro (system-ui) for all text; SF Mono (ui-monospace) for times, amounts, tracking numbers, shortcuts
 - Replace all Unicode glyphs in the mocks with SF Symbols (see `docs/design-system.md` glyph mapping)
+- **Text colour hierarchy (4 levels):** `winnowText` → `winnowTextSubdued` → `winnowTextSecondary` → `winnowTextTertiary` → `winnowTextQuaternary`
 
 ## ADRs
 
@@ -58,14 +82,41 @@ Architectural decisions that are settled — don't re-litigate without a new iss
 - Issues tracked on GitHub: https://github.com/keranm/projectWinnow/issues
 - Branch naming: `feat/`, `fix/`, `chore/`, `refactor/`, `docs/`, `design/`
 - PRs: one logical change, one approval before merge
+- **Push directly to `main`** — Keran has granted blanket permission for this project
 
 ## Common tasks
 
+**After any new Swift file is added / directory structure changes:**
+```
+cd /Users/keran/Development/projectWinnow/Apps/macOS
+xcodegen generate
+```
+This regenerates `Winnow.xcodeproj`. The `project.yml` already has signing locked in (`CODE_SIGN_STYLE: Automatic`, `DEVELOPMENT_TEAM: AUEPCDGA5G`) so the provisioning error won't reappear.
+
 **Adding a new screen:**
 1. Check the corresponding `.dc.html` file in `design_handoff_winnow/`
-2. Create the view in `Packages/WinnowUI/Sources/WinnowUI/` or the app target
+2. Create the view in `Packages/WinnowUI/Sources/WinnowUI/` or the app target under `Apps/macOS/Sources/Views/`
 3. Use design tokens from `WinnowColors`, `WinnowTypography`, `WinnowSpacing`
 4. Add the assist diamond wherever intelligence results appear
+5. Run `xcodegen generate` then build
+
+**Avatar colours (sender initials):**
+Hash-based palette used consistently across Today, sidebar, and reading pane:
+```swift
+let palette: [(bg: String, fg: String)] = [
+    ("fbe7ea","c0566c"), ("e8eafb","5a5fc0"), ("e4f0e8","4f9168"),
+    ("f3ece0","a07d3a"), ("dbe6f8","2f6bdb"), ("eef0f4","6a7184"),
+]
+let idx = abs(identifier.hashValue) % palette.count
+```
+Use the sender's email as the hash key for consistency across sessions.
+
+**Adding a new setting:**
+1. Check `Winnow Settings.dc.html` for the UI spec
+2. Add the property to `WinnowSettings` (`Apps/macOS/Sources/Settings/WinnowSettings.swift`)
+3. Add `save()` / `load()` entries for the new property
+4. Note: currently persists to UserDefaults — the intent (CLAUDE.md + ADR) is iCloud KV Store; migrate when implementing cross-device sync
+5. `WinnowSettings` is a singleton injected via `.environment(appState.settings)` — do NOT create a second instance
 
 **Adding a new intelligence extraction:**
 1. Determine which tier (deterministic regex → Core ML → Foundation Models)
@@ -73,7 +124,5 @@ Architectural decisions that are settled — don't re-litigate without a new iss
 3. Register in `ExtractionPipeline`
 4. Unit test the deterministic path exhaustively
 
-**Adding a new setting:**
-1. Check `Winnow Settings.dc.html` for the UI spec
-2. Persist in iCloud Key-Value Store (not UserDefaults) for cross-device sync
-3. No server-side storage
+**SourceKit "No such module" errors:**
+These are pre-build LSP false alarms — the packages aren't resolved until Xcode builds. Run the build; it succeeds. Ignore SourceKit squiggles on `import WinnowCore` / `import WinnowUI`.
