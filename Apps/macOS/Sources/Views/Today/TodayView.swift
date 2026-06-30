@@ -6,414 +6,464 @@ import WinnowUI
 struct TodayView: View {
     @Environment(AppState.self) private var appState
 
+    // MARK: - Derived data
+
     private var hour: Int { Calendar.current.component(.hour, from: Date()) }
 
     private var greeting: String {
-        let name = appState.accounts.first?.displayName?
+        let first = appState.accounts.first?.displayName?
             .components(separatedBy: " ").first ?? "there"
         switch hour {
-        case 0..<12:  return "Good morning, \(name)"
-        case 12..<18: return "Good afternoon, \(name)"
-        default:       return "Good evening, \(name)"
+        case 0..<12:  return "Good morning, \(first)"
+        case 12..<18: return "Good afternoon, \(first)"
+        default:       return "Good evening, \(first)"
         }
     }
 
     private var dateString: String {
-        Date().formatted(.dateTime.weekday(.wide).month(.wide).day())
+        let f = Date.FormatStyle().weekday(.wide).month(.wide).day()
+        return Date().formatted(f)
     }
 
-    private var needsReplyThreads: [MailThread] { appState.threads.filter { $0.needsReply } }
-    private var packageThreads: [MailThread] {
-        appState.threads.filter { t in t.intelligenceResults.contains { if case .packageTracking = $0 { return true }; return false } }
+    private var needsReplyThreads: [MailThread] {
+        // Use flagged/important threads as proxy until sent-folder analysis lands
+        let nr = appState.threads.filter { $0.needsReply }
+        if !nr.isEmpty { return Array(nr.prefix(5)) }
+        return Array(appState.threads.filter { $0.labels.contains("IMPORTANT") }.prefix(3))
     }
-    private var flightThreads: [MailThread] {
-        appState.threads.filter { t in t.intelligenceResults.contains { if case .flightInfo = $0 { return true }; return false } }
-    }
+
     private var billThreads: [MailThread] {
-        appState.threads.filter { t in t.intelligenceResults.contains { if case .bill = $0 { return true }; return false } }
+        appState.threads.filter { t in
+            t.intelligenceResults.contains { if case .bill = $0 { return true }; return false }
+        }
     }
-    private var recentThreads: [MailThread] { Array(appState.threads.prefix(7)) }
+
+    private var packageThreads: [MailThread] {
+        appState.threads.filter { t in
+            t.intelligenceResults.contains { if case .packageTracking = $0 { return true }; return false }
+        }
+    }
+
+    private var flightThreads: [MailThread] {
+        appState.threads.filter { t in
+            t.intelligenceResults.contains { if case .flightInfo = $0 { return true }; return false }
+        }
+    }
+
+    private var tripThreads: [MailThread] { flightThreads + packageThreads }
+
+    private var totalBillAmount: Double {
+        billThreads.compactMap { t in
+            for r in t.intelligenceResults { if case .bill(let b) = r { return b.amount } }
+            return nil
+        }.reduce(0, +)
+    }
+
+    // MARK: - Body
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
-                // ── Greeting header ─────────────────────────────────────────
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(greeting)
-                            .font(WinnowTypography.display)
-                            .foregroundStyle(Color.winnowText)
-                            .tracking(-0.6)
-
-                        Text(dateString)
-                            .font(WinnowTypography.body)
-                            .foregroundStyle(Color.winnowTextTertiary)
-                    }
-
-                    Spacer()
-
-                    Button {
-                        appState.selectedNavItem = .other
-                    } label: {
-                        HStack(spacing: 6) {
-                            Text("Open inbox")
-                                .font(WinnowTypography.label)
-                            KeycapView("⌘1")
-                        }
-                        .foregroundStyle(Color.winnowTextSecondary)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(
-                            RoundedRectangle(cornerRadius: WinnowRadius.pill)
-                                .strokeBorder(Color.winnowTextTertiary.opacity(0.3), lineWidth: 1)
-                        )
-                    }
-                    .buttonStyle(.plain)
-                    .padding(.top, 4)
-                }
-                .padding(.horizontal, WinnowSpacing.sectionH)
-                .padding(.top, WinnowSpacing.sectionH)
-                .padding(.bottom, 14)
-
-                // ── Briefing line ────────────────────────────────────────────
-                HStack(spacing: 6) {
-                    AssistDiamond(size: .small)
-                    Text(briefing)
-                        .font(WinnowTypography.body)
-                        .foregroundStyle(Color.winnowTextSecondary)
-                }
-                .padding(.horizontal, WinnowSpacing.sectionH)
-                .padding(.bottom, 28)
-
-                // ── Needs a reply ────────────────────────────────────────────
-                if !needsReplyThreads.isEmpty {
-                    todaySection(title: "Needs a reply", badge: needsReplyThreads.count, subtitle: "they're waiting on you") {
-                        ForEach(needsReplyThreads) { thread in
-                            NeedsReplyCard(thread: thread)
-                                .onTapGesture {
-                                    appState.selectedNavItem = .important
-                                    appState.selectThread(thread.id)
-                                }
-                        }
-                    }
-                    .padding(.bottom, 24)
-                }
-
-                // ── Secondary grid (trips / bills) ───────────────────────────
-                if !flightThreads.isEmpty || !packageThreads.isEmpty || !billThreads.isEmpty {
-                    HStack(alignment: .top, spacing: 12) {
-                        if !billThreads.isEmpty {
-                            GridCard(title: "Due soon") {
-                                ForEach(billThreads) { thread in BillCard(thread: thread) }
-                            }
-                        }
-                        if !flightThreads.isEmpty || !packageThreads.isEmpty {
-                            GridCard(title: "Trips & deliveries") {
-                                ForEach(flightThreads) { t in FlightCard(thread: t) }
-                                ForEach(packageThreads) { t in PackageCard(thread: t) }
-                            }
-                        }
-                    }
-                    .padding(.horizontal, WinnowSpacing.sectionH)
-                    .padding(.bottom, 24)
-                }
-
-                // ── Recent inbox ─────────────────────────────────────────────
-                if !recentThreads.isEmpty {
-                    todaySection(title: "Recent inbox", badge: appState.threads.count, subtitle: nil) {
-                        VStack(spacing: 0) {
-                            ForEach(Array(recentThreads.enumerated()), id: \.element.id) { idx, thread in
-                                InboxRow(thread: thread)
-                                    .onTapGesture {
-                                        appState.selectedNavItem = .other
-                                        appState.selectThread(thread.id)
-                                    }
-                                if idx < recentThreads.count - 1 {
-                                    Divider()
-                                        .padding(.leading, WinnowSpacing.rowH)
-                                        .opacity(0.5)
-                                }
-                            }
-                        }
-                        .background(
-                            RoundedRectangle(cornerRadius: WinnowRadius.card)
-                                .fill(Color.winnowSurface)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: WinnowRadius.card)
-                                        .strokeBorder(Color.black.opacity(0.06), lineWidth: 1)
-                                )
-                        )
-                    }
-                    .padding(.bottom, 24)
-                } else if appState.isLoading {
-                    HStack(spacing: 8) {
-                        ProgressView().scaleEffect(0.7)
-                        Text("Syncing inbox…")
-                            .font(WinnowTypography.body)
-                            .foregroundStyle(Color.winnowTextTertiary)
-                    }
-                    .padding(.horizontal, WinnowSpacing.sectionH)
-                } else if let error = appState.syncError {
-                    Text(error)
-                        .font(WinnowTypography.body)
-                        .foregroundStyle(Color.winnowAlert)
-                        .padding(.horizontal, WinnowSpacing.sectionH)
-                }
+                greetingHeader
+                briefingRow
+                needsReplySection
+                secondaryGrid
+                agentStrip
             }
+            .padding(.horizontal, 34)
+            .padding(.top, 28)
+            .padding(.bottom, 30)
         }
         .background(Color.winnowSurface)
     }
 
-    // MARK: - Briefing
+    // MARK: - Greeting header
 
-    private var briefing: String {
-        var parts: [String] = []
-        if !needsReplyThreads.isEmpty {
-            parts.append("\(needsReplyThreads.count) \(needsReplyThreads.count == 1 ? "thread needs" : "threads need") a reply")
-        }
-        if !packageThreads.isEmpty {
-            parts.append("\(packageThreads.count) \(packageThreads.count == 1 ? "package" : "packages") on the way")
-        }
-        if !billThreads.isEmpty {
-            parts.append("\(billThreads.count) renewal\(billThreads.count == 1 ? "" : "s") due soon")
-        }
-        if parts.isEmpty {
-            if appState.isLoading { return "Syncing your inbox…" }
-            let unread = appState.threads.filter { !$0.isRead }.count
-            if unread > 0 { return "\(unread) unread in inbox." }
-            return appState.threads.isEmpty ? "You're all caught up." : "\(appState.threads.count) threads in inbox."
-        }
-        return parts.joined(separator: " · ") + "."
-    }
+    private var greetingHeader: some View {
+        HStack(alignment: .bottom) {
+            VStack(alignment: .leading, spacing: 5) {
+                Text(greeting)
+                    .font(.system(size: 25, weight: .semibold))
+                    .foregroundStyle(Color(hex: "161618"))
+                    .tracking(-0.5)
 
-    // MARK: - Section wrapper
-
-    @ViewBuilder
-    private func todaySection<Content: View>(
-        title: String,
-        badge: Int,
-        subtitle: String?,
-        @ViewBuilder content: () -> Content
-    ) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .firstTextBaseline) {
-                Text(title.uppercased())
-                    .winnowSectionHeader()
-                if badge > 0 {
-                    Text("\(badge)")
-                        .font(.system(size: 10, weight: .semibold, design: .monospaced))
-                        .foregroundStyle(Color.winnowAccent)
-                        .padding(.horizontal, 5)
-                        .padding(.vertical, 2)
-                        .background(Color.winnowAccentTint)
-                        .cornerRadius(4)
-                }
-                Spacer()
-                if let sub = subtitle {
-                    Text(sub)
-                        .font(WinnowTypography.meta)
-                        .foregroundStyle(Color.winnowTextTertiary)
-                }
-            }
-            content()
-        }
-        .padding(.horizontal, WinnowSpacing.sectionH)
-    }
-}
-
-// MARK: - Inbox row
-
-private struct InboxRow: View {
-    let thread: MailThread
-
-    var body: some View {
-        HStack(spacing: 12) {
-            // Unread indicator
-            Circle()
-                .fill(thread.isRead ? Color.clear : Color.winnowAccent)
-                .frame(width: 6, height: 6)
-
-            VStack(alignment: .leading, spacing: 3) {
-                HStack {
-                    Text(thread.messages.last?.from.displayName ?? thread.messages.last?.from.email ?? "")
-                        .font(WinnowTypography.senderName)
-                        .foregroundStyle(Color.winnowText)
-                        .lineLimit(1)
-                    Spacer()
-                    Text(thread.lastMessageDate, style: .time)
-                        .font(WinnowTypography.meta)
-                        .foregroundStyle(Color.winnowTextTertiary)
-                }
-                Text(thread.subject)
-                    .font(WinnowTypography.messageSubject)
-                    .foregroundStyle(!thread.isRead ? Color.winnowText : Color.winnowTextSecondary)
-                    .lineLimit(1)
-                Text(thread.snippet)
-                    .font(WinnowTypography.messagePreview)
+                Text(dateString)
+                    .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(Color.winnowTextTertiary)
-                    .lineLimit(1)
-            }
-        }
-        .padding(.horizontal, WinnowSpacing.rowH)
-        .padding(.vertical, WinnowSpacing.rowV)
-        .contentShape(Rectangle())
-        .onHover { inside in
-            if inside { NSCursor.pointingHand.push() } else { NSCursor.pop() }
-        }
-    }
-}
-
-// MARK: - Grid card wrapper
-
-private struct GridCard<Content: View>: View {
-    let title: String
-    @ViewBuilder let content: Content
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text(title.uppercased())
-                .winnowSectionHeader()
-            content
-        }
-        .padding(WinnowSpacing.cardH)
-        .frame(maxWidth: .infinity, alignment: .topLeading)
-        .background(
-            RoundedRectangle(cornerRadius: WinnowRadius.card)
-                .fill(Color.winnowSurface)
-                .overlay(
-                    RoundedRectangle(cornerRadius: WinnowRadius.card)
-                        .strokeBorder(Color.black.opacity(0.06), lineWidth: 1)
-                )
-        )
-    }
-}
-
-// MARK: - Needs reply card
-
-private struct NeedsReplyCard: View {
-    let thread: MailThread
-
-    var body: some View {
-        HStack(spacing: 12) {
-            // Avatar
-            Circle()
-                .fill(Color.winnowAccentTint)
-                .frame(width: 36, height: 36)
-                .overlay(
-                    Text(String((thread.messages.last?.from.displayName ?? "?").prefix(2)).uppercased())
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundStyle(Color.winnowAccent)
-                )
-
-            VStack(alignment: .leading, spacing: 3) {
-                Text(thread.messages.last?.from.displayName ?? "")
-                    .font(WinnowTypography.senderName)
-                    .foregroundStyle(Color.winnowText)
-                Text(thread.subject)
-                    .font(WinnowTypography.messageSubject)
-                    .foregroundStyle(Color.winnowTextSecondary)
-                    .lineLimit(1)
-                Text(thread.snippet)
-                    .font(WinnowTypography.body)
-                    .foregroundStyle(Color.winnowTextTertiary)
-                    .lineLimit(1)
             }
 
             Spacer()
 
-            if thread.hasDraftReady {
-                HStack(spacing: 4) {
-                    AssistDiamond(size: .small)
-                    Text("Draft ready")
-                        .font(.system(size: 11, weight: .medium))
-                        .foregroundStyle(Color.winnowAccent)
-                }
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(Color.winnowAccentTint)
-                .cornerRadius(WinnowRadius.pill)
-            }
-
-            Button("Reply") {}
-                .buttonStyle(.bordered)
-                .controlSize(.small)
-        }
-        .padding(WinnowSpacing.cardH)
-        .background(
-            RoundedRectangle(cornerRadius: WinnowRadius.card)
-                .fill(Color.winnowSurface)
-                .overlay(
-                    RoundedRectangle(cornerRadius: WinnowRadius.card)
-                        .strokeBorder(Color.black.opacity(0.06), lineWidth: 1)
-                )
-        )
-    }
-}
-
-// MARK: - Flight card
-
-private struct FlightCard: View {
-    let thread: MailThread
-
-    private var flight: IntelligenceResult.FlightInfo? {
-        for r in thread.intelligenceResults { if case .flightInfo(let f) = r { return f } }
-        return nil
-    }
-
-    var body: some View {
-        if let f = flight {
-            HStack(spacing: 10) {
-                Image(systemName: "airplane")
-                    .font(.system(size: 15))
-                    .foregroundStyle(Color.winnowAccent)
-                    .frame(width: 24)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("\(f.from) → \(f.to)")
-                        .font(WinnowTypography.label)
-                        .foregroundStyle(Color.winnowText)
-                    Text("\(f.flightNumber) · \(f.departureDate.formatted(date: .abbreviated, time: .shortened))")
-                        .font(WinnowTypography.meta)
+            // "Open inbox ⌘1" pill
+            Button { appState.selectedNavItem = .other } label: {
+                HStack(spacing: 8) {
+                    Text("Open inbox")
+                        .font(.system(size: 13, weight: .regular))
                         .foregroundStyle(Color.winnowTextTertiary)
+                    Text("⌘1")
+                        .font(.system(size: 11, weight: .semibold).monospaced())
+                        .foregroundStyle(Color(hex: "B2B2B8"))
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 1)
+                        .background(Color.black.opacity(0.05))
+                        .clipShape(RoundedRectangle(cornerRadius: 4))
                 }
+                .padding(.horizontal, 13)
+                .padding(.vertical, 8)
+                .background(
+                    RoundedRectangle(cornerRadius: 9)
+                        .strokeBorder(Color.black.opacity(0.10), lineWidth: 1)
+                )
             }
+            .buttonStyle(.plain)
+        }
+    }
+
+    // MARK: - Briefing row
+
+    private var briefingRow: some View {
+        HStack(alignment: .top, spacing: 9) {
+            AssistDiamond(size: .small)
+                .padding(.top, 3)
+
+            buildBriefingText()
+                .font(.system(size: 14))
+                .lineSpacing(4)
+                .foregroundStyle(Color.winnowTextSecondary)
+        }
+        .padding(.top, 16)
+        .padding(.bottom, 22)
+    }
+
+    private func buildBriefingText() -> Text {
+        let unread = appState.threads.filter { !$0.isRead }.count
+        let bills  = billThreads.count
+        let trips  = tripThreads.count
+        let replies = needsReplyThreads.count
+
+        if appState.isLoading && appState.threads.isEmpty {
+            return Text("Syncing your inbox…")
+        }
+        if appState.threads.isEmpty {
+            return Text("You're all caught up.")
+        }
+
+        var parts: [Text] = []
+
+        if replies > 0 {
+            parts.append(
+                Text("\(replies) email\(replies == 1 ? "" : "s")").bold().foregroundStyle(Color.winnowText) +
+                Text(" need\(replies == 1 ? "s" : "") a reply")
+            )
+        }
+        if trips > 0 {
+            parts.append(
+                Text("\(trips) \(trips == 1 ? "shipment" : "shipments or flights")").bold().foregroundStyle(Color.winnowText) +
+                Text(" to track")
+            )
+        }
+        if bills > 0 {
+            parts.append(
+                Text("\(bills == 1 ? "1 bill" : "\(bills) bills")").bold().foregroundStyle(Color.winnowText) +
+                Text(bills == 1 ? " is due soon" : " are due soon")
+            )
+        }
+
+        if parts.isEmpty {
+            return Text("\(unread) unread").bold().foregroundStyle(Color.winnowText) + Text(" in inbox.")
+        }
+
+        var combined = parts[0]
+        for (i, part) in parts.dropFirst().enumerated() {
+            combined = combined + Text(i == parts.count - 2 ? ", and " : ", ") + part
+        }
+        return combined + Text(".")
+    }
+
+    // MARK: - Needs a reply (hero card)
+
+    @ViewBuilder
+    private var needsReplySection: some View {
+        if !needsReplyThreads.isEmpty {
+            VStack(alignment: .leading, spacing: 0) {
+                // Card header
+                HStack(spacing: 8) {
+                    Text("Needs a reply")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(Color.winnowText)
+
+                    Text("\(needsReplyThreads.count)")
+                        .font(.system(size: 11, weight: .semibold).monospaced())
+                        .foregroundStyle(Color.winnowAccent)
+                        .padding(.horizontal, 7)
+                        .padding(.vertical, 1)
+                        .background(Color.winnowAccentTint)
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+
+                    Spacer()
+
+                    Text("they're waiting on you")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundStyle(Color(hex: "B2B2B8"))
+                }
+                .padding(.horizontal, 19)
+                .padding(.top, 16)
+                .padding(.bottom, 6)
+
+                // Rows with internal dividers
+                ForEach(Array(needsReplyThreads.enumerated()), id: \.element.id) { _, thread in
+                    Divider().opacity(0.5)
+                    NeedsReplyRow(thread: thread) {
+                        appState.selectedNavItem = .other
+                        appState.selectThread(thread.id)
+                    }
+                }
+
+                Spacer().frame(height: 8)
+            }
+            .background(Color.winnowSurface)
+            .clipShape(RoundedRectangle(cornerRadius: 13))
+            .overlay(
+                RoundedRectangle(cornerRadius: 13)
+                    .strokeBorder(Color.black.opacity(0.07), lineWidth: 1)
+            )
+            .padding(.bottom, 16)
+        }
+    }
+
+    // MARK: - Secondary 3-column grid
+
+    private var secondaryGrid: some View {
+        HStack(alignment: .top, spacing: 16) {
+            FollowingUpCard()
+            DueSoonCard(threads: billThreads, total: totalBillAmount)
+            TripsCard(threads: tripThreads)
+        }
+        .padding(.bottom, 16)
+    }
+
+    // MARK: - Agent strip
+
+    @ViewBuilder
+    private var agentStrip: some View {
+        if let date = appState.lastSyncDate {
+            let ago = Int(Date().timeIntervalSince(date) / 60)
+            HStack(spacing: 11) {
+                AssistDiamond(size: .small)
+                    .frame(width: 8, height: 8)
+
+                Group {
+                    Text("Winnow synced ").foregroundStyle(Color.winnowTextSecondary) +
+                    Text("just now").bold().foregroundStyle(Color.winnowText)
+                    + Text(ago == 0 ? "" : " \(ago)m ago")
+                        .foregroundStyle(Color.winnowTextSecondary)
+                }
+                .font(.system(size: 13))
+                .lineSpacing(4)
+
+                Spacer()
+
+                Button("Refresh") {
+                    Task { await appState.syncInbox() }
+                }
+                .font(.system(size: 12.5, weight: .semibold))
+                .foregroundStyle(Color.winnowAccent)
+                .buttonStyle(.plain)
+            }
+            .padding(.horizontal, 17)
+            .padding(.vertical, 13)
+            .background(Color(hex: "F7F9FC"))
+            .clipShape(RoundedRectangle(cornerRadius: 11))
+            .overlay(
+                RoundedRectangle(cornerRadius: 11)
+                    .strokeBorder(Color.winnowAccent.opacity(0.10), lineWidth: 1)
+            )
         }
     }
 }
 
-// MARK: - Package card
+// MARK: - Needs Reply Row
 
-private struct PackageCard: View {
+private struct NeedsReplyRow: View {
     let thread: MailThread
+    let onTap: () -> Void
 
-    private var pkg: IntelligenceResult.PackageInfo? {
-        for r in thread.intelligenceResults { if case .packageTracking(let p) = r { return p } }
-        return nil
+    private var sender: String {
+        thread.messages.last?.from.displayName ?? thread.messages.last?.from.email ?? "Unknown"
+    }
+
+    private var initials: String {
+        let words = sender.components(separatedBy: " ")
+        let first = String(words.first?.prefix(1) ?? "?").uppercased()
+        let last  = String(words.dropFirst().first?.prefix(1) ?? "").uppercased()
+        return first + last
+    }
+
+    private var waitingLabel: String {
+        let age = Date().timeIntervalSince(thread.lastMessageDate)
+        if age < 3600     { return "waiting \(max(1, Int(age / 60)))m" }
+        if age < 86400    { return "waiting \(Int(age / 3600))h" }
+        return "waiting \(Int(age / 86400))d"
+    }
+
+    private var avatarColors: (bg: Color, fg: Color) {
+        let palette: [(String, String)] = [
+            ("fbe7ea","c0566c"), ("e8eafb","5a5fc0"), ("e4f0e8","4f9168"),
+            ("f3ece0","a07d3a"), ("dbe6f8","2f6bdb"), ("eef0f4","6a7184"),
+        ]
+        let idx = abs(sender.hashValue) % palette.count
+        return (Color(hex: palette[idx].0), Color(hex: palette[idx].1))
     }
 
     var body: some View {
-        if let p = pkg {
-            HStack(spacing: 10) {
-                Image(systemName: "shippingbox")
-                    .font(.system(size: 15))
-                    .foregroundStyle(Color.winnowSuccess)
-                    .frame(width: 24)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(thread.subject)
-                        .font(WinnowTypography.label)
+        HStack(alignment: .center, spacing: 14) {
+            // Avatar
+            let colors = avatarColors
+            Circle()
+                .fill(colors.bg)
+                .frame(width: 34, height: 34)
+                .overlay(
+                    Text(initials)
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(colors.fg)
+                )
+
+            // Content
+            VStack(alignment: .leading, spacing: 2) {
+                HStack(alignment: .firstTextBaseline, spacing: 9) {
+                    Text(sender)
+                        .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(Color.winnowText)
                         .lineLimit(1)
-                    Text("\(p.carrier) · \(p.status.label)")
-                        .font(WinnowTypography.meta)
-                        .foregroundStyle(Color.winnowTextTertiary)
+
+                    Text(waitingLabel)
+                        .font(.system(size: 11, weight: .medium).monospaced())
+                        .foregroundStyle(Color(hex: "B2B2B8"))
                 }
+
+                Text(thread.subject)
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundStyle(Color(hex: "3A3A40"))
+                    .lineLimit(1)
+
+                Text(thread.snippet)
+                    .font(.system(size: 12.5))
+                    .foregroundStyle(Color.winnowTextTertiary)
+                    .lineLimit(1)
             }
+
+            Spacer(minLength: 8)
+
+            // Draft ready badge (when applicable)
+            if thread.hasDraftReady {
+                HStack(spacing: 5) {
+                    AssistDiamond(size: .small)
+                    Text("Draft ready")
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundStyle(Color.winnowAccent)
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(Color.winnowAccentTint)
+                .clipShape(Capsule())
+            }
+
+            // Reply button
+            Button("Reply") { onTap() }
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(Color.winnowAccent)
+                .padding(.horizontal, 13)
+                .padding(.vertical, 5)
+                .overlay(
+                    Capsule()
+                        .strokeBorder(Color.winnowAccent.opacity(0.28), lineWidth: 1)
+                )
+                .buttonStyle(.plain)
         }
+        .padding(.horizontal, 19)
+        .padding(.vertical, 14)
+        .contentShape(Rectangle())
+        .onTapGesture { onTap() }
+        .onHover { inside in if inside { NSCursor.pointingHand.push() } else { NSCursor.pop() } }
     }
 }
 
-// MARK: - Bill card
+// MARK: - Following Up Card
 
-private struct BillCard: View {
+private struct FollowingUpCard: View {
+    var body: some View {
+        TodayCard {
+            todayCardHeader(title: "Following up")
+            // Placeholder until sent-folder analysis is implemented
+            VStack(alignment: .leading, spacing: 0) {
+                Divider().opacity(0.4).padding(.top, 6)
+                emptyRow("No sent threads awaiting reply")
+            }
+            Spacer().frame(height: 8)
+        }
+    }
+
+    private func emptyRow(_ msg: String) -> some View {
+        Text(msg)
+            .font(.system(size: 12))
+            .foregroundStyle(Color.winnowTextTertiary)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+// MARK: - Due Soon Card
+
+private struct DueSoonCard: View {
+    let threads: [MailThread]
+    let total: Double
+
+    var body: some View {
+        TodayCard {
+            // Header with diamond + total
+            HStack(spacing: 8) {
+                AssistDiamond(size: .small)
+                Text("DUE SOON")
+                    .font(.system(size: 11, weight: .semibold))
+                    .tracking(0.05 * 11)
+                    .foregroundStyle(Color(hex: "9AA6BB"))
+                Spacer()
+                if total > 0 {
+                    Text("≈\(currencyString(total))")
+                        .font(.system(size: 11, weight: .semibold).monospaced())
+                        .foregroundStyle(Color(hex: "34343A"))
+                }
+            }
+            .padding(.horizontal, 17)
+            .padding(.top, 14)
+            .padding(.bottom, 4)
+
+            if threads.isEmpty {
+                Divider().opacity(0.4).padding(.top, 6)
+                Text("No bills due soon")
+                    .font(.system(size: 12))
+                    .foregroundStyle(Color.winnowTextTertiary)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 14)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            } else {
+                ForEach(Array(threads.prefix(4).enumerated()), id: \.element.id) { i, thread in
+                    if i == 0 { Divider().opacity(0.4).padding(.top, 6) } else { Divider().opacity(0.4) }
+                    BillDueSoonRow(thread: thread)
+                }
+            }
+            Spacer().frame(height: 8)
+        }
+    }
+
+    private func currencyString(_ amount: Double) -> String {
+        let formatted = String(format: "%.0f", amount)
+        return "$\(formatted)"
+    }
+}
+
+private struct BillDueSoonRow: View {
     let thread: MailThread
 
     private var bill: IntelligenceResult.BillInfo? {
@@ -423,26 +473,187 @@ private struct BillCard: View {
 
     var body: some View {
         if let b = bill {
-            HStack(spacing: 10) {
-                Image(systemName: "repeat")
-                    .font(.system(size: 13))
-                    .foregroundStyle(b.hasPriceChange ? Color.winnowCaution : Color.winnowTextTertiary)
-                    .frame(width: 24)
-                VStack(alignment: .leading, spacing: 2) {
+            HStack {
+                VStack(alignment: .leading, spacing: 1) {
                     Text(b.merchant)
-                        .font(WinnowTypography.label)
+                        .font(.system(size: 12.5, weight: .semibold))
                         .foregroundStyle(Color.winnowText)
-                    Text("\(b.currency == "GBP" ? "£" : "$")\(String(format: "%.2f", b.amount))")
-                        .font(WinnowTypography.meta)
-                        .foregroundStyle(b.hasPriceChange ? Color.winnowCaution : Color.winnowTextTertiary)
+                        .lineLimit(1)
+                    if let due = b.dueDate {
+                        Text(due.formatted(.dateTime.month().day()))
+                            .font(.system(size: 11))
+                            .foregroundStyle(Color(hex: "A2A2A8"))
+                    } else {
+                        Text(thread.lastMessageDate.formatted(.dateTime.month().day()))
+                            .font(.system(size: 11))
+                            .foregroundStyle(Color(hex: "A2A2A8"))
+                    }
                 }
                 Spacer()
-                if let due = b.dueDate {
-                    Text("in \(Calendar.current.dateComponents([.day], from: Date(), to: due).day ?? 0)d")
-                        .font(.system(size: 11, weight: .medium, design: .monospaced))
-                        .foregroundStyle(Color.winnowCaution)
-                }
+                Text(amountString(b))
+                    .font(.system(size: 12.5, weight: .semibold).monospaced())
+                    .foregroundStyle(Color(hex: "34343A"))
             }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 9)
         }
     }
+
+    private func amountString(_ b: IntelligenceResult.BillInfo) -> String {
+        let symbol: String
+        switch b.currency {
+        case "GBP": symbol = "£"
+        case "EUR": symbol = "€"
+        case "AUD": symbol = "A$"
+        default:    symbol = "$"
+        }
+        return "\(symbol)\(b.amount == b.amount.rounded() ? String(format: "%.0f", b.amount) : String(format: "%.2f", b.amount))"
+    }
+}
+
+// MARK: - Trips & Deliveries Card
+
+private struct TripsCard: View {
+    let threads: [MailThread]
+
+    var body: some View {
+        TodayCard {
+            todayCardHeader(title: "Trips & deliveries")
+
+            if threads.isEmpty {
+                Divider().opacity(0.4).padding(.top, 6)
+                Text("No upcoming trips or deliveries")
+                    .font(.system(size: 12))
+                    .foregroundStyle(Color.winnowTextTertiary)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 14)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            } else {
+                ForEach(Array(threads.prefix(4).enumerated()), id: \.element.id) { i, thread in
+                    if i == 0 { Divider().opacity(0.4).padding(.top, 6) } else { Divider().opacity(0.4) }
+                    TripRow(thread: thread)
+                }
+            }
+            Spacer().frame(height: 8)
+        }
+    }
+}
+
+private struct TripRow: View {
+    let thread: MailThread
+
+    private var flight: IntelligenceResult.FlightInfo? {
+        for r in thread.intelligenceResults { if case .flightInfo(let f) = r { return f } }
+        return nil
+    }
+    private var pkg: IntelligenceResult.PackageInfo? {
+        for r in thread.intelligenceResults { if case .packageTracking(let p) = r { return p } }
+        return nil
+    }
+
+    var body: some View {
+        HStack(alignment: .center, spacing: 11) {
+            iconBox
+
+            VStack(alignment: .leading, spacing: 1) {
+                Text(title)
+                    .font(.system(size: 12.5, weight: .semibold))
+                    .foregroundStyle(Color.winnowText)
+                    .lineLimit(1)
+                Text(detail)
+                    .font(.system(size: 11))
+                    .foregroundStyle(Color.winnowTextTertiary)
+                    .lineLimit(1)
+            }
+            Spacer()
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+    }
+
+    private var title: String {
+        if let f = flight { return "\(f.from) → \(f.to)" }
+        if let p = pkg {
+            switch p.status {
+            case .outForDelivery: return "Out for delivery"
+            case .delivered:      return "Delivered"
+            default:              return "Arriving soon"
+            }
+        }
+        return thread.subject
+    }
+
+    private var detail: String {
+        if let f = flight {
+            return "\(f.flightNumber) · \(f.departureDate.formatted(.dateTime.month(.abbreviated).day()))"
+        }
+        if let p = pkg { return "\(p.carrier) · \(p.trackingNumber.prefix(12))" }
+        return thread.snippet
+    }
+
+    private var iconBox: some View {
+        Group {
+            if flight != nil {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color(hex: "F1EDDC"))
+                    .frame(width: 30, height: 30)
+                    .overlay(
+                        Image(systemName: "airplane")
+                            .font(.system(size: 13, weight: .medium))
+                            .foregroundStyle(Color(hex: "A07D1A"))
+                    )
+            } else {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color(hex: "DBE6F8"))
+                    .frame(width: 30, height: 30)
+                    .overlay(
+                        Image(systemName: "shippingbox.fill")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundStyle(Color.winnowAccent)
+                    )
+            }
+        }
+        .frame(width: 30, height: 30)
+    }
+}
+
+// MARK: - Shared card chrome
+
+private struct TodayCard<Content: View>: View {
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            content
+        }
+        .frame(maxWidth: .infinity, alignment: .topLeading)
+        .background(Color.winnowSurface)
+        .clipShape(RoundedRectangle(cornerRadius: 13))
+        .overlay(
+            RoundedRectangle(cornerRadius: 13)
+                .strokeBorder(Color.black.opacity(0.07), lineWidth: 1)
+        )
+    }
+}
+
+private func todayCardHeader(title: String, badge: Int? = nil) -> some View {
+    HStack(spacing: 8) {
+        Text(title.uppercased())
+            .font(.system(size: 11, weight: .semibold))
+            .tracking(0.6)
+            .foregroundStyle(Color(hex: "9AA6BB"))
+        if let b = badge, b > 0 {
+            Text("\(b)")
+                .font(.system(size: 11, weight: .semibold).monospaced())
+                .foregroundStyle(Color.winnowAccent)
+                .padding(.horizontal, 6)
+                .padding(.vertical, 1)
+                .background(Color.winnowAccentTint)
+                .clipShape(RoundedRectangle(cornerRadius: 4))
+        }
+        Spacer()
+    }
+    .padding(.horizontal, 17)
+    .padding(.top, 14)
+    .padding(.bottom, 4)
 }
