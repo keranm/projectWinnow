@@ -4,6 +4,7 @@ import WinnowUI
 
 struct ComposeView: View {
     @Environment(AppState.self) private var appState
+    @Environment(WinnowSettings.self) private var settings
     @Binding var isPresented: Bool
 
     @State private var toLine = ""
@@ -81,7 +82,12 @@ struct ComposeView: View {
         }
         .background(Color.winnowSurface)
         .frame(width: 560, height: 440)
-        .onAppear { focused = .to }
+        .onAppear {
+            focused = .to
+            if let sig = settings.defaultIdentity?.signatureBody, !sig.isEmpty {
+                bodyText = "\n\n\(sig)"
+            }
+        }
     }
 
     private func fieldRow(_ label: String, text: Binding<String>, field: Field) -> some View {

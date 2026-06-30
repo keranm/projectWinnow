@@ -9,42 +9,35 @@ struct SidebarView: View {
         VStack(spacing: 0) {
             accountChip
 
-            Divider().opacity(0.5)
-
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
-                    // Primary nav
+                    sectionLabel("Inbox")
+                        .padding(.bottom, 4)
+
                     ForEach(NavItem.primaryItems, id: \.self) { item in
                         SidebarRow(
                             item: item,
                             isSelected: appState.selectedNavItem == item,
                             count: appState.count(for: item)
-                        ) {
-                            appState.selectedNavItem = item
-                        }
+                        ) { appState.selectedNavItem = item }
                     }
 
-                    // Pulled from mail
                     HStack(spacing: 5) {
                         AssistDiamond(size: .small)
-                        Text("Pulled from mail")
-                            .winnowSectionHeader()
+                        sectionLabel("Pulled from mail")
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 22)
-                    .padding(.bottom, 6)
+                    .padding(.top, 18)
+                    .padding(.bottom, 4)
 
                     ForEach(NavItem.pulledItems, id: \.self) { item in
                         SidebarRow(
                             item: item,
                             isSelected: appState.selectedNavItem == item,
                             count: appState.count(for: item)
-                        ) {
-                            appState.selectedNavItem = item
-                        }
+                        ) { appState.selectedNavItem = item }
                     }
                 }
-                .padding(.top, 8)
+                .padding(.top, 6)
             }
 
             Spacer(minLength: 0)
@@ -60,33 +53,50 @@ struct SidebarView: View {
     private var accountChip: some View {
         HStack(spacing: 10) {
             if let account = appState.accounts.first {
-                Circle()
-                    .fill(Color(hex: account.color.hex))
-                    .frame(width: 28, height: 28)
-                    .overlay(
-                        Text(account.initials)
-                            .font(.system(size: 11, weight: .semibold))
-                            .foregroundStyle(.white)
-                    )
+                initialsAvatar(account)
 
                 VStack(alignment: .leading, spacing: 1) {
                     Text(account.displayName ?? account.email)
-                        .font(WinnowTypography.label)
+                        .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(Color.winnowText)
                         .lineLimit(1)
                     Text(account.email)
-                        .font(WinnowTypography.meta)
+                        .font(.system(size: 11))
                         .foregroundStyle(Color.winnowTextTertiary)
                         .lineLimit(1)
                 }
             }
             Spacer()
-            Image(systemName: "chevron.down")
-                .font(.system(size: 10, weight: .semibold))
-                .foregroundStyle(Color.winnowTextTertiary)
         }
-        .padding(.horizontal, 14)
+        .padding(.horizontal, 12)
         .padding(.vertical, 12)
+    }
+
+    private func initialsAvatar(_ account: Account) -> some View {
+        let palette: [(bg: String, fg: String)] = [
+            ("e7ecf6", "2f6bdb"), ("fbe7ea", "c0566c"), ("e4f0e8", "4f9168"),
+            ("f3ece0", "a07d3a"), ("e8eafb", "5a5fc0"), ("eef0f4", "6a7184"),
+        ]
+        let idx = abs(account.email.hashValue) % palette.count
+        let pair = palette[idx]
+        return Circle()
+            .fill(Color(hex: pair.bg))
+            .frame(width: 30, height: 30)
+            .overlay(
+                Text(account.initials)
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(Color(hex: pair.fg))
+            )
+    }
+
+    // MARK: - Section label
+
+    private func sectionLabel(_ text: String) -> some View {
+        Text(text.uppercased())
+            .font(.system(size: 10.5, weight: .semibold))
+            .tracking(0.7)
+            .foregroundStyle(Color.winnowTextQuaternary)
+            .padding(.horizontal, 10)
     }
 
     // MARK: - Sync footer
@@ -101,12 +111,12 @@ struct SidebarView: View {
                     .frame(width: 6, height: 6)
             }
             Text(syncFooterLabel)
-                .font(WinnowTypography.meta)
+                .font(.system(size: 11))
                 .foregroundStyle(appState.syncError == nil ? Color.winnowTextTertiary : Color.winnowAlert)
                 .lineLimit(1)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 16)
+        .padding(.horizontal, 12)
         .padding(.vertical, 10)
     }
 
@@ -130,33 +140,32 @@ private struct SidebarRow: View {
 
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 0) {
-                // Diamond selection indicator — occupies fixed 20pt leading slot
-                ZStack {
-                    if isSelected {
-                        AssistDiamond(size: .small)
-                    }
-                }
-                .frame(width: 20)
-
+            HStack {
                 Text(item.title)
-                    .font(WinnowTypography.label)
+                    .font(.system(size: 13, weight: isSelected ? .semibold : .medium))
                     .foregroundStyle(isSelected ? Color.winnowText : Color.winnowTextSecondary)
 
                 Spacer()
 
                 if count > 0 {
                     Text("\(count)")
-                        .font(.system(size: 11, weight: .medium, design: .monospaced))
-                        .foregroundStyle(isSelected ? Color.winnowAccent : Color.winnowTextTertiary)
-                        .monospacedDigit()
+                        .font(.system(size: 11, weight: isSelected ? .semibold : .medium, design: .monospaced))
+                        .foregroundStyle(isSelected ? Color.winnowAccent : Color.winnowTextQuaternary)
                 }
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 7)
             .background(
-                RoundedRectangle(cornerRadius: WinnowRadius.row)
-                    .fill(isSelected ? Color.winnowAccentTint : Color.clear)
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 7)
+                        .fill(isSelected ? Color.winnowAccentTint : Color.clear)
+                    if isSelected {
+                        RoundedRectangle(cornerRadius: 2)
+                            .fill(Color.winnowAccent)
+                            .frame(width: 2)
+                            .padding(.vertical, 3)
+                    }
+                }
             )
         }
         .buttonStyle(.plain)

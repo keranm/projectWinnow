@@ -7,7 +7,8 @@ struct ThreadListView: View {
         VStack(spacing: 0) {
             header
 
-            Divider()
+            // Very subtle 1px separator matching design rgba(0,0,0,.05)
+            Color.black.opacity(0.05).frame(height: 1)
 
             if appState.visibleThreads.isEmpty && !appState.isLoading {
                 emptyState
@@ -15,16 +16,18 @@ struct ThreadListView: View {
                 ScrollView {
                     LazyVStack(spacing: 0) {
                         ForEach(appState.visibleThreads) { thread in
-                            ThreadRowView(thread: thread,
-                                          isSelected: thread.id == appState.selectedThreadID)
+                            ThreadRowView(
+                                thread: thread,
+                                isSelected: thread.id == appState.selectedThreadID
+                            )
                             .onTapGesture {
                                 appState.selectThread(thread.id)
                                 appState.markRead(thread.id)
                             }
-                            Divider().padding(.leading, 36).opacity(0.5)
+                            // Hairline divider rgba(0,0,0,.04)
+                            Color.black.opacity(0.04).frame(height: 1)
                         }
 
-                        // Load more footer
                         if appState.hasMoreThreads {
                             loadMoreRow
                         }
@@ -42,39 +45,54 @@ struct ThreadListView: View {
         }
     }
 
+    // MARK: - Header
+
     private var header: some View {
-        HStack {
+        HStack(alignment: .firstTextBaseline) {
             Text(appState.selectedNavItem.title)
-                .font(.system(size: 13, weight: .semibold))
+                .font(.system(size: 16, weight: .semibold))
                 .foregroundStyle(Color.winnowText)
 
             Spacer()
 
-            let unread = appState.visibleThreads.filter { !$0.isRead }.count
-            if unread > 0 {
-                Text("\(unread)")
-                    .font(.system(size: 11, weight: .medium, design: .monospaced))
-                    .foregroundStyle(Color.winnowAccent)
-            }
+            Text(headerDateLabel)
+                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                .foregroundStyle(Color.winnowTextQuaternary)
 
             Button {
                 Task { await appState.syncInbox() }
             } label: {
-                Image(systemName: appState.isLoading ? "arrow.clockwise" : "arrow.clockwise")
+                Image(systemName: "arrow.clockwise")
                     .font(.system(size: 11, weight: .medium))
                     .foregroundStyle(Color.winnowTextTertiary)
                     .rotationEffect(appState.isLoading ? .degrees(360) : .zero)
-                    .animation(appState.isLoading
-                        ? .linear(duration: 1).repeatForever(autoreverses: false)
-                        : .default, value: appState.isLoading)
+                    .animation(
+                        appState.isLoading
+                            ? .linear(duration: 1).repeatForever(autoreverses: false)
+                            : .default,
+                        value: appState.isLoading
+                    )
             }
             .buttonStyle(.plain)
             .help("Refresh (⌘R)")
-            .padding(.leading, 4)
+            .padding(.leading, 6)
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 11)
+        .padding(.horizontal, 18)
+        .padding(.top, 14)
+        .padding(.bottom, 12)
     }
+
+    private var headerDateLabel: String {
+        let cal = Calendar.current
+        if cal.isDateInToday(Date()) {
+            return "Today"
+        }
+        let fmt = DateFormatter()
+        fmt.dateFormat = "EEE d MMM"
+        return fmt.string(from: Date())
+    }
+
+    // MARK: - Load more
 
     private var loadMoreRow: some View {
         Button {
@@ -94,6 +112,8 @@ struct ThreadListView: View {
         .buttonStyle(.plain)
         .disabled(appState.isLoadingMore)
     }
+
+    // MARK: - Empty state
 
     private var emptyState: some View {
         VStack(spacing: 8) {

@@ -7,9 +7,11 @@ import UIKit
 
 public extension Color {
     // MARK: - Text
-    static let winnowText           = adaptive(light: "1C1C20", dark: "F2F2F5")
-    static let winnowTextSecondary  = adaptive(light: "55555C", dark: "A0A0A8")
-    static let winnowTextTertiary   = adaptive(light: "9A9AA0", dark: "6A6A72")
+    static let winnowText            = adaptive(light: "1C1C20", dark: "F2F2F5")
+    static let winnowTextSubdued     = adaptive(light: "3A3A40", dark: "C0C0C8") // read-state sender names
+    static let winnowTextSecondary   = adaptive(light: "55555C", dark: "A0A0A8")
+    static let winnowTextTertiary    = adaptive(light: "9A9AA0", dark: "6A6A72")
+    static let winnowTextQuaternary  = adaptive(light: "B2B2B8", dark: "545460") // lightest text: muted timestamps, section labels
 
     // MARK: - Backgrounds
     static let winnowSidebar        = adaptive(light: "FAFAFA", dark: "161617")

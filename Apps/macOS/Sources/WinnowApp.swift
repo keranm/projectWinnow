@@ -3,13 +3,12 @@ import SwiftUI
 @main
 struct WinnowApp: App {
     @State private var appState = AppState()
-    @State private var settings = WinnowSettings()
 
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environment(appState)
-                .environment(settings)
+                .environment(appState.settings)
         }
         .windowStyle(.titleBar)
         .windowToolbarStyle(.unified)
@@ -67,7 +66,7 @@ struct WinnowApp: App {
         // ── Settings window (⌘,) ───────────────────────────────────────────
         Settings {
             SettingsView()
-                .environment(settings)
+                .environment(appState.settings)
                 .environment(appState)
         }
     }
