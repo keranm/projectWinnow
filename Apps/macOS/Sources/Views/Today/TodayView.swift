@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 import WinnowCore
 import WinnowUI
 
@@ -13,6 +14,10 @@ struct TodayView: View {
         case 12..<18: return "Good afternoon, \(name)."
         default:       return "Good evening, \(name)."
         }
+    }
+
+    private var recentThreads: [MailThread] {
+        Array(appState.threads.prefix(7))
     }
 
     private var needsReplyThreads: [MailThread] {
@@ -84,6 +89,30 @@ struct TodayView: View {
                         }
                     }
                 }
+
+                // Recent inbox — always shown so you can see mail even without intelligence tags
+                if !recentThreads.isEmpty {
+                    TodaySection(title: "Recent inbox") {
+                        ForEach(recentThreads) { thread in
+                            InboxRow(thread: thread)
+                                .onTapGesture {
+                                    appState.selectedNavItem = .other
+                                    appState.selectThread(thread.id)
+                                }
+                        }
+                    }
+                } else if appState.isLoading {
+                    HStack(spacing: 8) {
+                        ProgressView().scaleEffect(0.7)
+                        Text("Syncing inbox…")
+                            .font(WinnowTypography.body)
+                            .foregroundStyle(Color.winnowTextTertiary)
+                    }
+                } else if let error = appState.syncError {
+                    Text(error)
+                        .font(WinnowTypography.body)
+                        .foregroundStyle(Color.winnowAlert)
+                }
             }
             .padding(.horizontal, WinnowSpacing.sectionH)
             .padding(.vertical, WinnowSpacing.sectionH)
@@ -111,7 +140,12 @@ struct TodayView: View {
         if !billThreads.isEmpty {
             parts.append("\(billThreads.count) renewal\(billThreads.count == 1 ? "" : "s") due soon")
         }
-        if parts.isEmpty { return "You're all caught up." }
+        if parts.isEmpty {
+            let unread = appState.threads.filter { !$0.isRead }.count
+            if appState.isLoading { return "Syncing your inbox…" }
+            if appState.threads.isEmpty { return "You're all caught up." }
+            return unread > 0 ? "\(unread) unread in inbox." : "\(appState.threads.count) threads in inbox."
+        }
         return parts.joined(separator: " · ") + "."
     }
 }
@@ -279,6 +313,51 @@ private struct PackageCard: View {
                             .strokeBorder(Color.black.opacity(0.06), lineWidth: 1)
                     )
             )
+        }
+    }
+}
+
+private struct InboxRow: View {
+    let thread: MailThread
+
+    var body: some View {
+        HStack(spacing: 10) {
+            UnreadDot(isUnread: !thread.isRead)
+
+            VStack(alignment: .leading, spacing: 2) {
+                HStack {
+                    Text(thread.messages.last?.from.displayName ?? thread.messages.last?.from.email ?? "")
+                        .font(WinnowTypography.senderName)
+                        .foregroundStyle(Color.winnowText)
+                        .lineLimit(1)
+                    Spacer()
+                    Text(thread.lastMessageDate.formatted(date: .omitted, time: .shortened))
+                        .font(WinnowTypography.meta)
+                        .foregroundStyle(Color.winnowTextTertiary)
+                }
+                Text(thread.subject)
+                    .font(WinnowTypography.messageSubject)
+                    .foregroundStyle(!thread.isRead ? Color.winnowText : Color.winnowTextSecondary)
+                    .lineLimit(1)
+                Text(thread.snippet)
+                    .font(WinnowTypography.messagePreview)
+                    .foregroundStyle(Color.winnowTextTertiary)
+                    .lineLimit(1)
+            }
+        }
+        .padding(.horizontal, WinnowSpacing.rowH)
+        .padding(.vertical, WinnowSpacing.rowV)
+        .background(
+            RoundedRectangle(cornerRadius: WinnowRadius.row)
+                .fill(Color.winnowSurface)
+                .overlay(
+                    RoundedRectangle(cornerRadius: WinnowRadius.row)
+                        .strokeBorder(Color.black.opacity(0.05), lineWidth: 1)
+                )
+        )
+        .contentShape(Rectangle())
+        .onHover { inside in
+            if inside { NSCursor.pointingHand.push() } else { NSCursor.pop() }
         }
     }
 }

@@ -93,7 +93,7 @@ public actor OAuthLocalServer {
     }
 
     private static func sendHTML(to fd: Int32, _ html: String) {
-        let response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: \(html.utf8.count)\r\nConnection: close\r\n\r\n\(html)"
+        let response = "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: \(html.utf8.count)\r\nConnection: close\r\n\r\n\(html)"
         _ = send(fd, response, response.utf8.count, 0)
     }
 }

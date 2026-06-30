@@ -82,16 +82,30 @@ struct SidebarView: View {
 
     private var syncFooter: some View {
         HStack(spacing: 6) {
-            Circle()
-                .fill(Color.winnowSuccess)
-                .frame(width: 6, height: 6)
-            Text("On-device · synced 2m ago")
+            if appState.isLoading {
+                ProgressView().scaleEffect(0.5).frame(width: 6, height: 6)
+            } else {
+                Circle()
+                    .fill(appState.syncError == nil ? Color.winnowSuccess : Color.winnowAlert)
+                    .frame(width: 6, height: 6)
+            }
+            Text(syncFooterLabel)
                 .font(WinnowTypography.meta)
-                .foregroundStyle(Color.winnowTextTertiary)
+                .foregroundStyle(appState.syncError == nil ? Color.winnowTextTertiary : Color.winnowAlert)
+                .lineLimit(1)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
+    }
+
+    private var syncFooterLabel: String {
+        if let error = appState.syncError { return error }
+        if appState.isLoading { return "Syncing…" }
+        guard let date = appState.lastSyncDate else { return "On-device" }
+        let mins = Int(Date().timeIntervalSince(date) / 60)
+        if mins < 1 { return "On-device · just now" }
+        return "On-device · \(mins)m ago"
     }
 }
 

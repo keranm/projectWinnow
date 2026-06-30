@@ -17,6 +17,7 @@ final class AppState {
     var isAuthenticated: Bool = false
     var isLoading: Bool = false
     var syncError: String?
+    var lastSyncDate: Date?
 
     // Derived
     var selectedThread: MailThread? {
@@ -99,6 +100,7 @@ final class AppState {
 
             let fetched = try await client.syncInbox()
             threads = fetched
+            lastSyncDate = Date()
             if selectedThreadID == nil { selectedThreadID = threads.first?.id }
 
             // Persist refreshed tokens back to Keychain
