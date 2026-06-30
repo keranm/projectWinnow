@@ -10,15 +10,22 @@
 		1D93D66BE2E6E15FA7135A55 /* ThreadListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 599FF8EA65BD502CED244223 /* ThreadListView.swift */; };
 		20F3228A7974B704A4B39A5B /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2F75367F63C93D25CE6036 /* RootView.swift */; };
 		25C96B799C27D18C72B85E92 /* MailContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D6D77278B8FF8C4563D3813 /* MailContentView.swift */; };
+		33EAA79A63BF562B71E0AA0E /* SnippetsPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096C6816A9C1FBFD98F29874 /* SnippetsPanel.swift */; };
+		47AE365D31F6699E81A1D348 /* WinnowSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26425429F6F68035A64BE30F /* WinnowSettings.swift */; };
 		5AB5AACD27EAE80BFF7C5382 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1D6B8EECA4F740F52A2325 /* MockData.swift */; };
+		5C1965EDC4931FBECC3E669B /* GeneralPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA34D531DC5D7EF9933286C /* GeneralPanel.swift */; };
+		8015D170B2682583FBF24C48 /* AccountsPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EEF79BB74C034EC00BF2FC7 /* AccountsPanel.swift */; };
 		81E468F690A2B021A5095BA2 /* ComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C2F790DF3E1CCCD0D98C78 /* ComposeView.swift */; };
 		858788E3B2BD5BAD0A7ED8F7 /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC6E20B05066B194BB1E2F2 /* Secrets.swift */; };
+		9B75EFE52376613A84A41D48 /* AppearancePanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B84CB71846660771C0B9EC /* AppearancePanel.swift */; };
 		A2A9617E1CE561233D3C1158 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9001E3F8A44E8C83F5621D55 /* TodayView.swift */; };
 		A3E80596F802901F4DB8D667 /* ReadingPaneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 475EB32FAE5A75CBE6674C50 /* ReadingPaneView.swift */; };
 		B1E374C66DB634A57B4B987B /* ConnectAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CD17D4A0EBC30F47478B8E /* ConnectAccountView.swift */; };
+		B44C44A5DF353B84F9A5909E /* IntelligencePanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B89C34F45796EBA6004080 /* IntelligencePanel.swift */; };
 		BD3DA47C794B12A5FC41508D /* WinnowUI in Frameworks */ = {isa = PBXBuildFile; productRef = 51BB0E31B28E644545F84B9D /* WinnowUI */; };
 		C60F1AC83C0586BD0DD93129 /* ThreadRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2D1A3D8A4CC83CE18DFC152 /* ThreadRowView.swift */; };
 		CBB8F21BD721799A3BD0A3C7 /* EmptySelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99B35E428690A0A8F77D7292 /* EmptySelectionView.swift */; };
+		CFA76F0F7364A7B6B818CD51 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7243C27B17F187C29A79BD75 /* SettingsView.swift */; };
 		D03FC023CB5E2B0DE4AE8D84 /* WinnowCore in Frameworks */ = {isa = PBXBuildFile; productRef = 485B8EC29AB4A84D0D841C5B /* WinnowCore */; };
 		D8AF38196F6ACA4E80A44B3B /* WinnowApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CFE9036DBC5CD37B4073240 /* WinnowApp.swift */; };
 		DE82217E69D34EFA50A38E26 /* NavItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2848D76D6E58005ECB79B5FD /* NavItem.swift */; };
@@ -29,17 +36,24 @@
 /* Begin PBXFileReference section */
 		04C2F790DF3E1CCCD0D98C78 /* ComposeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposeView.swift; sourceTree = "<group>"; };
 		07378EC9CE2C7D6FD73EE4F1 /* Winnow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Winnow.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		096C6816A9C1FBFD98F29874 /* SnippetsPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnippetsPanel.swift; sourceTree = "<group>"; };
 		0CFE9036DBC5CD37B4073240 /* WinnowApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WinnowApp.swift; sourceTree = "<group>"; };
+		26425429F6F68035A64BE30F /* WinnowSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WinnowSettings.swift; sourceTree = "<group>"; };
 		2848D76D6E58005ECB79B5FD /* NavItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavItem.swift; sourceTree = "<group>"; };
+		2EEF79BB74C034EC00BF2FC7 /* AccountsPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsPanel.swift; sourceTree = "<group>"; };
 		475EB32FAE5A75CBE6674C50 /* ReadingPaneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPaneView.swift; sourceTree = "<group>"; };
 		599FF8EA65BD502CED244223 /* ThreadListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadListView.swift; sourceTree = "<group>"; };
 		5C2F75367F63C93D25CE6036 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		614F311C47862DEB5F65ED36 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		6D6D77278B8FF8C4563D3813 /* MailContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailContentView.swift; sourceTree = "<group>"; };
+		7243C27B17F187C29A79BD75 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		9001E3F8A44E8C83F5621D55 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		99B35E428690A0A8F77D7292 /* EmptySelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptySelectionView.swift; sourceTree = "<group>"; };
 		AEC6E20B05066B194BB1E2F2 /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
+		B2B89C34F45796EBA6004080 /* IntelligencePanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntelligencePanel.swift; sourceTree = "<group>"; };
+		B5B84CB71846660771C0B9EC /* AppearancePanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearancePanel.swift; sourceTree = "<group>"; };
 		C1ABC2DCAE9CED9599FD7DF7 /* WinnowUI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = WinnowUI; path = ../../Packages/WinnowUI; sourceTree = SOURCE_ROOT; };
+		CAA34D531DC5D7EF9933286C /* GeneralPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralPanel.swift; sourceTree = "<group>"; };
 		CAED9DDBB02AB395DEB79C9F /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		D3CD17D4A0EBC30F47478B8E /* ConnectAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectAccountView.swift; sourceTree = "<group>"; };
 		E2D1A3D8A4CC83CE18DFC152 /* ThreadRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadRowView.swift; sourceTree = "<group>"; };
@@ -110,6 +124,16 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		88A57EAC437792EB9DE55C06 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				7243C27B17F187C29A79BD75 /* SettingsView.swift */,
+				26425429F6F68035A64BE30F /* WinnowSettings.swift */,
+				D1D6C21E04759E34915F2E08 /* Panels */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		8A6836204117A0B052E83048 = {
 			isa = PBXGroup;
 			children = (
@@ -135,6 +159,18 @@
 			path = Onboarding;
 			sourceTree = "<group>";
 		};
+		D1D6C21E04759E34915F2E08 /* Panels */ = {
+			isa = PBXGroup;
+			children = (
+				2EEF79BB74C034EC00BF2FC7 /* AccountsPanel.swift */,
+				B5B84CB71846660771C0B9EC /* AppearancePanel.swift */,
+				CAA34D531DC5D7EF9933286C /* GeneralPanel.swift */,
+				B2B89C34F45796EBA6004080 /* IntelligencePanel.swift */,
+				096C6816A9C1FBFD98F29874 /* SnippetsPanel.swift */,
+			);
+			path = Panels;
+			sourceTree = "<group>";
+		};
 		E83D80F2CAC89AB8C28BDD80 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
@@ -143,6 +179,7 @@
 				2848D76D6E58005ECB79B5FD /* NavItem.swift */,
 				AEC6E20B05066B194BB1E2F2 /* Secrets.swift */,
 				0CFE9036DBC5CD37B4073240 /* WinnowApp.swift */,
+				88A57EAC437792EB9DE55C06 /* Settings */,
 				1C171D93C12869780CCA161E /* Views */,
 			);
 			path = Sources;
@@ -179,6 +216,8 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+				};
 			};
 			buildConfigurationList = 80993737B8C67880D29C999F /* Build configuration list for PBXProject "Winnow" */;
 			developmentRegion = en;
@@ -208,21 +247,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8015D170B2682583FBF24C48 /* AccountsPanel.swift in Sources */,
 				E6E3D8AA952BD661732393BB /* AppState.swift in Sources */,
+				9B75EFE52376613A84A41D48 /* AppearancePanel.swift in Sources */,
 				81E468F690A2B021A5095BA2 /* ComposeView.swift in Sources */,
 				B1E374C66DB634A57B4B987B /* ConnectAccountView.swift in Sources */,
 				CBB8F21BD721799A3BD0A3C7 /* EmptySelectionView.swift in Sources */,
+				5C1965EDC4931FBECC3E669B /* GeneralPanel.swift in Sources */,
+				B44C44A5DF353B84F9A5909E /* IntelligencePanel.swift in Sources */,
 				25C96B799C27D18C72B85E92 /* MailContentView.swift in Sources */,
 				5AB5AACD27EAE80BFF7C5382 /* MockData.swift in Sources */,
 				DE82217E69D34EFA50A38E26 /* NavItem.swift in Sources */,
 				A3E80596F802901F4DB8D667 /* ReadingPaneView.swift in Sources */,
 				20F3228A7974B704A4B39A5B /* RootView.swift in Sources */,
 				858788E3B2BD5BAD0A7ED8F7 /* Secrets.swift in Sources */,
+				CFA76F0F7364A7B6B818CD51 /* SettingsView.swift in Sources */,
 				EAD294BD56CC91BE96C359DA /* SidebarView.swift in Sources */,
+				33EAA79A63BF562B71E0AA0E /* SnippetsPanel.swift in Sources */,
 				1D93D66BE2E6E15FA7135A55 /* ThreadListView.swift in Sources */,
 				C60F1AC83C0586BD0DD93129 /* ThreadRowView.swift in Sources */,
 				A2A9617E1CE561233D3C1158 /* TodayView.swift in Sources */,
 				D8AF38196F6ACA4E80A44B3B /* WinnowApp.swift in Sources */,
+				47AE365D31F6699E81A1D348 /* WinnowSettings.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -234,10 +280,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Resources/Winnow.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = AUEPCDGA5G;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_TESTABILITY = YES;
 				INFOPLIST_FILE = Resources/Info.plist;
@@ -248,7 +291,6 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.keranm.winnow;
 				PRODUCT_NAME = Winnow;
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -381,10 +423,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Resources/Winnow.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = AUEPCDGA5G;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -394,7 +433,6 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.keranm.winnow;
 				PRODUCT_NAME = Winnow;
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";

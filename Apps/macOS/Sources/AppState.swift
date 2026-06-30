@@ -64,6 +64,7 @@ final class AppState {
     private let tokenKey = "oauth_tokens_primary"
     private var fullBodyLoadedIDs: Set<String> = []
     private var backgroundSyncTask: Task<Void, Never>?
+    var settings: WinnowSettings = WinnowSettings()
 
     // MARK: - Lifecycle
 
@@ -117,13 +118,15 @@ final class AppState {
 
         do {
             let profile = try await client.getProfile()
+            let displayName = profile.emailAddress.components(separatedBy: "@").first?.capitalized ?? profile.emailAddress
             accounts = [Account(
                 id: "primary",
                 email: profile.emailAddress,
-                displayName: profile.emailAddress.components(separatedBy: "@").first?.capitalized,
+                displayName: displayName,
                 provider: .gmail,
                 color: .blue
             )]
+            settings.seedIdentityIfNeeded(email: profile.emailAddress, displayName: displayName)
 
             let (raw, token) = try await client.syncInbox()
             let fetched = await ExtractionPipeline.shared.processTier1(raw)

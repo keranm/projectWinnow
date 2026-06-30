@@ -3,11 +3,13 @@ import SwiftUI
 @main
 struct WinnowApp: App {
     @State private var appState = AppState()
+    @State private var settings = WinnowSettings()
 
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environment(appState)
+                .environment(settings)
         }
         .windowStyle(.titleBar)
         .windowToolbarStyle(.unified)
@@ -44,26 +46,29 @@ struct WinnowApp: App {
             }
 
             CommandMenu("Navigate") {
-                Button("Today") { appState.selectedNavItem = .today }
+                Button("Today")                 { appState.selectedNavItem = .today }
                     .keyboardShortcut("1", modifiers: .command)
-
-                Button("Inbox") { appState.selectedNavItem = .other }
+                Button("Inbox")                 { appState.selectedNavItem = .other }
                     .keyboardShortcut("2", modifiers: .command)
-
-                Button("Trips & Deliveries") { appState.selectedNavItem = .trips }
+                Button("Trips & Deliveries")    { appState.selectedNavItem = .trips }
                     .keyboardShortcut("3", modifiers: .command)
-
-                Button("Subscriptions") { appState.selectedNavItem = .subscriptions }
+                Button("Subscriptions")         { appState.selectedNavItem = .subscriptions }
                     .keyboardShortcut("4", modifiers: .command)
 
                 Divider()
 
-                Button("Next Thread") { appState.advance() }
+                Button("Next Thread")     { appState.advance() }
                     .keyboardShortcut("j", modifiers: [])
-
                 Button("Previous Thread") { appState.retreat() }
                     .keyboardShortcut("k", modifiers: [])
             }
+        }
+
+        // ── Settings window (⌘,) ───────────────────────────────────────────
+        Settings {
+            SettingsView()
+                .environment(settings)
+                .environment(appState)
         }
     }
 }
