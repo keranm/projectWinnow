@@ -25,6 +25,18 @@ final class AppState {
         return threads.first { $0.id == id }
     }
 
+    func count(for item: NavItem) -> Int {
+        switch item {
+        case .today:      return threads.filter { !$0.isRead }.count
+        case .important:  return threads.filter { $0.labels.contains("IMPORTANT") }.count
+        case .other:      return threads.filter { $0.labels.contains("INBOX") }.count
+        case .trips:      return threads.filter { $0.intelligenceResults.contains { if case .flightInfo = $0 { return true }; if case .packageTracking = $0 { return true }; return false } }.count
+        case .quotes:     return 0
+        case .subscriptions: return threads.filter { $0.intelligenceResults.contains { if case .bill = $0 { return true }; return false } }.count
+        case .calendar:   return 0
+        }
+    }
+
     var visibleThreads: [MailThread] {
         switch selectedNavItem {
         case .today, .important:

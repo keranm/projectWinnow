@@ -6,7 +6,6 @@ struct SidebarView: View {
     @Environment(AppState.self) private var appState
 
     var body: some View {
-        @Bindable var state = appState
         VStack(spacing: 0) {
             accountChip
 
@@ -16,20 +15,31 @@ struct SidebarView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     // Primary nav
                     ForEach(NavItem.primaryItems, id: \.self) { item in
-                        SidebarRow(item: item, isSelected: appState.selectedNavItem == item) {
+                        SidebarRow(
+                            item: item,
+                            isSelected: appState.selectedNavItem == item,
+                            count: appState.count(for: item)
+                        ) {
                             appState.selectedNavItem = item
                         }
                     }
 
                     // Pulled from mail
-                    Text("Pulled from mail")
-                        .winnowSectionHeader()
-                        .padding(.horizontal, 16)
-                        .padding(.top, 20)
-                        .padding(.bottom, 6)
+                    HStack(spacing: 5) {
+                        AssistDiamond(size: .small)
+                        Text("Pulled from mail")
+                            .winnowSectionHeader()
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 22)
+                    .padding(.bottom, 6)
 
                     ForEach(NavItem.pulledItems, id: \.self) { item in
-                        SidebarRow(item: item, isSelected: appState.selectedNavItem == item) {
+                        SidebarRow(
+                            item: item,
+                            isSelected: appState.selectedNavItem == item,
+                            count: appState.count(for: item)
+                        ) {
                             appState.selectedNavItem = item
                         }
                     }
@@ -38,13 +48,14 @@ struct SidebarView: View {
             }
 
             Spacer(minLength: 0)
-
             Divider().opacity(0.5)
             syncFooter
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(Color.winnowSidebar)
     }
+
+    // MARK: - Account chip
 
     private var accountChip: some View {
         HStack(spacing: 10) {
@@ -69,9 +80,7 @@ struct SidebarView: View {
                         .lineLimit(1)
                 }
             }
-
             Spacer()
-
             Image(systemName: "chevron.down")
                 .font(.system(size: 10, weight: .semibold))
                 .foregroundStyle(Color.winnowTextTertiary)
@@ -79,6 +88,8 @@ struct SidebarView: View {
         .padding(.horizontal, 14)
         .padding(.vertical, 12)
     }
+
+    // MARK: - Sync footer
 
     private var syncFooter: some View {
         HStack(spacing: 6) {
@@ -109,38 +120,43 @@ struct SidebarView: View {
     }
 }
 
+// MARK: - Row
+
 private struct SidebarRow: View {
     let item: NavItem
     let isSelected: Bool
+    let count: Int
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 10) {
-                Image(systemName: item.systemImage)
-                    .font(.system(size: 13))
-                    .foregroundStyle(isSelected ? Color.winnowAccent : Color.winnowTextSecondary)
-                    .frame(width: 18)
+            HStack(spacing: 0) {
+                // Diamond selection indicator — occupies fixed 20pt leading slot
+                ZStack {
+                    if isSelected {
+                        AssistDiamond(size: .small)
+                    }
+                }
+                .frame(width: 20)
 
                 Text(item.title)
                     .font(WinnowTypography.label)
                     .foregroundStyle(isSelected ? Color.winnowText : Color.winnowTextSecondary)
 
                 Spacer()
+
+                if count > 0 {
+                    Text("\(count)")
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
+                        .foregroundStyle(isSelected ? Color.winnowAccent : Color.winnowTextTertiary)
+                        .monospacedDigit()
+                }
             }
-            .padding(.horizontal, 12)
+            .padding(.horizontal, 10)
             .padding(.vertical, 7)
             .background(
-                ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: WinnowRadius.row)
-                        .fill(isSelected ? Color.winnowAccentTint : Color.clear)
-                    if isSelected {
-                        Rectangle()
-                            .fill(Color.winnowAccent)
-                            .frame(width: 2)
-                            .cornerRadius(1)
-                    }
-                }
+                RoundedRectangle(cornerRadius: WinnowRadius.row)
+                    .fill(isSelected ? Color.winnowAccentTint : Color.clear)
             )
         }
         .buttonStyle(.plain)
