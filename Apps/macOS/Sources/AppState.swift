@@ -111,7 +111,8 @@ final class AppState {
                 color: .blue
             )]
 
-            let fetched = try await client.syncInbox()
+            let raw = try await client.syncInbox()
+            let fetched = await ExtractionPipeline.shared.processTier1(raw)
             threads = fetched
             lastSyncDate = Date()
             if selectedThreadID == nil { selectedThreadID = threads.first?.id }
@@ -149,11 +150,37 @@ final class AppState {
     }
 
     func markRead(_ id: String) {
-        if let i = threads.firstIndex(where: { $0.id == id }) { threads[i].isRead = true }
+        guard let i = threads.firstIndex(where: { $0.id == id }), !threads[i].isRead else { return }
+        threads[i].isRead = true
+        Task { try? await gmailClient?.modifyThread(id, removeLabels: ["UNREAD"]) }
     }
 
     func archive(_ id: String) {
+        if selectedThreadID == id { advance() }
         threads.removeAll { $0.id == id }
+        Task { try? await gmailClient?.modifyThread(id, removeLabels: ["INBOX"]) }
+    }
+
+    func sendReply(threadID: String, body: String) async {
+        guard let client = gmailClient,
+              let account = accounts.first,
+              let thread = threads.first(where: { $0.id == threadID }),
+              let lastMsg = thread.messages.last
+        else { return }
+
+        let to = [lastMsg.from.email]
+        do {
+            try await client.sendReply(
+                threadID: threadID,
+                inReplyToMessageID: lastMsg.rfc2822MessageID,
+                from: account.email,
+                to: to,
+                subject: thread.subject,
+                plainBody: body
+            )
+        } catch {
+            syncError = error.localizedDescription
+        }
     }
 
     /// Fetches the full thread body on demand. Safe to call repeatedly — no-ops if already loaded.

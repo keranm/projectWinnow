@@ -13,6 +13,8 @@ public struct MailMessage: Identifiable, Sendable, Hashable {
     public var date: Date
     public var labels: Set<String>
     public var isRead: Bool
+    /// RFC 2822 Message-ID header value — used for reply threading.
+    public var rfc2822MessageID: String?
 
     public init(
         id: String,
@@ -26,7 +28,8 @@ public struct MailMessage: Identifiable, Sendable, Hashable {
         body: MessageBody? = nil,
         date: Date,
         labels: Set<String> = [],
-        isRead: Bool = false
+        isRead: Bool = false,
+        rfc2822MessageID: String? = nil
     ) {
         self.id = id
         self.threadID = threadID
@@ -40,6 +43,7 @@ public struct MailMessage: Identifiable, Sendable, Hashable {
         self.date = date
         self.labels = labels
         self.isRead = isRead
+        self.rfc2822MessageID = rfc2822MessageID
     }
 }
 

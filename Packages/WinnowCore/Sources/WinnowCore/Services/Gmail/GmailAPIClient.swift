@@ -60,6 +60,42 @@ public actor GmailAPIClient {
         return results.sorted { $0.lastMessageDate > $1.lastMessageDate }
     }
 
+    // MARK: - Mutations
+
+    /// Add or remove Gmail labels on a thread. Use this for mark-as-read, archive, star, etc.
+    public func modifyThread(_ id: String, addLabels: [String] = [], removeLabels: [String] = []) async throws {
+        struct Body: Encodable { let addLabelIds: [String]; let removeLabelIds: [String] }
+        try await postJSON("threads/\(id)/modify", body: Body(addLabelIds: addLabels, removeLabelIds: removeLabels))
+    }
+
+    /// Sends a plain-text reply and attaches it to the existing thread.
+    public func sendReply(
+        threadID: String,
+        inReplyToMessageID: String?,
+        from: String,
+        to: [String],
+        subject: String,
+        plainBody: String
+    ) async throws {
+        let sub = subject.hasPrefix("Re: ") ? subject : "Re: \(subject)"
+        var headers = [
+            "From: \(from)",
+            "To: \(to.joined(separator: ", "))",
+            "Subject: \(sub)",
+            "MIME-Version: 1.0",
+            "Content-Type: text/plain; charset=UTF-8"
+        ]
+        if let mid = inReplyToMessageID {
+            headers.append("In-Reply-To: \(mid)")
+            headers.append("References: \(mid)")
+        }
+        let mime = headers.joined(separator: "\r\n") + "\r\n\r\n" + plainBody
+        let raw = Data(mime.utf8).base64URLEncoded()
+
+        struct SendBody: Encodable { let raw: String; let threadId: String }
+        try await postJSON("messages/send", body: SendBody(raw: raw, threadId: threadID))
+    }
+
     // MARK: - Token management
 
     public func currentTokens() -> OAuthTokens { tokens }
@@ -76,6 +112,19 @@ public actor GmailAPIClient {
         return tokens.accessToken
     }
 
+    private func postJSON<T: Encodable>(_ path: String, body: T) async throws {
+        let token = try await validToken()
+        var req = URLRequest(url: Self.base.appendingPathComponent(path))
+        req.httpMethod = "POST"
+        req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        req.httpBody = try JSONEncoder().encode(body)
+        let (data, response) = try await URLSession.shared.data(for: req)
+        guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
+            throw GmailError.requestFailed(String(data: data, encoding: .utf8) ?? "unknown")
+        }
+    }
+
     private func get<T: Decodable>(_ path: String, params: [String: String] = [:], as type: T.Type) async throws -> T {
         let token = try await validToken()
         var comps = URLComponents(url: Self.base.appendingPathComponent(path), resolvingAgainstBaseURL: false)!
@@ -90,6 +139,15 @@ public actor GmailAPIClient {
             throw GmailError.requestFailed(String(data: data, encoding: .utf8) ?? "unknown")
         }
         return try JSONDecoder().decode(T.self, from: data)
+    }
+}
+
+private extension Data {
+    func base64URLEncoded() -> String {
+        base64EncodedString()
+            .replacingOccurrences(of: "+", with: "-")
+            .replacingOccurrences(of: "/", with: "_")
+            .replacingOccurrences(of: "=", with: "")
     }
 }
 

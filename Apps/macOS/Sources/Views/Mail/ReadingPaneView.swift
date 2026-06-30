@@ -38,6 +38,11 @@ struct ReadingPaneView: View {
         .background(Color.winnowSurface)
         .task(id: thread.id) {
             await appState.loadFullThread(thread.id)
+            // Auto-mark as read after a brief reading pause
+            if !thread.isRead {
+                try? await Task.sleep(for: .seconds(1.5))
+                appState.markRead(thread.id)
+            }
         }
     }
 
@@ -178,9 +183,16 @@ struct ReadingPaneView: View {
                     .background(Color.winnowStage.opacity(0.5))
                     .cornerRadius(WinnowRadius.row)
 
-                Button("Send") {}
-                    .buttonStyle(WinnowPrimaryButton())
-                    .disabled(replyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                Button("Send") {
+                    let body = replyText
+                    let tid = thread.id
+                    Task {
+                        await appState.sendReply(threadID: tid, body: body)
+                        replyText = ""
+                    }
+                }
+                .buttonStyle(WinnowPrimaryButton())
+                .disabled(replyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
         }
         .padding(.horizontal, WinnowSpacing.sectionH)

@@ -46,7 +46,8 @@ enum GmailMessageMapper {
             body: body,
             date: date,
             labels: Set(m.labelIds ?? []),
-            isRead: !(m.labelIds?.contains("UNREAD") ?? false)
+            isRead: !(m.labelIds?.contains("UNREAD") ?? false),
+            rfc2822MessageID: m.header("Message-ID")
         )
     }
 
