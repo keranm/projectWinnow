@@ -8,6 +8,7 @@ struct ReadingPaneView: View {
     @Environment(WinnowSettings.self) private var settings
     @State private var replyText: String = ""
     @State private var signatureSeeded = false
+    @State private var isSendHovered = false
     @FocusState private var replyFocused: Bool
 
     private var latestMessage: MailMessage? { thread.messages.last }
@@ -260,21 +261,10 @@ struct ReadingPaneView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
                 ForEach(thread.suggestedReplies, id: \.self) { reply in
-                    Button {
+                    QuickReplyChip(text: reply) {
                         replyText = reply
                         replyFocused = true
-                    } label: {
-                        Text(reply)
-                            .font(.system(size: 12.5, weight: .medium))
-                            .foregroundStyle(Color(hex: "5A5A62"))
-                            .padding(.horizontal, 13)
-                            .padding(.vertical, 5)
-                            .overlay(
-                                Capsule()
-                                    .strokeBorder(Color.black.opacity(0.10), lineWidth: 1)
-                            )
                     }
-                    .buttonStyle(.plain)
                 }
             }
         }
@@ -309,13 +299,17 @@ struct ReadingPaneView: View {
             .padding(.vertical, 6)
             .background(
                 RoundedRectangle(cornerRadius: 7)
-                    .fill(replyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                          ? Color.winnowAccent.opacity(0.4)
-                          : Color.winnowAccent)
+                    .fill({
+                        let isEmpty = replyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                        if isEmpty { return Color.winnowAccent.opacity(0.4) }
+                        return Color.winnowAccent.opacity(isSendHovered ? 0.88 : 1.0)
+                    }())
+                    .animation(.easeInOut(duration: 0.12), value: isSendHovered)
             )
             .buttonStyle(.plain)
             .disabled(replyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             .keyboardShortcut(.return, modifiers: .command)
+            .onHover { isSendHovered = $0 }
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 11)
@@ -333,18 +327,60 @@ struct ReadingPaneView: View {
     }
 }
 
+// MARK: - Quick reply chip
+
+private struct QuickReplyChip: View {
+    let text: String
+    let onTap: () -> Void
+    @State private var isHovered = false
+
+    var body: some View {
+        Button(action: onTap) {
+            Text(text)
+                .font(.system(size: 12.5, weight: .medium))
+                .foregroundStyle(Color(hex: "5A5A62"))
+                .padding(.horizontal, 13)
+                .padding(.vertical, 5)
+                .background(
+                    Capsule()
+                        .fill(isHovered ? Color.winnowHover : .clear)
+                        .animation(.easeInOut(duration: 0.12), value: isHovered)
+                        .overlay(
+                            Capsule()
+                                .strokeBorder(Color.black.opacity(isHovered ? 0.14 : 0.10), lineWidth: 1)
+                        )
+                )
+        }
+        .buttonStyle(.plain)
+        .onHover { isHovered = $0 }
+    }
+}
+
 // MARK: - Primary button style (used in ComposeView)
 
 struct WinnowPrimaryButton: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.system(size: 12.5, weight: .semibold))
-            .foregroundStyle(.white)
-            .padding(.horizontal, 14)
-            .padding(.vertical, 6)
-            .background(
-                RoundedRectangle(cornerRadius: 7)
-                    .fill(Color.winnowAccent.opacity(configuration.isPressed ? 0.8 : 1))
-            )
+        Inner(configuration: configuration)
+    }
+
+    private struct Inner: View {
+        let configuration: ButtonStyle.Configuration
+        @State private var isHovered = false
+
+        var body: some View {
+            configuration.label
+                .font(.system(size: 12.5, weight: .semibold))
+                .foregroundStyle(.white)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 6)
+                .background(
+                    RoundedRectangle(cornerRadius: 7)
+                        .fill(Color.winnowAccent.opacity(
+                            configuration.isPressed ? 0.75 : (isHovered ? 0.88 : 1.0)
+                        ))
+                        .animation(.easeInOut(duration: 0.12), value: isHovered)
+                )
+                .onHover { isHovered = $0 }
+        }
     }
 }

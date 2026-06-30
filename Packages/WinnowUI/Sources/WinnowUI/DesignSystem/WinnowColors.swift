@@ -30,6 +30,22 @@ public extension Color {
     // MARK: - Controls
     static let winnowToggleOff      = adaptive(light: "D8D8DE", dark: "48484A")
 
+    // MARK: - Hover
+    static let winnowHover: Color = {
+        #if os(macOS)
+        return Color(NSColor(name: nil) { appearance in
+            appearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua
+                ? NSColor.white.withAlphaComponent(0.08)
+                : NSColor.black.withAlphaComponent(0.04)
+        })
+        #else
+        return Color(UIColor { $0.userInterfaceStyle == .dark
+            ? UIColor.white.withAlphaComponent(0.08)
+            : UIColor.black.withAlphaComponent(0.04)
+        })
+        #endif
+    }()
+
     // MARK: - Hex initializer
     init(hex: String) {
         let clean = hex.hasPrefix("#") ? String(hex.dropFirst()) : hex

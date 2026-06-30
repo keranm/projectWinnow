@@ -83,6 +83,8 @@ private struct EngineCard: View {
     let engine: WinnowSettings.Engine
     let selected: Bool
     let onSelect: () -> Void
+    @State private var isHovered = false
+    @State private var isDownloadHovered = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -126,10 +128,16 @@ private struct EngineCard: View {
                         .foregroundStyle(Color.winnowAccent)
                         .padding(.horizontal, 14)
                         .padding(.vertical, 7)
+                        .background(
+                            RoundedRectangle(cornerRadius: 9)
+                                .fill(isDownloadHovered ? Color.winnowAccentTint : .clear)
+                                .animation(.easeInOut(duration: 0.12), value: isDownloadHovered)
+                        )
                         .overlay(
                             RoundedRectangle(cornerRadius: 9)
                                 .strokeBorder(Color.winnowAccent.opacity(0.28), lineWidth: 1)
                         )
+                        .onHover { isDownloadHovered = $0 }
                 }
             }
 
@@ -159,8 +167,14 @@ private struct EngineCard: View {
                     lineWidth: selected ? 1.5 : 1
                 )
         )
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(!selected && isHovered ? Color.winnowHover : .clear)
+                .animation(.easeInOut(duration: 0.12), value: isHovered)
+        )
         .contentShape(Rectangle())
         .onTapGesture(perform: onSelect)
+        .onHover { isHovered = $0 }
     }
 
     private var subtitleText: String {
@@ -193,6 +207,7 @@ private struct CloudEngineCard: View {
     @Binding var isEnabled: Bool
     @Binding var apiKey: String
     let onToggle: () -> Void
+    @State private var isPasteHovered = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -245,7 +260,15 @@ private struct CloudEngineCard: View {
                     }
                     .font(.system(size: 11.5, weight: .medium))
                     .foregroundStyle(Color.winnowAccent)
+                    .padding(.horizontal, 7)
+                    .padding(.vertical, 3)
+                    .background(
+                        RoundedRectangle(cornerRadius: 5)
+                            .fill(isPasteHovered ? Color.winnowAccentTint : .clear)
+                            .animation(.easeInOut(duration: 0.12), value: isPasteHovered)
+                    )
                     .buttonStyle(.plain)
+                    .onHover { isPasteHovered = $0 }
                 } else {
                     Text("disabled")
                         .font(.system(size: 11).monospaced())
@@ -280,24 +303,34 @@ private struct CloudEngineCard: View {
 private struct AssistanceLevelPicker: View {
     @Binding var selection: WinnowSettings.AssistanceLevel
     let onChange: () -> Void
+    @State private var hoveredLevel: WinnowSettings.AssistanceLevel? = nil
 
     var body: some View {
         HStack(spacing: 0) {
             ForEach(WinnowSettings.AssistanceLevel.allCases, id: \.self) { level in
                 let isSelected = selection == level
+                let isHovered = hoveredLevel == level && !isSelected
                 Text(level.label)
                     .font(.system(size: 12.5, weight: isSelected ? .semibold : .medium))
                     .foregroundStyle(isSelected ? Color.winnowText : Color(hex: "6A6A70"))
                     .padding(.horizontal, 16)
                     .padding(.vertical, 6)
                     .background(
-                        isSelected
-                            ? RoundedRectangle(cornerRadius: 6)
-                                .fill(Color.white)
-                                .shadow(color: .black.opacity(0.12), radius: 1, x: 0, y: 1)
-                            : nil
+                        Group {
+                            if isSelected {
+                                RoundedRectangle(cornerRadius: 6)
+                                    .fill(Color.white)
+                                    .shadow(color: .black.opacity(0.12), radius: 1, x: 0, y: 1)
+                            } else if isHovered {
+                                RoundedRectangle(cornerRadius: 6)
+                                    .fill(Color.winnowHover)
+                            }
+                        }
                     )
+                    .animation(.easeInOut(duration: 0.12), value: isHovered)
+                    .contentShape(Rectangle())
                     .onTapGesture { selection = level; onChange() }
+                    .onHover { hoveredLevel = $0 ? level : nil }
             }
         }
         .padding(3)

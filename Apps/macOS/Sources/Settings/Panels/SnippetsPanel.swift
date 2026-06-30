@@ -5,6 +5,7 @@ struct SnippetsPanel: View {
     @Environment(WinnowSettings.self) private var settings
     @State private var selectedID: UUID? = nil
     @State private var editBuffer: WinnowSettings.Snippet? = nil
+    @State private var isNewSnippetHovered = false
 
     private var selectedSnippet: WinnowSettings.Snippet? {
         guard let id = selectedID else { return nil }
@@ -50,10 +51,14 @@ struct SnippetsPanel: View {
                     Text("＋ New snippet")
                         .font(.system(size: 12.5, weight: .semibold))
                         .foregroundStyle(Color.winnowAccent)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 11)
+                        .padding(.vertical, 9)
+                        .background(isNewSnippetHovered ? Color.winnowHover : .clear)
+                        .animation(.easeInOut(duration: 0.12), value: isNewSnippetHovered)
                 }
                 .buttonStyle(.plain)
-                .padding(.horizontal, 11)
-                .padding(.vertical, 9)
+                .onHover { isNewSnippetHovered = $0 }
             }
             .frame(width: 220)
             .background(Color.winnowSidebar)
@@ -99,6 +104,7 @@ struct SnippetsPanel: View {
 private struct SnippetListRow: View {
     let snippet: WinnowSettings.Snippet
     let isSelected: Bool
+    @State private var isHovered = false
 
     var body: some View {
         HStack {
@@ -113,12 +119,14 @@ private struct SnippetListRow: View {
                 .font(.system(size: 11, weight: isSelected ? .semibold : .medium).monospaced())
                 .foregroundStyle(isSelected ? Color.winnowAccent : Color(hex: "B2B2B8"))
         }
+        .frame(maxWidth: .infinity)
         .padding(.horizontal, 11)
         .padding(.vertical, 9)
         .background(
             ZStack(alignment: .leading) {
                 RoundedRectangle(cornerRadius: 7)
-                    .fill(isSelected ? Color.winnowAccentTint : Color.clear)
+                    .fill(isSelected ? Color.winnowAccentTint : (isHovered ? Color.winnowHover : .clear))
+                    .animation(.easeInOut(duration: 0.12), value: isHovered)
                 if isSelected {
                     Rectangle()
                         .fill(Color.winnowAccent)
@@ -129,6 +137,7 @@ private struct SnippetListRow: View {
             }
         )
         .contentShape(Rectangle())
+        .onHover { isHovered = $0 }
     }
 }
 
@@ -148,6 +157,7 @@ private struct SnippetEditor: View {
     }
     enum Field { case name, shortcut, body }
 
+    @State private var isDeleteHovered = false
     private let placeholders = ["first name", "date", "calendar link"]
 
     var body: some View {
@@ -210,19 +220,10 @@ private struct SnippetEditor: View {
                     .foregroundStyle(Color.winnowTextTertiary)
 
                 ForEach(placeholders, id: \.self) { ph in
-                    Button {
+                    PlaceholderChip(label: ph) {
                         snippet.body += " {{\(ph)}}"
                         onChange(snippet)
-                    } label: {
-                        Text(ph)
-                            .font(.system(size: 12.5).monospaced())
-                            .foregroundStyle(Color.winnowAccent)
-                            .padding(.horizontal, 5)
-                            .padding(.vertical, 1)
-                            .background(Color.winnowAccentTint)
-                            .clipShape(RoundedRectangle(cornerRadius: 5))
                     }
-                    .buttonStyle(.plain)
                 }
             }
             .padding(.horizontal, 24)
@@ -259,10 +260,43 @@ private struct SnippetEditor: View {
                 Button("Delete snippet") { onDelete() }
                     .font(.system(size: 12, weight: .medium))
                     .foregroundStyle(Color.winnowAlert)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(isDeleteHovered ? Color.winnowAlert.opacity(0.08) : .clear)
+                            .animation(.easeInOut(duration: 0.12), value: isDeleteHovered)
+                    )
                     .buttonStyle(.plain)
+                    .onHover { isDeleteHovered = $0 }
             }
             .padding(.horizontal, 24)
             .padding(.vertical, 14)
         }
+    }
+}
+
+// MARK: - Placeholder chip
+
+private struct PlaceholderChip: View {
+    let label: String
+    let onTap: () -> Void
+    @State private var isHovered = false
+
+    var body: some View {
+        Button(action: onTap) {
+            Text(label)
+                .font(.system(size: 12.5).monospaced())
+                .foregroundStyle(Color.winnowAccent)
+                .padding(.horizontal, 5)
+                .padding(.vertical, 1)
+                .background(
+                    RoundedRectangle(cornerRadius: 5)
+                        .fill(isHovered ? Color.winnowAccent.opacity(0.14) : Color.winnowAccentTint)
+                        .animation(.easeInOut(duration: 0.12), value: isHovered)
+                )
+        }
+        .buttonStyle(.plain)
+        .onHover { isHovered = $0 }
     }
 }

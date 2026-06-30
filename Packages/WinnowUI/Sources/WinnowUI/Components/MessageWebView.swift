@@ -21,6 +21,10 @@ public struct MessageWebView: NSViewRepresentable {
         let webView = WKWebView(frame: .zero, configuration: config)
         webView.navigationDelegate = context.coordinator
         webView.enclosingScrollView?.hasVerticalScroller = true
+        // Always render email in light mode — email HTML is designed for white backgrounds.
+        // The Winnow chrome stays dark; only the message body is forced to light.
+        webView.appearance = NSAppearance(named: .aqua)
+        webView.underPageBackgroundColor = .white
         return webView
     }
 
@@ -37,8 +41,8 @@ public struct MessageWebView: NSViewRepresentable {
         <!DOCTYPE html><html><head>
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <style>
-        :root { color-scheme: light dark; }
         body {
+          background-color: #ffffff;
           font-family: -apple-system, system-ui, sans-serif;
           font-size: 14px;
           line-height: 1.55;
@@ -50,10 +54,6 @@ public struct MessageWebView: NSViewRepresentable {
         img { max-width: 100% !important; height: auto !important; }
         table { max-width: 100% !important; border-collapse: collapse; }
         pre, code { font-family: ui-monospace, monospace; font-size: 12px; }
-        @media (prefers-color-scheme: dark) {
-          body { color: #E5E5E5; }
-          a    { color: #4F8EF0; }
-        }
         </style>
         </head><body>\(html)</body></html>
         """

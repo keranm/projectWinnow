@@ -68,8 +68,9 @@ struct SidebarView: View {
             }
             Spacer()
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 12)
+        .padding(.horizontal, 14)
+        .padding(.top, 38)
+        .padding(.bottom, 12)
     }
 
     private func initialsAvatar(_ account: Account) -> some View {
@@ -96,7 +97,7 @@ struct SidebarView: View {
             .font(.system(size: 10.5, weight: .semibold))
             .tracking(0.7)
             .foregroundStyle(Color.winnowTextQuaternary)
-            .padding(.horizontal, 10)
+            .padding(.horizontal, 14)
     }
 
     // MARK: - Sync footer
@@ -116,7 +117,7 @@ struct SidebarView: View {
                 .lineLimit(1)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 12)
+        .padding(.horizontal, 14)
         .padding(.vertical, 10)
     }
 
@@ -137,6 +138,7 @@ private struct SidebarRow: View {
     let isSelected: Bool
     let count: Int
     let action: () -> Void
+    @State private var isHovered = false
 
     var body: some View {
         Button(action: action) {
@@ -153,23 +155,24 @@ private struct SidebarRow: View {
                         .foregroundStyle(isSelected ? Color.winnowAccent : Color.winnowTextQuaternary)
                 }
             }
-            .padding(.horizontal, 10)
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, 12)
             .padding(.vertical, 7)
             .background(
                 ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 7)
-                        .fill(isSelected ? Color.winnowAccentTint : Color.clear)
+                    Rectangle()
+                        .fill(isSelected ? Color.winnowAccentTint : (isHovered ? Color.winnowHover : .clear))
+                        .animation(.easeInOut(duration: 0.12), value: isHovered)
                     if isSelected {
-                        RoundedRectangle(cornerRadius: 2)
+                        Rectangle()
                             .fill(Color.winnowAccent)
                             .frame(width: 2)
-                            .padding(.vertical, 3)
                     }
                 }
             )
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .padding(.horizontal, 6)
-        .padding(.vertical, 1)
+        .onHover { isHovered = $0 }
     }
 }

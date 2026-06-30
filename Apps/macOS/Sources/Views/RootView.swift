@@ -1,9 +1,8 @@
 import SwiftUI
-import WinnowUI
 
 struct RootView: View {
     @Environment(AppState.self) private var appState
-    @State private var columnVisibility: NavigationSplitViewVisibility = .all
+    @Environment(WinnowSettings.self) private var settings
 
     var body: some View {
         Group {
@@ -19,24 +18,22 @@ struct RootView: View {
 
     private var mainLayout: some View {
         @Bindable var state = appState
-        return NavigationSplitView(columnVisibility: $columnVisibility) {
+        return HStack(spacing: 0) {
             SidebarView()
-                .navigationSplitViewColumnWidth(min: 212, ideal: 220, max: 228)
-        } detail: {
+                .frame(width: 220)
+                .ignoresSafeArea()
+            Divider()
+                .ignoresSafeArea()
             detailContent
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .ignoresSafeArea()
         }
-        .navigationTitle("")
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                Text("Winnow")
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundStyle(Color.winnowTextTertiary)
-            }
-        }
-        .background(Color.winnowStage)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .ignoresSafeArea()
         .sheet(isPresented: $state.isComposing) {
             ComposeView(isPresented: $state.isComposing)
                 .environment(appState)
+                .environment(settings)
         }
     }
 

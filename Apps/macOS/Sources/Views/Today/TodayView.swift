@@ -94,28 +94,7 @@ struct TodayView: View {
 
             Spacer()
 
-            // "Open inbox ⌘1" pill
-            Button { appState.selectedNavItem = .other } label: {
-                HStack(spacing: 8) {
-                    Text("Open inbox")
-                        .font(.system(size: 13, weight: .regular))
-                        .foregroundStyle(Color.winnowTextTertiary)
-                    Text("⌘1")
-                        .font(.system(size: 11, weight: .semibold).monospaced())
-                        .foregroundStyle(Color(hex: "B2B2B8"))
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 1)
-                        .background(Color.black.opacity(0.05))
-                        .clipShape(RoundedRectangle(cornerRadius: 4))
-                }
-                .padding(.horizontal, 13)
-                .padding(.vertical, 8)
-                .background(
-                    RoundedRectangle(cornerRadius: 9)
-                        .strokeBorder(Color.black.opacity(0.10), lineWidth: 1)
-                )
-            }
-            .buttonStyle(.plain)
+            OpenInboxPill { appState.selectedNavItem = .other }
         }
     }
 
@@ -263,12 +242,7 @@ struct TodayView: View {
 
                 Spacer()
 
-                Button("Refresh") {
-                    Task { await appState.syncInbox() }
-                }
-                .font(.system(size: 12.5, weight: .semibold))
-                .foregroundStyle(Color.winnowAccent)
-                .buttonStyle(.plain)
+                AgentRefreshButton { Task { await appState.syncInbox() } }
             }
             .padding(.horizontal, 17)
             .padding(.vertical, 13)
@@ -287,6 +261,7 @@ struct TodayView: View {
 private struct NeedsReplyRow: View {
     let thread: MailThread
     let onTap: () -> Void
+    @State private var isHovered = false
 
     private var sender: String {
         thread.messages.last?.from.displayName ?? thread.messages.last?.from.email ?? "Unknown"
@@ -382,9 +357,11 @@ private struct NeedsReplyRow: View {
         }
         .padding(.horizontal, 19)
         .padding(.vertical, 14)
+        .background(isHovered ? Color.winnowHover : .clear)
+        .animation(.easeInOut(duration: 0.12), value: isHovered)
         .contentShape(Rectangle())
         .onTapGesture { onTap() }
-        .onHover { inside in if inside { NSCursor.pointingHand.push() } else { NSCursor.pop() } }
+        .onHover { isHovered = $0 }
     }
 }
 
@@ -465,6 +442,8 @@ private struct DueSoonCard: View {
 
 private struct BillDueSoonRow: View {
     let thread: MailThread
+    @Environment(AppState.self) private var appState
+    @State private var isHovered = false
 
     private var bill: IntelligenceResult.BillInfo? {
         for r in thread.intelligenceResults { if case .bill(let b) = r { return b } }
@@ -494,8 +473,17 @@ private struct BillDueSoonRow: View {
                     .font(.system(size: 12.5, weight: .semibold).monospaced())
                     .foregroundStyle(Color(hex: "34343A"))
             }
+            .frame(maxWidth: .infinity)
             .padding(.horizontal, 16)
             .padding(.vertical, 9)
+            .background(isHovered ? Color.winnowHover : .clear)
+            .animation(.easeInOut(duration: 0.12), value: isHovered)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                appState.selectedNavItem = .other
+                appState.selectThread(thread.id)
+            }
+            .onHover { isHovered = $0 }
         }
     }
 
@@ -541,6 +529,8 @@ private struct TripsCard: View {
 
 private struct TripRow: View {
     let thread: MailThread
+    @Environment(AppState.self) private var appState
+    @State private var isHovered = false
 
     private var flight: IntelligenceResult.FlightInfo? {
         for r in thread.intelligenceResults { if case .flightInfo(let f) = r { return f } }
@@ -567,8 +557,17 @@ private struct TripRow: View {
             }
             Spacer()
         }
+        .frame(maxWidth: .infinity)
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
+        .background(isHovered ? Color.winnowHover : .clear)
+        .animation(.easeInOut(duration: 0.12), value: isHovered)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            appState.selectedNavItem = .other
+            appState.selectThread(thread.id)
+        }
+        .onHover { isHovered = $0 }
     }
 
     private var title: String {
@@ -633,6 +632,67 @@ private struct TodayCard<Content: View>: View {
             RoundedRectangle(cornerRadius: 13)
                 .strokeBorder(Color.black.opacity(0.07), lineWidth: 1)
         )
+    }
+}
+
+// MARK: - Open inbox pill
+
+private struct OpenInboxPill: View {
+    let action: () -> Void
+    @State private var isHovered = false
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 8) {
+                Text("Open inbox")
+                    .font(.system(size: 13, weight: .regular))
+                    .foregroundStyle(Color.winnowTextTertiary)
+                Text("⌘1")
+                    .font(.system(size: 11, weight: .semibold).monospaced())
+                    .foregroundStyle(Color(hex: "B2B2B8"))
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 1)
+                    .background(Color.black.opacity(0.05))
+                    .clipShape(RoundedRectangle(cornerRadius: 4))
+            }
+            .padding(.horizontal, 13)
+            .padding(.vertical, 8)
+            .background(
+                RoundedRectangle(cornerRadius: 9)
+                    .fill(isHovered ? Color.winnowHover : .clear)
+                    .animation(.easeInOut(duration: 0.12), value: isHovered)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 9)
+                            .strokeBorder(Color.black.opacity(isHovered ? 0.14 : 0.10), lineWidth: 1)
+                    )
+            )
+        }
+        .buttonStyle(.plain)
+        .onHover { isHovered = $0 }
+    }
+}
+
+// MARK: - Agent strip refresh button
+
+private struct AgentRefreshButton: View {
+    let action: () -> Void
+    @State private var isHovered = false
+
+    var body: some View {
+        Button(action: action) {
+            Text("Refresh")
+                .font(.system(size: 12.5, weight: .semibold))
+                .foregroundStyle(Color.winnowAccent)
+                .padding(.horizontal, 9)
+                .padding(.vertical, 4)
+                .background(
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(isHovered ? Color.winnowAccentTint : .clear)
+                        .animation(.easeInOut(duration: 0.12), value: isHovered)
+                )
+        }
+        .buttonStyle(.plain)
+        .onHover { isHovered = $0 }
     }
 }
 

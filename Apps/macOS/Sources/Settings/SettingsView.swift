@@ -70,6 +70,7 @@ struct SettingsView: View {
 private struct SettingsNavRow: View {
     let section: SettingsSection
     let isSelected: Bool
+    @State private var isHovered = false
 
     var body: some View {
         HStack(spacing: 10) {
@@ -91,7 +92,8 @@ private struct SettingsNavRow: View {
         .background(
             ZStack(alignment: .leading) {
                 RoundedRectangle(cornerRadius: 7)
-                    .fill(isSelected ? Color.winnowAccentTint : Color.clear)
+                    .fill(isSelected ? Color.winnowAccentTint : (isHovered ? Color.winnowHover : .clear))
+                    .animation(.easeInOut(duration: 0.12), value: isHovered)
                 if isSelected {
                     RoundedRectangle(cornerRadius: 2)
                         .fill(Color.winnowAccent)
@@ -101,9 +103,7 @@ private struct SettingsNavRow: View {
             }
         )
         .contentShape(Rectangle())
-        .onHover { inside in
-            if inside && !isSelected { NSCursor.pointingHand.push() } else { NSCursor.pop() }
-        }
+        .onHover { isHovered = $0 }
     }
 }
 
@@ -150,12 +150,15 @@ struct SettingsToggleRow: View {
 struct WinnowToggle: View {
     @Binding var isOn: Bool
     var onChange: (() -> Void)? = nil
+    @State private var isHovered = false
 
     var body: some View {
         ZStack(alignment: isOn ? .trailing : .leading) {
             Capsule()
                 .fill(isOn ? Color.winnowAccent : Color(hex: "D8D8DE"))
                 .frame(width: 38, height: 22)
+                .opacity(isHovered ? 0.82 : 1.0)
+                .animation(.easeInOut(duration: 0.12), value: isHovered)
 
             Circle()
                 .fill(Color.white)
@@ -164,9 +167,11 @@ struct WinnowToggle: View {
                 .padding(2)
         }
         .animation(.spring(duration: 0.2), value: isOn)
+        .contentShape(Rectangle())
         .onTapGesture {
             isOn.toggle()
             onChange?()
         }
+        .onHover { isHovered = $0 }
     }
 }

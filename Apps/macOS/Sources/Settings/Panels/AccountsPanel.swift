@@ -5,6 +5,7 @@ struct AccountsPanel: View {
     @Environment(WinnowSettings.self) private var settings
     @State private var editingIdentity: WinnowSettings.Identity? = nil
     @State private var isAddingIdentity = false
+    @State private var isAddIdentityHovered = false
 
     var body: some View {
         @Bindable var s = settings
@@ -104,8 +105,16 @@ struct AccountsPanel: View {
                     Text("＋ Add identity")
                         .font(.system(size: 12.5, weight: .semibold))
                         .foregroundStyle(Color.winnowAccent)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(isAddIdentityHovered ? Color.winnowAccentTint : .clear)
+                                .animation(.easeInOut(duration: 0.12), value: isAddIdentityHovered)
+                        )
                 }
                 .buttonStyle(.plain)
+                .onHover { isAddIdentityHovered = $0 }
 
                 Spacer()
 
@@ -136,6 +145,9 @@ private struct IdentityRow: View {
     let identity: WinnowSettings.Identity
     let onEdit: () -> Void
     let onSetDefault: () -> Void
+    @State private var isHovered = false
+    @State private var isSetDefaultHovered = false
+    @State private var isEditHovered = false
 
     var body: some View {
         HStack {
@@ -176,18 +188,39 @@ private struct IdentityRow: View {
                     Button("Set default", action: onSetDefault)
                         .font(.system(size: 11, weight: .semibold))
                         .foregroundStyle(Color.winnowTextTertiary)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 3)
+                        .background(
+                            RoundedRectangle(cornerRadius: 5)
+                                .fill(isSetDefaultHovered ? Color.winnowHover : .clear)
+                                .animation(.easeInOut(duration: 0.12), value: isSetDefaultHovered)
+                        )
                         .buttonStyle(.plain)
-                        .frame(width: 60, alignment: .leading)
+                        .onHover { isSetDefaultHovered = $0 }
+                        .frame(width: 72, alignment: .leading)
                 }
             }
 
             Button("Edit", action: onEdit)
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(Color.winnowAccent)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 3)
+                .background(
+                    RoundedRectangle(cornerRadius: 5)
+                        .fill(isEditHovered ? Color.winnowAccentTint : .clear)
+                        .animation(.easeInOut(duration: 0.12), value: isEditHovered)
+                )
                 .buttonStyle(.plain)
+                .onHover { isEditHovered = $0 }
         }
+        .frame(maxWidth: .infinity)
         .padding(.horizontal, 16)
         .padding(.vertical, 13)
+        .background(isHovered ? Color.winnowHover : .clear)
+        .animation(.easeInOut(duration: 0.12), value: isHovered)
+        .contentShape(Rectangle())
+        .onHover { isHovered = $0 }
     }
 }
 
@@ -197,6 +230,8 @@ struct IdentityEditorSheet: View {
     @State var identity: WinnowSettings.Identity
     let onSave: (WinnowSettings.Identity) -> Void
     let onDismiss: () -> Void
+    @State private var isCancelHovered = false
+    @State private var isSaveHovered = false
 
     @FocusState private var focused: Field?
     enum Field { case displayName, email, label, sendsVia, sigName, sigBody }
@@ -206,18 +241,34 @@ struct IdentityEditorSheet: View {
             // Chrome
             HStack {
                 Button("Cancel", action: onDismiss)
-                    .buttonStyle(.plain)
                     .foregroundStyle(Color.winnowTextTertiary)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(isCancelHovered ? Color.winnowHover : .clear)
+                            .animation(.easeInOut(duration: 0.12), value: isCancelHovered)
+                    )
+                    .buttonStyle(.plain)
+                    .onHover { isCancelHovered = $0 }
                 Spacer()
                 Text(identity.email.isEmpty ? "New identity" : "Edit identity")
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(Color.winnowText)
                 Spacer()
                 Button("Save") { onSave(identity) }
-                    .buttonStyle(.plain)
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(Color.winnowAccent)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(isSaveHovered ? Color.winnowAccentTint : .clear)
+                            .animation(.easeInOut(duration: 0.12), value: isSaveHovered)
+                    )
+                    .buttonStyle(.plain)
                     .disabled(identity.email.isEmpty || identity.displayName.isEmpty)
+                    .onHover { isSaveHovered = $0 }
             }
             .padding(.horizontal, 24)
             .padding(.vertical, 16)

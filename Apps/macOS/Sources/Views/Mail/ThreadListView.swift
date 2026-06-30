@@ -2,6 +2,8 @@ import SwiftUI
 
 struct ThreadListView: View {
     @Environment(AppState.self) private var appState
+    @State private var isRefreshHovered = false
+    @State private var isLoadMoreHovered = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -37,6 +39,7 @@ struct ThreadListView: View {
         }
         .background(Color.winnowSurface)
         .focusable()
+        .focusEffectDisabled()
         .onKeyPress("j") { appState.advance(); return .handled }
         .onKeyPress("k") { appState.retreat(); return .handled }
         .onKeyPress("e") {
@@ -72,10 +75,17 @@ struct ThreadListView: View {
                             : .default,
                         value: appState.isLoading
                     )
+                    .padding(5)
+                    .background(
+                        RoundedRectangle(cornerRadius: 5)
+                            .fill(isRefreshHovered ? Color.winnowHover : .clear)
+                            .animation(.easeInOut(duration: 0.12), value: isRefreshHovered)
+                    )
             }
             .buttonStyle(.plain)
             .help("Refresh (⌘R)")
-            .padding(.leading, 6)
+            .padding(.leading, 2)
+            .onHover { isRefreshHovered = $0 }
         }
         .padding(.horizontal, 18)
         .padding(.top, 14)
@@ -108,9 +118,14 @@ struct ThreadListView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 14)
+            .background(
+                isLoadMoreHovered ? Color.winnowHover : .clear
+            )
+            .animation(.easeInOut(duration: 0.12), value: isLoadMoreHovered)
         }
         .buttonStyle(.plain)
         .disabled(appState.isLoadingMore)
+        .onHover { isLoadMoreHovered = $0 }
     }
 
     // MARK: - Empty state

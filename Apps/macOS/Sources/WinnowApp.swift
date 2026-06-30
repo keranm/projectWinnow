@@ -1,7 +1,9 @@
 import SwiftUI
+import AppKit
 
 @main
 struct WinnowApp: App {
+    @NSApplicationDelegateAdaptor(WinnowAppDelegate.self) var appDelegate
     @State private var appState = AppState()
 
     var body: some Scene {
@@ -10,8 +12,7 @@ struct WinnowApp: App {
                 .environment(appState)
                 .environment(appState.settings)
         }
-        .windowStyle(.titleBar)
-        .windowToolbarStyle(.unified)
+        .windowStyle(.hiddenTitleBar)
         .defaultSize(width: 1200, height: 760)
         .defaultPosition(.center)
         .commands {
@@ -69,5 +70,40 @@ struct WinnowApp: App {
                 .environment(appState.settings)
                 .environment(appState)
         }
+    }
+}
+
+// MARK: - App delegate
+//
+// willOrderOnScreenNotification fires before the window is drawn — the only reliable hook
+// that guarantees fullSizeContentView is set before SwiftUI commits its initial layout pass.
+// Filtering by width ≥ 1000 skips the Settings window.
+
+final class WinnowAppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(windowBecameKey(_:)),
+            name: NSWindow.didBecomeKeyNotification,
+            object: nil
+        )
+        // Configure any windows already open at launch
+        NSApplication.shared.windows.forEach(configureIfMain(_:))
+    }
+
+    @objc private func windowBecameKey(_ note: Notification) {
+        guard let window = note.object as? NSWindow else { return }
+        configureIfMain(window)
+    }
+
+    private func configureIfMain(_ window: NSWindow) {
+        guard window.styleMask.contains(.titled),
+              !window.styleMask.contains(.fullSizeContentView),
+              window.frame.width >= 900 else { return }
+        window.titleVisibility = .hidden
+        window.titlebarAppearsTransparent = true
+        window.styleMask.insert(.fullSizeContentView)
+        window.isMovableByWindowBackground = true
+        window.toolbar = nil
     }
 }

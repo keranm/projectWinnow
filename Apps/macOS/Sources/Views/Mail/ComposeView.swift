@@ -11,6 +11,7 @@ struct ComposeView: View {
     @State private var subject = ""
     @State private var bodyText = ""
     @State private var isSending = false
+    @State private var isCancelHovered = false
     @FocusState private var focused: Field?
 
     enum Field { case to, subject, body }
@@ -24,9 +25,17 @@ struct ComposeView: View {
             // ── Chrome ─────────────────────────────────────────────────────────
             HStack {
                 Button("Cancel") { isPresented = false }
-                    .buttonStyle(.plain)
                     .foregroundStyle(Color.winnowTextTertiary)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(isCancelHovered ? Color.winnowHover : .clear)
+                            .animation(.easeInOut(duration: 0.12), value: isCancelHovered)
+                    )
+                    .buttonStyle(.plain)
                     .keyboardShortcut(.escape, modifiers: [])
+                    .onHover { isCancelHovered = $0 }
 
                 Spacer()
 

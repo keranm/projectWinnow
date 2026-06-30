@@ -5,6 +5,7 @@ import WinnowUI
 struct ThreadRowView: View {
     let thread: MailThread
     let isSelected: Bool
+    @State private var isHovered = false
 
     private var sender: String {
         thread.messages.last?.from.displayName ?? "Unknown"
@@ -67,7 +68,8 @@ struct ThreadRowView: View {
         .background(
             ZStack(alignment: .leading) {
                 Rectangle()
-                    .fill(isSelected ? Color.winnowAccentTint : Color.clear)
+                    .fill(isSelected ? Color.winnowAccentTint : (isHovered ? Color.winnowHover : .clear))
+                    .animation(.easeInOut(duration: 0.12), value: isHovered)
                 if isSelected {
                     Rectangle()
                         .fill(Color.winnowAccent)
@@ -76,5 +78,6 @@ struct ThreadRowView: View {
             }
         )
         .contentShape(Rectangle())
+        .onHover { isHovered = $0 }
     }
 }
