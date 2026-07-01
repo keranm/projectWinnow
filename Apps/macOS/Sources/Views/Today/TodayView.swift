@@ -50,7 +50,27 @@ struct TodayView: View {
         }
     }
 
-    private var tripThreads: [MailThread] { flightThreads + packageThreads }
+    // Deduplicate packages by tracking number — keep the most recent per track ID.
+    private var dedupedPackageThreads: [MailThread] {
+        var seen: [String: MailThread] = [:]
+        var noTrack: [MailThread] = []
+        for thread in packageThreads {
+            guard let p = thread.intelligenceResults.compactMap({ r -> IntelligenceResult.PackageInfo? in
+                if case .packageTracking(let pkg) = r { return pkg }; return nil
+            }).first else { continue }
+            if p.trackingNumber.isEmpty {
+                noTrack.append(thread)
+            } else {
+                let key = p.trackingNumber
+                if let existing = seen[key] {
+                    if thread.lastMessageDate > existing.lastMessageDate { seen[key] = thread }
+                } else {
+                    seen[key] = thread
+                }
+            }
+        }
+        return Array(seen.values).sorted { $0.lastMessageDate > $1.lastMessageDate } + noTrack
+    }
 
     private var totalBillAmount: Double {
         billThreads.compactMap { t in
@@ -117,7 +137,7 @@ struct TodayView: View {
     private func buildBriefingText() -> Text {
         let unread = appState.threads.filter { !$0.isRead }.count
         let bills  = billThreads.count
-        let trips  = tripThreads.count
+        let trips  = flightThreads.count + dedupedPackageThreads.count
         let replies = needsReplyThreads.count
 
         if appState.isLoading && appState.threads.isEmpty {
@@ -216,7 +236,7 @@ struct TodayView: View {
         HStack(alignment: .top, spacing: 16) {
             FollowingUpCard()
             DueSoonCard(threads: billThreads, total: totalBillAmount)
-            TripsCard(threads: tripThreads)
+            TripsCard(flightThreads: flightThreads, packageThreads: dedupedPackageThreads)
         }
         .padding(.bottom, 16)
     }
@@ -502,13 +522,24 @@ private struct BillDueSoonRow: View {
 // MARK: - Trips & Deliveries Card
 
 private struct TripsCard: View {
-    let threads: [MailThread]
+    let flightThreads: [MailThread]
+    let packageThreads: [MailThread]
+
+    private var cardTitle: String {
+        switch (flightThreads.isEmpty, packageThreads.isEmpty) {
+        case (false, false): return "Trips & deliveries"
+        case (false, true):  return "Trips"
+        case (true, false):  return "Deliveries"
+        default:             return "Trips & deliveries"
+        }
+    }
 
     var body: some View {
         TodayCard {
-            todayCardHeader(title: "Trips & deliveries")
+            todayCardHeader(title: cardTitle)
 
-            if threads.isEmpty {
+            let allThreads = flightThreads + packageThreads
+            if allThreads.isEmpty {
                 Divider().opacity(0.4).padding(.top, 6)
                 Text("No upcoming trips or deliveries")
                     .font(.system(size: 12))
@@ -517,7 +548,7 @@ private struct TripsCard: View {
                     .padding(.vertical, 14)
                     .frame(maxWidth: .infinity, alignment: .leading)
             } else {
-                ForEach(Array(threads.prefix(4).enumerated()), id: \.element.id) { i, thread in
+                ForEach(Array(allThreads.prefix(4).enumerated()), id: \.element.id) { i, thread in
                     if i == 0 { Divider().opacity(0.4).padding(.top, 6) } else { Divider().opacity(0.4) }
                     TripRow(thread: thread)
                 }
@@ -564,7 +595,7 @@ private struct TripRow: View {
         .animation(.easeInOut(duration: 0.12), value: isHovered)
         .contentShape(Rectangle())
         .onTapGesture {
-            appState.selectedNavItem = .other
+            appState.selectedNavItem = flight != nil ? .flights : .deliveries
             appState.selectThread(thread.id)
         }
         .onHover { isHovered = $0 }
@@ -572,13 +603,7 @@ private struct TripRow: View {
 
     private var title: String {
         if let f = flight { return "\(f.from) → \(f.to)" }
-        if let p = pkg {
-            switch p.status {
-            case .outForDelivery: return "Out for delivery"
-            case .delivered:      return "Delivered"
-            default:              return "Arriving soon"
-            }
-        }
+        if let p = pkg    { return p.status.label }
         return thread.subject
     }
 
@@ -586,7 +611,14 @@ private struct TripRow: View {
         if let f = flight {
             return "\(f.flightNumber) · \(f.departureDate.formatted(.dateTime.month(.abbreviated).day()))"
         }
-        if let p = pkg { return "\(p.carrier) · \(p.trackingNumber.prefix(12))" }
+        if let p = pkg {
+            // Use sender name when carrier is the generic fallback
+            let carrier = p.carrier == "Courier"
+                ? (thread.messages.first?.from.displayName ?? "Courier")
+                : p.carrier
+            if p.trackingNumber.isEmpty { return carrier }
+            return "\(carrier) · \(p.trackingNumber.prefix(12))"
+        }
         return thread.snippet
     }
 
