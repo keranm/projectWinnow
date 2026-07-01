@@ -50,13 +50,14 @@ final class AppState {
 
     func count(for item: NavItem) -> Int {
         switch item {
-        case .today:      return threads.filter { !$0.isRead }.count
-        case .important:  return threads.filter { $0.labels.contains("IMPORTANT") }.count
-        case .other:      return threads.filter { $0.labels.contains("INBOX") }.count
-        case .trips:      return threads.filter { isTrip($0) }.count
-        case .quotes:     return 0
+        case .today:         return threads.filter { !$0.isRead }.count
+        case .important:     return threads.filter { $0.labels.contains("IMPORTANT") }.count
+        case .other:         return threads.filter { $0.labels.contains("INBOX") }.count
+        case .flights:       return threads.filter { isFlight($0) }.count
+        case .deliveries:    return threads.filter { isDelivery($0) }.count
+        case .quotes:        return 0
         case .subscriptions: return threads.filter { isBill($0) }.count
-        case .calendar:   return 0
+        case .calendar:      return 0
         }
     }
 
@@ -67,8 +68,10 @@ final class AppState {
         switch selectedNavItem {
         case .today, .important:
             return threads.filter { visible($0) && ($0.labels.contains("IMPORTANT") || $0.needsReply) }
-        case .trips:
-            return threads.filter { visible($0) && isTrip($0) }
+        case .flights:
+            return threads.filter { visible($0) && isFlight($0) }
+        case .deliveries:
+            return threads.filter { visible($0) && isDelivery($0) }
         case .subscriptions:
             return threads.filter { visible($0) && isBill($0) }
         default:
@@ -404,12 +407,12 @@ final class AppState {
         }
     }
 
-    private func isTrip(_ t: MailThread) -> Bool {
-        t.intelligenceResults.contains {
-            if case .flightInfo = $0 { return true }
-            if case .packageTracking = $0 { return true }
-            return false
-        }
+    private func isFlight(_ t: MailThread) -> Bool {
+        t.intelligenceResults.contains { if case .flightInfo = $0 { return true }; return false }
+    }
+
+    private func isDelivery(_ t: MailThread) -> Bool {
+        t.intelligenceResults.contains { if case .packageTracking = $0 { return true }; return false }
     }
 
     private func isBill(_ t: MailThread) -> Bool {

@@ -6,8 +6,9 @@ enum NavItem: Hashable, CaseIterable {
     case important
     case other
 
-    // Pulled from mail
-    case trips
+    // Pulled from mail (shown only when non-empty)
+    case flights
+    case deliveries
     case quotes
     case subscriptions
     case calendar
@@ -17,7 +18,8 @@ enum NavItem: Hashable, CaseIterable {
         case .today:          return "Today"
         case .important:      return "Important"
         case .other:          return "Other"
-        case .trips:          return "Trips & deliveries"
+        case .flights:        return "Trips"
+        case .deliveries:     return "Deliveries"
         case .quotes:         return "Quotes"
         case .subscriptions:  return "Subscriptions"
         case .calendar:       return "Calendar"
@@ -29,7 +31,8 @@ enum NavItem: Hashable, CaseIterable {
         case .today:          return "star.fill"
         case .important:      return "flag.fill"
         case .other:          return "tray.fill"
-        case .trips:          return "airplane"
+        case .flights:        return "airplane"
+        case .deliveries:     return "shippingbox"
         case .quotes:         return "quote.bubble.fill"
         case .subscriptions:  return "repeat"
         case .calendar:       return "calendar"
@@ -37,5 +40,5 @@ enum NavItem: Hashable, CaseIterable {
     }
 
     static var primaryItems: [NavItem] { [.today, .important, .other] }
-    static var pulledItems: [NavItem]  { [.trips, .quotes, .subscriptions, .calendar] }
+    static var pulledItems: [NavItem]  { [.flights, .deliveries, .quotes, .subscriptions, .calendar] }
 }

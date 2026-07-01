@@ -29,7 +29,9 @@ struct SidebarView: View {
                     .padding(.top, 18)
                     .padding(.bottom, 4)
 
-                    ForEach(NavItem.pulledItems, id: \.self) { item in
+                    ForEach(NavItem.pulledItems.filter {
+                        appState.count(for: $0) > 0 || appState.selectedNavItem == $0
+                    }, id: \.self) { item in
                         SidebarRow(
                             item: item,
                             isSelected: appState.selectedNavItem == item,

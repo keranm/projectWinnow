@@ -49,14 +49,16 @@ struct WinnowApp: App {
             }
 
             CommandMenu("Navigate") {
-                Button("Today")                 { appState.selectedNavItem = .today }
+                Button("Today")         { appState.selectedNavItem = .today }
                     .keyboardShortcut("1", modifiers: .command)
-                Button("Inbox")                 { appState.selectedNavItem = .other }
+                Button("Inbox")         { appState.selectedNavItem = .other }
                     .keyboardShortcut("2", modifiers: .command)
-                Button("Trips & Deliveries")    { appState.selectedNavItem = .trips }
+                Button("Trips")         { appState.selectedNavItem = .flights }
                     .keyboardShortcut("3", modifiers: .command)
-                Button("Subscriptions")         { appState.selectedNavItem = .subscriptions }
+                Button("Deliveries")    { appState.selectedNavItem = .deliveries }
                     .keyboardShortcut("4", modifiers: .command)
+                Button("Subscriptions") { appState.selectedNavItem = .subscriptions }
+                    .keyboardShortcut("5", modifiers: .command)
 
                 Divider()
 
