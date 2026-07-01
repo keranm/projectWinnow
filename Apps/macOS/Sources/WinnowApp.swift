@@ -25,7 +25,7 @@ struct WinnowApp: App {
 
             CommandMenu("View") {
                 Button("Command Bar") { appState.showCommandBar.toggle() }
-                    .keyboardShortcut("k", modifiers: .command)
+                    .keyboardShortcut("/", modifiers: .command)
             }
 
             CommandMenu("Mail") {
