@@ -1,4 +1,5 @@
 import Foundation
+import WinnowCore
 
 @Observable
 final class WinnowSettings {
@@ -97,6 +98,14 @@ final class WinnowSettings {
 
     var snippets: [Snippet] = []
 
+    // MARK: - Rules
+
+    var rules: [Rule] = []
+
+    // MARK: - Snooze
+
+    var snoozeEntries: [SnoozeEntry] = []
+
     // MARK: - General
 
     var showDockBadge: Bool       = true
@@ -147,6 +156,50 @@ final class WinnowSettings {
         save()
     }
 
+    // MARK: - Rules helpers
+
+    func upsertRule(_ rule: Rule) {
+        if let i = rules.firstIndex(where: { $0.id == rule.id }) {
+            rules[i] = rule
+        } else {
+            rules.append(rule)
+        }
+        save()
+    }
+
+    func deleteRule(id: UUID) {
+        rules.removeAll { $0.id == id }
+        save()
+    }
+
+    func moveRule(from source: IndexSet, to destination: Int) {
+        rules.move(fromOffsets: source, toOffset: destination)
+        save()
+    }
+
+    // MARK: - Snooze helpers
+
+    func snooze(threadID: String, until wakeDate: Date) {
+        snoozeEntries.removeAll { $0.threadID == threadID }
+        snoozeEntries.append(SnoozeEntry(threadID: threadID, wakeDate: wakeDate))
+        save()
+    }
+
+    func unsnooze(threadID: String) {
+        snoozeEntries.removeAll { $0.threadID == threadID }
+        save()
+    }
+
+    func activeSnoozedIDs(at now: Date = Date()) -> Set<String> {
+        Set(snoozeEntries.filter { $0.wakeDate > now }.map { $0.threadID })
+    }
+
+    func clearExpiredSnoozes(at now: Date = Date()) {
+        let before = snoozeEntries.count
+        snoozeEntries.removeAll { $0.wakeDate <= now }
+        if snoozeEntries.count != before { save() }
+    }
+
     // MARK: - Identity helpers
 
     func upsertIdentity(_ identity: Identity) {
@@ -182,8 +235,10 @@ final class WinnowSettings {
         defaults.set(threadDensity, forKey: "s.density")
 
         let enc = JSONEncoder()
-        if let data = try? enc.encode(identities) { defaults.set(data, forKey: "s.identities") }
-        if let data = try? enc.encode(snippets)   { defaults.set(data, forKey: "s.snippets") }
+        if let data = try? enc.encode(identities)    { defaults.set(data, forKey: "s.identities") }
+        if let data = try? enc.encode(snippets)      { defaults.set(data, forKey: "s.snippets") }
+        if let data = try? enc.encode(rules)         { defaults.set(data, forKey: "s.rules") }
+        if let data = try? enc.encode(snoozeEntries) { defaults.set(data, forKey: "s.snooze") }
     }
 
     private func load() {
@@ -210,8 +265,12 @@ final class WinnowSettings {
 
         let dec = JSONDecoder()
         if let data = defaults.data(forKey: "s.identities"),
-           let v = try? dec.decode([Identity].self, from: data) { identities = v }
+           let v = try? dec.decode([Identity].self, from: data)    { identities = v }
         if let data = defaults.data(forKey: "s.snippets"),
-           let v = try? dec.decode([Snippet].self, from: data) { snippets = v }
+           let v = try? dec.decode([Snippet].self, from: data)     { snippets = v }
+        if let data = defaults.data(forKey: "s.rules"),
+           let v = try? dec.decode([Rule].self, from: data)        { rules = v }
+        if let data = defaults.data(forKey: "s.snooze"),
+           let v = try? dec.decode([SnoozeEntry].self, from: data) { snoozeEntries = v }
     }
 }

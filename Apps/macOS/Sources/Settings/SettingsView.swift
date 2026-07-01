@@ -5,6 +5,7 @@ enum SettingsSection: String, CaseIterable, Identifiable {
     case general        = "General"
     case accounts       = "Accounts"
     case snippets       = "Snippets"
+    case rules          = "Rules"
     case appearance     = "Appearance"
     case intelligence   = "Intelligence"
     case privacy        = "Privacy & Security"
@@ -47,6 +48,7 @@ struct SettingsView: View {
                     case .general:      GeneralPanel()
                     case .accounts:     AccountsPanel()
                     case .snippets:     SnippetsPanel()
+                    case .rules:        RulesPanel()
                     case .appearance:   AppearancePanel()
                     case .intelligence: IntelligencePanel()
                     case .privacy:      PrivacyPanel()

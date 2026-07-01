@@ -9,6 +9,7 @@ struct ReadingPaneView: View {
     @State private var replyText: String = ""
     @State private var signatureSeeded = false
     @State private var isSendHovered = false
+    @State private var showSnoozePopover = false
     @FocusState private var replyFocused: Bool
 
     private var latestMessage: MailMessage? { thread.messages.last }
@@ -36,12 +37,36 @@ struct ReadingPaneView: View {
 
     private var threadHeader: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(thread.subject)
-                .font(.system(size: 22, weight: .semibold))
-                .foregroundStyle(Color(hex: "171719"))
-                .tracking(-0.22)
-                .lineLimit(2)
-                .fixedSize(horizontal: false, vertical: true)
+            HStack(alignment: .top, spacing: 8) {
+                Text(thread.subject)
+                    .font(.system(size: 22, weight: .semibold))
+                    .foregroundStyle(Color(hex: "171719"))
+                    .tracking(-0.22)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                Button {
+                    showSnoozePopover = true
+                } label: {
+                    Image(systemName: "clock")
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundStyle(Color.winnowTextTertiary)
+                        .padding(6)
+                        .background(
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(Color.winnowHover.opacity(0))
+                        )
+                }
+                .buttonStyle(.plain)
+                .help("Snooze")
+                .popover(isPresented: $showSnoozePopover, arrowEdge: .top) {
+                    SnoozePickerView(
+                        onSnooze: { date in appState.snooze(threadID: thread.id, until: date) },
+                        onDismiss: { showSnoozePopover = false }
+                    )
+                }
+            }
 
             participantsMeta
         }

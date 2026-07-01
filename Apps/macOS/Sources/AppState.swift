@@ -27,6 +27,12 @@ final class AppState {
     // Compose
     var isComposing: Bool = false
 
+    // Snooze
+    var snoozedIDs: Set<String> = []
+
+    // Rules
+    var ruleFilteredIDs: Set<String> = []
+
     // Search
     var isSearchActive: Bool = false
     var searchQuery: String = ""
@@ -56,15 +62,17 @@ final class AppState {
 
     var visibleThreads: [MailThread] {
         if isSearchActive { return searchResults }
+        let hidden = snoozedIDs.union(ruleFilteredIDs)
+        func visible(_ t: MailThread) -> Bool { !hidden.contains(t.id) }
         switch selectedNavItem {
         case .today, .important:
-            return threads.filter { $0.labels.contains("IMPORTANT") || $0.needsReply }
+            return threads.filter { visible($0) && ($0.labels.contains("IMPORTANT") || $0.needsReply) }
         case .trips:
-            return threads.filter { isTrip($0) }
+            return threads.filter { visible($0) && isTrip($0) }
         case .subscriptions:
-            return threads.filter { isBill($0) }
+            return threads.filter { visible($0) && isBill($0) }
         default:
-            return threads.filter { $0.labels.contains("INBOX") }
+            return threads.filter { visible($0) && $0.labels.contains("INBOX") }
         }
     }
 
@@ -79,6 +87,7 @@ final class AppState {
     // MARK: - Lifecycle
 
     func bootstrap() async {
+        snoozedIDs = settings.activeSnoozedIDs()
         guard let data = try? keychain.getData(forKey: tokenKey),
               let tokens = try? JSONDecoder().decode(OAuthTokens.self, from: data)
         else { return }
@@ -144,8 +153,10 @@ final class AppState {
             nextPageToken = token
             fullBodyLoadedIDs = []
             lastSyncDate = Date()
+            checkSnoozeWakeUps()
+            applyRules()
             if selectedThreadID == nil || !threads.contains(where: { $0.id == selectedThreadID }) {
-                selectedThreadID = threads.first?.id
+                selectedThreadID = visibleThreads.first?.id
             }
 
             let updated = await client.currentTokens()
@@ -167,6 +178,7 @@ final class AppState {
             let existingIDs = Set(threads.map { $0.id })
             threads += annotated.filter { !existingIDs.contains($0.id) }
             nextPageToken = newToken
+            applyRules()
         } catch {
             syncError = error.localizedDescription
         }
@@ -241,6 +253,55 @@ final class AppState {
         } catch {
             syncError = error.localizedDescription
         }
+    }
+
+    // MARK: - Snooze
+
+    func snooze(threadID: String, until wakeDate: Date) {
+        settings.snooze(threadID: threadID, until: wakeDate)
+        snoozedIDs = settings.activeSnoozedIDs()
+        if selectedThreadID == threadID { advance() }
+    }
+
+    func unsnooze(threadID: String) {
+        settings.unsnooze(threadID: threadID)
+        snoozedIDs = settings.activeSnoozedIDs()
+    }
+
+    func checkSnoozeWakeUps() {
+        settings.clearExpiredSnoozes()
+        snoozedIDs = settings.activeSnoozedIDs()
+    }
+
+    // MARK: - Rules
+
+    func applyRules() {
+        let enabled = settings.rules.filter { $0.isEnabled }
+        guard !enabled.isEmpty else { ruleFilteredIDs = []; return }
+
+        var toFilter: Set<String> = []
+        for thread in threads {
+            for rule in enabled where rule.matches(thread) {
+                for action in rule.actions {
+                    switch action {
+                    case .skipInbox:
+                        toFilter.insert(thread.id)
+                    case .markAsRead:
+                        if !thread.isRead {
+                            if let i = threads.firstIndex(where: { $0.id == thread.id }) {
+                                threads[i].isRead = true
+                            }
+                            Task { try? await gmailClient?.modifyThread(thread.id, removeLabels: ["UNREAD"]) }
+                        }
+                    case .archive:
+                        toFilter.insert(thread.id)
+                        Task { try? await gmailClient?.modifyThread(thread.id, removeLabels: ["INBOX"]) }
+                    }
+                }
+                break // first matching rule wins
+            }
+        }
+        ruleFilteredIDs = toFilter
     }
 
     // MARK: - Search
