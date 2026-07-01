@@ -137,6 +137,11 @@ struct CommandBarView: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .onHover { hovered in
+            if hovered, let idx = flatItems.firstIndex(where: { $0.id == item.id }) {
+                selectedIndex = idx
+            }
+        }
     }
 
     // MARK: - Commands
