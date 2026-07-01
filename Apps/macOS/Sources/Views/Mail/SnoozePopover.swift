@@ -86,8 +86,8 @@ struct SnoozePickerView: View {
 
     private func dayLabel(for date: Date) -> String {
         let fmt = DateFormatter()
-        fmt.dateFormat = "EEE d MMM, 8:00 AM"
-        return fmt.string(from: date)
+        fmt.dateFormat = "EEE d MMM"
+        return fmt.string(from: date) + ", 8:00 AM"
     }
 }
 
