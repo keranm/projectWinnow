@@ -179,7 +179,11 @@ struct CommandBarView: View {
         ]
 
         let intelligence: [CmdItem] = [
-            CmdItem(id: "summarize", icon: "text.bubble", label: "Summarize this thread", shortcut: ["S"]) {},
+            CmdItem(id: "summarize", icon: "text.bubble", label: "Summarize this thread", shortcut: ["S"]) {
+            if let id = appState.selectedThreadID {
+                appState.summarize(threadID: id)
+            }
+        },
         ]
 
         var sections: [CmdSection] = []

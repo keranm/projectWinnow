@@ -327,6 +327,16 @@ final class AppState {
         ruleFilteredIDs = toFilter
     }
 
+    // MARK: - Intelligence
+
+    func summarize(threadID: String) {
+        guard let thread = threads.first(where: { $0.id == threadID }),
+              let summary = SummaryExtractor.extract(from: thread),
+              let i = threads.firstIndex(where: { $0.id == threadID })
+        else { return }
+        threads[i].summary = summary
+    }
+
     // MARK: - Search
 
     func activateSearch() {
