@@ -19,7 +19,7 @@ struct SidebarView: View {
                             item: item,
                             isSelected: appState.selectedNavItem == item,
                             count: appState.count(for: item)
-                        ) { appState.selectedNavItem = item }
+                        ) { appState.clearSearch(); appState.selectedNavItem = item }
                     }
 
                     HStack(spacing: 5) {
@@ -34,7 +34,7 @@ struct SidebarView: View {
                             item: item,
                             isSelected: appState.selectedNavItem == item,
                             count: appState.count(for: item)
-                        ) { appState.selectedNavItem = item }
+                        ) { appState.clearSearch(); appState.selectedNavItem = item }
                     }
                 }
                 .padding(.top, 6)

@@ -13,7 +13,7 @@ struct WinnowApp: App {
                 .environment(appState.settings)
         }
         .windowStyle(.hiddenTitleBar)
-        .defaultSize(width: 1200, height: 760)
+        .defaultSize(width: 1400, height: 880)
         .defaultPosition(.center)
         .commands {
             CommandGroup(replacing: .newItem) {}
@@ -27,6 +27,9 @@ struct WinnowApp: App {
                 Button("Compose New") { appState.isComposing = true }
                     .keyboardShortcut("n", modifiers: .command)
 
+                Button("Search") { appState.activateSearch() }
+                    .keyboardShortcut("f", modifiers: .command)
+
                 Divider()
 
                 Button("Refresh") { Task { await appState.syncInbox() } }
@@ -37,12 +40,12 @@ struct WinnowApp: App {
                 Button("Archive") {
                     if let id = appState.selectedThreadID { appState.archive(id) }
                 }
-                .keyboardShortcut("e", modifiers: [])
+                .keyboardShortcut("e", modifiers: .command)
 
                 Button("Mark as Read") {
                     if let id = appState.selectedThreadID { appState.markRead(id) }
                 }
-                .keyboardShortcut("m", modifiers: [])
+                .keyboardShortcut("m", modifiers: .command)
             }
 
             CommandMenu("Navigate") {
@@ -58,9 +61,9 @@ struct WinnowApp: App {
                 Divider()
 
                 Button("Next Thread")     { appState.advance() }
-                    .keyboardShortcut("j", modifiers: [])
+                    .keyboardShortcut("j", modifiers: .command)
                 Button("Previous Thread") { appState.retreat() }
-                    .keyboardShortcut("k", modifiers: [])
+                    .keyboardShortcut("k", modifiers: .command)
             }
         }
 

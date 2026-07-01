@@ -27,6 +27,15 @@ final class AppState {
     // Compose
     var isComposing: Bool = false
 
+    // Search
+    var isSearchActive: Bool = false
+    var searchQuery: String = ""
+    var searchResults: [MailThread] = []
+    var isSearching: Bool = false
+    var searchResultCount: Int = 0
+    var searchDuration: TimeInterval = 0
+    private var searchTask: Task<Void, Never>?
+
     // Derived
     var selectedThread: MailThread? {
         guard let id = selectedThreadID else { return nil }
@@ -46,6 +55,7 @@ final class AppState {
     }
 
     var visibleThreads: [MailThread] {
+        if isSearchActive { return searchResults }
         switch selectedNavItem {
         case .today, .important:
             return threads.filter { $0.labels.contains("IMPORTANT") || $0.needsReply }
@@ -231,6 +241,56 @@ final class AppState {
         } catch {
             syncError = error.localizedDescription
         }
+    }
+
+    // MARK: - Search
+
+    func activateSearch() {
+        isSearchActive = true
+        searchQuery = ""
+        searchResults = []
+        searchResultCount = 0
+        selectedThreadID = nil
+    }
+
+    func clearSearch() {
+        searchTask?.cancel()
+        isSearchActive = false
+        searchQuery = ""
+        searchResults = []
+        isSearching = false
+    }
+
+    func search(query: String) {
+        searchTask?.cancel()
+        searchQuery = query
+        guard !query.trimmingCharacters(in: .whitespaces).isEmpty else {
+            searchResults = []
+            searchResultCount = 0
+            return
+        }
+        searchTask = Task {
+            try? await Task.sleep(for: .milliseconds(300))
+            guard !Task.isCancelled else { return }
+            await performSearch(query: query)
+        }
+    }
+
+    private func performSearch(query: String) async {
+        guard let client = gmailClient else { return }
+        isSearching = true
+        let start = Date()
+        do {
+            let (raw, _) = try await client.searchThreads(query: query)
+            let processed = await ExtractionPipeline.shared.processTier1(raw)
+            guard searchQuery == query else { return }
+            searchResults = processed
+            searchResultCount = processed.count
+            searchDuration = Date().timeIntervalSince(start)
+        } catch {
+            if searchQuery == query { searchResults = [] }
+        }
+        if searchQuery == query { isSearching = false }
     }
 
     /// Fetches the full thread body on demand. Safe to call repeatedly — no-ops if already loaded.

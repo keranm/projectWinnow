@@ -38,6 +38,13 @@ public actor GmailAPIClient {
         return GmailMessageMapper.mapThread(thread, accountID: accountID)
     }
 
+    /// Searches all of Gmail using native query syntax (from:, has:attachment, etc.).
+    public func searchThreads(query: String, maxResults: Int = 50) async throws -> ([MailThread], nextPageToken: String?) {
+        let params: [String: String] = ["maxResults": "\(maxResults)", "q": query]
+        let listing = try await get("threads", params: params, as: GmailThreadsList.self)
+        return (try await fetchThreads(stubs: listing.threads ?? []), listing.nextPageToken)
+    }
+
     /// High-level: lists threads then fetches metadata for each in parallel.
     /// Returns (threads, nextPageToken) — pass the token to loadMoreThreads() to paginate.
     public func syncInbox() async throws -> ([MailThread], nextPageToken: String?) {
