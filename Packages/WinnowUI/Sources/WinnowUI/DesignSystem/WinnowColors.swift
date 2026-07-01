@@ -27,6 +27,12 @@ public extension Color {
     static let winnowCaution        = adaptive(light: "C08A4A", dark: "D4A562")
     static let winnowAlert          = adaptive(light: "D9534F", dark: "E86560")
 
+    // Slight elevation over surface — section headers in popovers / cards
+    static let winnowSurfaceElevated = adaptive(light: "FAFBFD", dark: "222224")
+
+    // Section label text (chT / "SNOOZE UNTIL" style)
+    static let winnowLabelText       = adaptive(light: "9AA6BB", dark: "7F8AA0")
+
     // MARK: - Controls
     static let winnowToggleOff      = adaptive(light: "D8D8DE", dark: "48484A")
 

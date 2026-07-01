@@ -40,7 +40,7 @@ struct ReadingPaneView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(thread.subject)
                 .font(.system(size: 22, weight: .semibold))
-                .foregroundStyle(Color(hex: "171719"))
+                .foregroundStyle(Color.winnowText)
                 .tracking(-0.22)
                 .lineLimit(2)
                 .fixedSize(horizontal: false, vertical: true)
@@ -69,12 +69,12 @@ struct ReadingPaneView: View {
                     Text("Snooze")
                         .font(.system(size: 13, weight: .semibold))
                 }
-                .foregroundStyle(showSnoozePopover ? Color(hex: "2f6bdb") : Color(hex: "9a9aa0"))
+                .foregroundStyle(showSnoozePopover ? Color.winnowAccent : Color.winnowTextTertiary)
                 .padding(.horizontal, 11)
                 .padding(.vertical, 6)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
-                        .fill(showSnoozePopover ? Color(hex: "eef3fc") : Color.clear)
+                        .fill(showSnoozePopover ? Color.winnowAccentTint : Color.clear)
                         .animation(.easeInOut(duration: 0.1), value: showSnoozePopover)
                 )
             }
@@ -112,7 +112,7 @@ struct ReadingPaneView: View {
             } label: {
                 Text("Reply")
                     .font(.system(size: 12.5, weight: .semibold))
-                    .foregroundStyle(Color(hex: "5a5a62"))
+                    .foregroundStyle(Color.winnowTextSecondary)
                     .padding(.horizontal, 13)
                     .padding(.vertical, 6)
                     .overlay(
@@ -134,7 +134,7 @@ struct ReadingPaneView: View {
         Button(action: action) {
             Image(systemName: icon)
                 .font(.system(size: 14, weight: .regular))
-                .foregroundStyle(Color(hex: "9a9aa0"))
+                .foregroundStyle(Color.winnowTextTertiary)
         }
         .buttonStyle(.plain)
         .help(helpText)
@@ -148,7 +148,7 @@ struct ReadingPaneView: View {
                 .foregroundStyle(Color.winnowTextTertiary)
 
             Text("·")
-                .foregroundStyle(Color(hex: "D2D2D8"))
+                .foregroundStyle(Color.winnowTextQuaternary)
 
             Text("\(thread.messages.count) \(thread.messages.count == 1 ? "message" : "messages")")
                 .font(.system(size: 12, weight: .medium))
@@ -198,7 +198,7 @@ struct ReadingPaneView: View {
                         messageHeader(msg)
                         Text(text)
                             .font(.system(size: 14))
-                            .foregroundStyle(Color(hex: "34343A"))
+                            .foregroundStyle(Color.winnowTextSubdued)
                             .lineSpacing(5)
                             .textSelection(.enabled)
                             .padding(.horizontal, WinnowSpacing.sectionHWide)
@@ -276,7 +276,7 @@ struct ReadingPaneView: View {
                             .foregroundStyle(Color.winnowTextSubdued)
                         Text(" — \(msg.snippet ?? "…")")
                             .font(.system(size: 13))
-                            .foregroundStyle(Color(hex: "A2A2A8"))
+                            .foregroundStyle(Color.winnowTextTertiary)
                             .lineLimit(1)
                             .truncationMode(.tail)
                     }
@@ -285,7 +285,7 @@ struct ReadingPaneView: View {
 
                     Text(collapsedTime(msg.date))
                         .font(.system(size: 11, weight: .medium, design: .monospaced))
-                        .foregroundStyle(Color(hex: "C2C2C8"))
+                        .foregroundStyle(Color.winnowTextQuaternary)
                 }
                 .padding(.horizontal, WinnowSpacing.sectionHWide)
                 .padding(.vertical, i == 0 ? 0 : 6)
@@ -428,7 +428,7 @@ private struct QuickReplyChip: View {
         Button(action: onTap) {
             Text(text)
                 .font(.system(size: 12.5, weight: .medium))
-                .foregroundStyle(Color(hex: "5A5A62"))
+                .foregroundStyle(Color.winnowTextSecondary)
                 .padding(.horizontal, 13)
                 .padding(.vertical, 5)
                 .background(

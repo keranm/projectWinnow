@@ -23,6 +23,11 @@ struct WinnowApp: App {
                 Button("Sign Out") { appState.signOut() }
             }
 
+            CommandMenu("View") {
+                Button("Command Bar") { appState.showCommandBar.toggle() }
+                    .keyboardShortcut("k", modifiers: .command)
+            }
+
             CommandMenu("Mail") {
                 Button("Compose New") { appState.isComposing = true }
                     .keyboardShortcut("n", modifiers: .command)

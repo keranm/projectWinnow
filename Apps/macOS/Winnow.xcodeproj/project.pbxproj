@@ -20,6 +20,7 @@
 		9B75EFE52376613A84A41D48 /* AppearancePanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B84CB71846660771C0B9EC /* AppearancePanel.swift */; };
 		A2A9617E1CE561233D3C1158 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9001E3F8A44E8C83F5621D55 /* TodayView.swift */; };
 		A3E80596F802901F4DB8D667 /* ReadingPaneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 475EB32FAE5A75CBE6674C50 /* ReadingPaneView.swift */; };
+		A9D013A817D1CAC37A535671 /* CommandBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4244D12F8892270741AFAA40 /* CommandBarView.swift */; };
 		AA1FBD6F2EBE606F947E32BC /* SnoozePopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2752BC82243F1BF2EF150CE3 /* SnoozePopover.swift */; };
 		B1E374C66DB634A57B4B987B /* ConnectAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CD17D4A0EBC30F47478B8E /* ConnectAccountView.swift */; };
 		B44C44A5DF353B84F9A5909E /* IntelligencePanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B89C34F45796EBA6004080 /* IntelligencePanel.swift */; };
@@ -44,6 +45,7 @@
 		2752BC82243F1BF2EF150CE3 /* SnoozePopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnoozePopover.swift; sourceTree = "<group>"; };
 		2848D76D6E58005ECB79B5FD /* NavItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavItem.swift; sourceTree = "<group>"; };
 		2EEF79BB74C034EC00BF2FC7 /* AccountsPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsPanel.swift; sourceTree = "<group>"; };
+		4244D12F8892270741AFAA40 /* CommandBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandBarView.swift; sourceTree = "<group>"; };
 		475EB32FAE5A75CBE6674C50 /* ReadingPaneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPaneView.swift; sourceTree = "<group>"; };
 		599FF8EA65BD502CED244223 /* ThreadListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadListView.swift; sourceTree = "<group>"; };
 		5C2F75367F63C93D25CE6036 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -81,6 +83,7 @@
 		1C171D93C12869780CCA161E /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4244D12F8892270741AFAA40 /* CommandBarView.swift */,
 				99B35E428690A0A8F77D7292 /* EmptySelectionView.swift */,
 				5C2F75367F63C93D25CE6036 /* RootView.swift */,
 				79FDD361E2286C7DE3492DB2 /* Mail */,
@@ -260,6 +263,7 @@
 				8015D170B2682583FBF24C48 /* AccountsPanel.swift in Sources */,
 				E6E3D8AA952BD661732393BB /* AppState.swift in Sources */,
 				9B75EFE52376613A84A41D48 /* AppearancePanel.swift in Sources */,
+				A9D013A817D1CAC37A535671 /* CommandBarView.swift in Sources */,
 				81E468F690A2B021A5095BA2 /* ComposeView.swift in Sources */,
 				B1E374C66DB634A57B4B987B /* ConnectAccountView.swift in Sources */,
 				CBB8F21BD721799A3BD0A3C7 /* EmptySelectionView.swift in Sources */,

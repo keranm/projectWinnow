@@ -16,7 +16,7 @@ struct SnoozePickerView: View {
             Text("SNOOZE UNTIL")
                 .font(.system(size: 11, weight: .semibold))
                 .tracking(0.55)
-                .foregroundStyle(Color(hex: "9aa6bb"))
+                .foregroundStyle(Color.winnowLabelText)
                 .padding(.horizontal, 15)
                 .padding(.top, 13)
                 .padding(.bottom, 7)
@@ -34,13 +34,13 @@ struct SnoozePickerView: View {
                 Text("WHEN…  ·  ON-DEVICE")
                     .font(.system(size: 11, weight: .semibold))
                     .tracking(0.55)
-                    .foregroundStyle(Color(hex: "9aa6bb"))
+                    .foregroundStyle(Color.winnowLabelText)
             }
             .padding(.horizontal, 15)
             .padding(.top, 10)
             .padding(.bottom, 6)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color(hex: "fafbfd"))
+            .background(Color.winnowSurfaceElevated)
 
             conditionRow("They reply",         detail: "watches this thread", monoDetail: false, condition: .onReply, enabled: true)
             Color.black.opacity(0.04).frame(height: 1)
@@ -55,10 +55,10 @@ struct SnoozePickerView: View {
             HStack(spacing: 9) {
                 Text("+")
                     .font(.system(size: 14))
-                    .foregroundStyle(Color(hex: "9a9aa0"))
+                    .foregroundStyle(Color.winnowTextTertiary)
                 Text("Pick a condition…")
                     .font(.system(size: 13.5, weight: .medium))
-                    .foregroundStyle(Color(hex: "3a3a40"))
+                    .foregroundStyle(Color.winnowTextSubdued)
             }
             .padding(.horizontal, 15)
             .padding(.vertical, 10)
@@ -71,12 +71,12 @@ struct SnoozePickerView: View {
                 Text("Conditions are watched on your Mac — no rules sent to a server.")
                     .font(.system(size: 11.5))
                     .lineSpacing(2)
-                    .foregroundStyle(Color(hex: "9a9aa0"))
+                    .foregroundStyle(Color.winnowTextTertiary)
                     .fixedSize(horizontal: false, vertical: true)
             }
             .padding(.horizontal, 15)
             .padding(.vertical, 11)
-            .background(Color(hex: "fafafa"))
+            .background(Color.winnowSidebar)
         }
         .frame(width: 360)
         .background(Color.winnowSurface)
@@ -92,11 +92,11 @@ struct SnoozePickerView: View {
             HStack {
                 Text(label)
                     .font(.system(size: 13.5, weight: .medium))
-                    .foregroundStyle(Color(hex: "3a3a40"))
+                    .foregroundStyle(Color.winnowTextSubdued)
                 Spacer()
                 Text(detail)
                     .font(.system(size: 12, weight: .medium, design: .monospaced))
-                    .foregroundStyle(Color(hex: "a2a2a8"))
+                    .foregroundStyle(Color.winnowTextTertiary)
             }
             .padding(.horizontal, 15)
             .padding(.vertical, 9)
@@ -117,22 +117,22 @@ struct SnoozePickerView: View {
             HStack {
                 Text(label)
                     .font(.system(size: 13.5, weight: isActive ? .semibold : .medium))
-                    .foregroundStyle(Color(hex: isActive ? "1c1c20" : (enabled ? "3a3a40" : "b2b2b8")))
+                    .foregroundStyle(isActive ? Color.winnowText : (enabled ? Color.winnowTextSubdued : Color.winnowTextQuaternary))
                 Spacer()
                 Text(detail)
                     .font(monoDetail
                           ? .system(size: 12, weight: .medium, design: .monospaced)
                           : .system(size: 11, weight: .medium))
-                    .foregroundStyle(Color(hex: isActive ? "7a8295" : "a2a2a8"))
+                    .foregroundStyle(isActive ? Color.winnowTextSecondary : Color.winnowTextTertiary)
             }
             .padding(.horizontal, 15)
             .padding(.vertical, 9)
             .background(
                 ZStack(alignment: .leading) {
                     if isActive {
-                        Color(hex: "eef3fc")
+                        Color.winnowAccentTint
                         Rectangle()
-                            .fill(Color(hex: "2f6bdb"))
+                            .fill(Color.winnowAccent)
                             .frame(width: 2)
                     }
                 }

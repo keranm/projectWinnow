@@ -27,6 +27,9 @@ final class AppState {
     // Compose
     var isComposing: Bool = false
 
+    // Command bar
+    var showCommandBar: Bool = false
+
     // Snooze
     var snoozedIDs: Set<String> = []
 

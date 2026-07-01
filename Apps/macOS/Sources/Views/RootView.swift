@@ -35,6 +35,12 @@ struct RootView: View {
                 .environment(appState)
                 .environment(settings)
         }
+        .overlay {
+            if state.showCommandBar {
+                CommandBarView(isPresented: $state.showCommandBar)
+                    .environment(appState)
+            }
+        }
     }
 
     @ViewBuilder
