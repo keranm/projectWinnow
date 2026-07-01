@@ -263,6 +263,13 @@ final class AppState {
         if selectedThreadID == threadID { advance() }
     }
 
+    func snooze(threadID: String, condition: SnoozeCondition) {
+        let messageCount = threads.first { $0.id == threadID }?.messages.count ?? 0
+        settings.snooze(threadID: threadID, condition: condition, messageCount: messageCount)
+        snoozedIDs = settings.activeSnoozedIDs()
+        if selectedThreadID == threadID { advance() }
+    }
+
     func unsnooze(threadID: String) {
         settings.unsnooze(threadID: threadID)
         snoozedIDs = settings.activeSnoozedIDs()
@@ -270,6 +277,16 @@ final class AppState {
 
     func checkSnoozeWakeUps() {
         settings.clearExpiredSnoozes()
+        // Fire condition-based entries
+        var triggered: [String] = []
+        for entry in settings.snoozeEntries {
+            guard entry.condition != nil,
+                  let thread = threads.first(where: { $0.id == entry.threadID }),
+                  entry.isTriggered(by: thread)
+            else { continue }
+            triggered.append(entry.threadID)
+        }
+        triggered.forEach { settings.unsnooze(threadID: $0) }
         snoozedIDs = settings.activeSnoozedIDs()
     }
 

@@ -18,6 +18,7 @@ struct ReadingPaneView: View {
     var body: some View {
         VStack(spacing: 0) {
             threadHeader
+            actionBar
             bodyContent.frame(maxWidth: .infinity, maxHeight: .infinity)
             composeFooter
         }
@@ -37,42 +38,106 @@ struct ReadingPaneView: View {
 
     private var threadHeader: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack(alignment: .top, spacing: 8) {
-                Text(thread.subject)
-                    .font(.system(size: 22, weight: .semibold))
-                    .foregroundStyle(Color(hex: "171719"))
-                    .tracking(-0.22)
-                    .lineLimit(2)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                Button {
-                    showSnoozePopover = true
-                } label: {
-                    Image(systemName: "clock")
-                        .font(.system(size: 13, weight: .medium))
-                        .foregroundStyle(Color.winnowTextTertiary)
-                        .padding(6)
-                        .background(
-                            RoundedRectangle(cornerRadius: 6)
-                                .fill(Color.winnowHover.opacity(0))
-                        )
-                }
-                .buttonStyle(.plain)
-                .help("Snooze")
-                .popover(isPresented: $showSnoozePopover, arrowEdge: .top) {
-                    SnoozePickerView(
-                        onSnooze: { date in appState.snooze(threadID: thread.id, until: date) },
-                        onDismiss: { showSnoozePopover = false }
-                    )
-                }
-            }
+            Text(thread.subject)
+                .font(.system(size: 22, weight: .semibold))
+                .foregroundStyle(Color(hex: "171719"))
+                .tracking(-0.22)
+                .lineLimit(2)
+                .fixedSize(horizontal: false, vertical: true)
 
             participantsMeta
         }
         .padding(.horizontal, WinnowSpacing.sectionHWide)
         .padding(.top, 26)
         .padding(.bottom, 16)
+    }
+
+    // MARK: - Action bar
+
+    private var actionBar: some View {
+        HStack(spacing: 20) {
+            toolbarButton(icon: "archivebox", help: "Archive (⌘E)") {
+                appState.archive(thread.id)
+            }
+
+            Button {
+                showSnoozePopover = true
+            } label: {
+                HStack(spacing: 6) {
+                    Image(systemName: "clock")
+                        .font(.system(size: 12.5, weight: .semibold))
+                    Text("Snooze")
+                        .font(.system(size: 13, weight: .semibold))
+                }
+                .foregroundStyle(showSnoozePopover ? Color(hex: "2f6bdb") : Color(hex: "9a9aa0"))
+                .padding(.horizontal, 11)
+                .padding(.vertical, 6)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(showSnoozePopover ? Color(hex: "eef3fc") : Color.clear)
+                        .animation(.easeInOut(duration: 0.1), value: showSnoozePopover)
+                )
+            }
+            .buttonStyle(.plain)
+            .popover(isPresented: $showSnoozePopover, arrowEdge: .bottom) {
+                SnoozePickerView(
+                    thread: thread,
+                    currentEntry: appState.settings.snoozeEntries.first { $0.threadID == thread.id },
+                    onSnoozeDate: { date in
+                        appState.snooze(threadID: thread.id, until: date)
+                        showSnoozePopover = false
+                    },
+                    onSnoozeCondition: { condition in
+                        appState.snooze(threadID: thread.id, condition: condition)
+                        showSnoozePopover = false
+                    },
+                    onUnsnooze: {
+                        appState.unsnooze(threadID: thread.id)
+                        showSnoozePopover = false
+                    }
+                )
+            }
+
+            toolbarButton(icon: "checkmark", help: "Mark done") {
+                appState.markRead(thread.id)
+                appState.archive(thread.id)
+            }
+
+            toolbarButton(icon: "number", help: "Label (coming soon)") {}
+
+            Spacer()
+
+            Button {
+                replyFocused = true
+            } label: {
+                Text("Reply")
+                    .font(.system(size: 12.5, weight: .semibold))
+                    .foregroundStyle(Color(hex: "5a5a62"))
+                    .padding(.horizontal, 13)
+                    .padding(.vertical, 6)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color.black.opacity(0.10), lineWidth: 1)
+                    )
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, WinnowSpacing.sectionHWide)
+        .frame(height: 48)
+        .overlay(alignment: .bottom) {
+            Color.black.opacity(0.04).frame(height: 1)
+        }
+    }
+
+    @ViewBuilder
+    private func toolbarButton(icon: String, help helpText: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: icon)
+                .font(.system(size: 14, weight: .regular))
+                .foregroundStyle(Color(hex: "9a9aa0"))
+        }
+        .buttonStyle(.plain)
+        .help(helpText)
     }
 
     private var participantsMeta: some View {

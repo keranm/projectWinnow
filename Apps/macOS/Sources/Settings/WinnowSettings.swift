@@ -185,18 +185,27 @@ final class WinnowSettings {
         save()
     }
 
+    func snooze(threadID: String, condition: SnoozeCondition, messageCount: Int) {
+        snoozeEntries.removeAll { $0.threadID == threadID }
+        snoozeEntries.append(SnoozeEntry(threadID: threadID, condition: condition, messageCount: messageCount))
+        save()
+    }
+
     func unsnooze(threadID: String) {
         snoozeEntries.removeAll { $0.threadID == threadID }
         save()
     }
 
     func activeSnoozedIDs(at now: Date = Date()) -> Set<String> {
-        Set(snoozeEntries.filter { $0.wakeDate > now }.map { $0.threadID })
+        Set(snoozeEntries.filter {
+            if let wakeDate = $0.wakeDate { return wakeDate > now }
+            return true  // condition-based stays until triggered
+        }.map { $0.threadID })
     }
 
     func clearExpiredSnoozes(at now: Date = Date()) {
         let before = snoozeEntries.count
-        snoozeEntries.removeAll { $0.wakeDate <= now }
+        snoozeEntries.removeAll { $0.isExpired(now: now) }
         if snoozeEntries.count != before { save() }
     }
 
