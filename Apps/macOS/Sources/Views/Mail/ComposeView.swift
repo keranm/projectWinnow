@@ -9,13 +9,14 @@ struct ComposeView: View {
 
     @State private var toLine = ""
     @State private var subject = ""
-    @State private var bodyText = ""
+    @State private var bodyText = NSAttributedString()
+    @State private var bodyFocused = false
     @State private var isSending = false
     @State private var isCancelHovered = false
     @State private var isFindingTime = false
     @FocusState private var focused: Field?
 
-    enum Field { case to, subject, body }
+    enum Field { case to, subject }
 
     private var canSend: Bool {
         !toLine.trimmingCharacters(in: .whitespaces).isEmpty && !isSending
@@ -48,10 +49,12 @@ struct ComposeView: View {
 
                 Button {
                     guard canSend else { return }
-                    let t = toLine; let s = subject; let b = bodyText
+                    let t = toLine; let s = subject
+                    let b = bodyText.string
+                    let html = MailBodyRenderer.htmlBody(from: bodyText)
                     isSending = true
                     Task {
-                        await appState.sendNew(to: t, subject: s, body: b)
+                        await appState.sendNew(to: t, subject: s, body: b, html: html)
                         isSending = false
                         isPresented = false
                     }
@@ -78,16 +81,18 @@ struct ComposeView: View {
                 Divider().opacity(0.4)
 
                 fieldRow("Subject", text: $subject, field: .subject)
-                    .onSubmit { focused = .body }
+                    .onSubmit { focused = nil; bodyFocused = true }
                 Divider().opacity(0.4)
 
-                TextEditor(text: $bodyText)
-                    .font(WinnowTypography.body)
-                    .focused($focused, equals: .body)
-                    .scrollContentBackground(.hidden)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .padding(.horizontal, 20)
-                    .padding(.top, 12)
+                FormattedTextEditor(
+                    text: $bodyText,
+                    placeholder: "Write something…",
+                    isFocused: $bodyFocused,
+                    fontSize: 14
+                )
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding(.horizontal, 20)
+                .padding(.top, 12)
 
                 Divider().opacity(0.4)
                 HStack {
@@ -103,7 +108,7 @@ struct ComposeView: View {
         .onAppear {
             focused = .to
             if let sig = settings.defaultIdentity?.signatureBody, !sig.isEmpty {
-                bodyText = "\n\n\(sig)"
+                bodyText = .editorText("\n\n\(sig)", fontSize: 14)
             }
         }
     }
@@ -115,7 +120,9 @@ struct ComposeView: View {
             let hours = settings.workingHours
             Task {
                 if let text = await FindATime.suggestionText(calendarIDs: calIDs, workingHours: hours) {
-                    bodyText = bodyText.isEmpty ? text : "\(bodyText)\n\n\(text)"
+                    bodyText = bodyText.isBlank
+                        ? .editorText(text, fontSize: 14)
+                        : bodyText.appendingEditorText("\n\n\(text)", fontSize: 14)
                 }
                 isFindingTime = false
             }

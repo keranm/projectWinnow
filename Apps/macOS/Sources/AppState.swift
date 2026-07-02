@@ -227,7 +227,7 @@ final class AppState {
         Task { try? await gmailClient?.modifyThread(id, removeLabels: ["INBOX"]) }
     }
 
-    func sendReply(threadID: String, body: String) async {
+    func sendReply(threadID: String, body: String, html: String? = nil) async {
         guard let client = gmailClient,
               let account = accounts.first,
               let thread = threads.first(where: { $0.id == threadID }),
@@ -241,14 +241,15 @@ final class AppState {
                 from: account.email,
                 to: [lastMsg.from.email],
                 subject: thread.subject,
-                plainBody: body
+                plainBody: body,
+                htmlBody: html
             )
         } catch {
             syncError = error.localizedDescription
         }
     }
 
-    func sendNew(to toLine: String, subject: String, body: String) async {
+    func sendNew(to toLine: String, subject: String, body: String, html: String? = nil) async {
         guard let client = gmailClient, let account = accounts.first else { return }
         let recipients = toLine
             .components(separatedBy: ",")
@@ -256,7 +257,7 @@ final class AppState {
             .filter { !$0.isEmpty }
         guard !recipients.isEmpty else { return }
         do {
-            try await client.sendNew(from: account.email, to: recipients, subject: subject, plainBody: body)
+            try await client.sendNew(from: account.email, to: recipients, subject: subject, plainBody: body, htmlBody: html)
         } catch {
             syncError = error.localizedDescription
         }

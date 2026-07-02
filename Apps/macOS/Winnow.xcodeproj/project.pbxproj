@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0700019D1219663690D1E64C /* CalendarPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8AE690E58F36A451B4DBB9 /* CalendarPanel.swift */; };
+		0BD7AC78265634632449A8F7 /* RichTextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D59CC609FEC36C7F72C0879 /* RichTextEditor.swift */; };
 		1D93D66BE2E6E15FA7135A55 /* ThreadListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 599FF8EA65BD502CED244223 /* ThreadListView.swift */; };
 		1FD90A4F89C1D52E28C93536 /* FindATime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0468DE7E7BC3B5DB75DF3 /* FindATime.swift */; };
 		20F3228A7974B704A4B39A5B /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2F75367F63C93D25CE6036 /* RootView.swift */; };
@@ -55,6 +56,7 @@
 		4B8AE690E58F36A451B4DBB9 /* CalendarPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPanel.swift; sourceTree = "<group>"; };
 		599FF8EA65BD502CED244223 /* ThreadListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadListView.swift; sourceTree = "<group>"; };
 		5C2F75367F63C93D25CE6036 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		5D59CC609FEC36C7F72C0879 /* RichTextEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RichTextEditor.swift; sourceTree = "<group>"; };
 		614F311C47862DEB5F65ED36 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		689C4FC6BB21DE77FABEB767 /* RulesPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulesPanel.swift; sourceTree = "<group>"; };
 		6D6D77278B8FF8C4563D3813 /* MailContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailContentView.swift; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 				04C2F790DF3E1CCCD0D98C78 /* ComposeView.swift */,
 				6D6D77278B8FF8C4563D3813 /* MailContentView.swift */,
 				475EB32FAE5A75CBE6674C50 /* ReadingPaneView.swift */,
+				5D59CC609FEC36C7F72C0879 /* RichTextEditor.swift */,
 				2752BC82243F1BF2EF150CE3 /* SnoozePopover.swift */,
 				599FF8EA65BD502CED244223 /* ThreadListView.swift */,
 				E2D1A3D8A4CC83CE18DFC152 /* ThreadRowView.swift */,
@@ -293,6 +296,7 @@
 				5AB5AACD27EAE80BFF7C5382 /* MockData.swift in Sources */,
 				DE82217E69D34EFA50A38E26 /* NavItem.swift in Sources */,
 				A3E80596F802901F4DB8D667 /* ReadingPaneView.swift in Sources */,
+				0BD7AC78265634632449A8F7 /* RichTextEditor.swift in Sources */,
 				20F3228A7974B704A4B39A5B /* RootView.swift in Sources */,
 				F60346251C4139F015719ABB /* RulesPanel.swift in Sources */,
 				858788E3B2BD5BAD0A7ED8F7 /* Secrets.swift in Sources */,

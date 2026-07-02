@@ -6,12 +6,12 @@ struct ReadingPaneView: View {
     let thread: MailThread
     @Environment(AppState.self) private var appState
     @Environment(WinnowSettings.self) private var settings
-    @State private var replyText: String = ""
+    @State private var replyText = NSAttributedString()
     @State private var signatureSeeded = false
     @State private var isSendHovered = false
     @State private var showSnoozePopover = false
     @State private var isFindingTime = false
-    @FocusState private var replyFocused: Bool
+    @State private var replyFocused = false
 
     private var latestMessage: MailMessage? { thread.messages.last }
     private var earlierMessages: [MailMessage] { thread.messages.dropLast().reversed() }
@@ -25,7 +25,7 @@ struct ReadingPaneView: View {
         }
         .background(Color.winnowSurface)
         .task(id: thread.id) {
-            replyText = ""
+            replyText = NSAttributedString()
             signatureSeeded = false
             await appState.loadFullThread(thread.id)
             if !thread.isRead {
@@ -362,13 +362,13 @@ struct ReadingPaneView: View {
             HStack(spacing: 8) {
                 if let draft = thread.draftReply {
                     DraftReadyChip {
-                        replyText = draft
+                        replyText = .editorText(draft)
                         replyFocused = true
                     }
                 }
                 ForEach(thread.suggestedReplies, id: \.self) { reply in
                     QuickReplyChip(text: reply) {
-                        replyText = reply
+                        replyText = .editorText(reply)
                         replyFocused = true
                     }
                 }
@@ -383,7 +383,7 @@ struct ReadingPaneView: View {
             let hours = settings.workingHours
             Task {
                 if let text = await FindATime.suggestionText(calendarIDs: calIDs, workingHours: hours) {
-                    replyText = replyText.isEmpty ? text : "\(replyText)\n\n\(text)"
+                    replyText = replyText.isBlank ? .editorText(text) : replyText.appendingEditorText("\n\n\(text)")
                     replyFocused = true
                 }
                 isFindingTime = false
@@ -408,26 +408,27 @@ struct ReadingPaneView: View {
         HStack(alignment: .bottom, spacing: 10) {
             findATimeButton
 
-            TextField(replyPlaceholder, text: $replyText, axis: .vertical)
-                .onChange(of: replyFocused) { _, focused in
-                    guard focused, !signatureSeeded else { return }
-                    signatureSeeded = true
-                    if let sig = settings.defaultIdentity?.signatureBody, !sig.isEmpty {
-                        replyText = "\n\n\(sig)"
-                    }
+            FormattedTextEditor(
+                text: $replyText,
+                placeholder: replyPlaceholder,
+                isFocused: $replyFocused,
+                growLimits: 20...170
+            )
+            .onChange(of: replyFocused) { _, focused in
+                guard focused, !signatureSeeded else { return }
+                signatureSeeded = true
+                if let sig = settings.defaultIdentity?.signatureBody, !sig.isEmpty, replyText.isBlank {
+                    replyText = .editorText("\n\n\(sig)")
                 }
-                .font(.system(size: 13.5))
-                .foregroundStyle(Color.winnowText)
-                .focused($replyFocused)
-                .textFieldStyle(.plain)
-                .lineLimit(1...8)
-                .frame(maxWidth: .infinity)
+            }
+            .frame(maxWidth: .infinity)
 
             Button("Send") {
-                let body = replyText
+                let body = replyText.string
+                let html = MailBodyRenderer.htmlBody(from: replyText)
                 let tid = thread.id
-                replyText = ""
-                Task { await appState.sendReply(threadID: tid, body: body) }
+                replyText = NSAttributedString()
+                Task { await appState.sendReply(threadID: tid, body: body, html: html) }
             }
             .font(.system(size: 12.5, weight: .semibold))
             .foregroundStyle(.white)
@@ -435,15 +436,13 @@ struct ReadingPaneView: View {
             .padding(.vertical, 6)
             .background(
                 RoundedRectangle(cornerRadius: 7)
-                    .fill({
-                        let isEmpty = replyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                        if isEmpty { return Color.winnowAccent.opacity(0.4) }
-                        return Color.winnowAccent.opacity(isSendHovered ? 0.88 : 1.0)
-                    }())
+                    .fill(replyText.isBlank
+                        ? Color.winnowAccent.opacity(0.4)
+                        : Color.winnowAccent.opacity(isSendHovered ? 0.88 : 1.0))
                     .animation(.easeInOut(duration: 0.12), value: isSendHovered)
             )
             .buttonStyle(.plain)
-            .disabled(replyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            .disabled(replyText.isBlank)
             .keyboardShortcut(.return, modifiers: .command)
             .onHover { isSendHovered = $0 }
         }

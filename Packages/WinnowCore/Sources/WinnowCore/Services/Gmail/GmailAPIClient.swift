@@ -59,14 +59,16 @@ public actor GmailAPIClient {
     }
 
     /// Sends a new outbound message (not threaded — use sendReply for replies).
-    public func sendNew(from: String, to: [String], subject: String, plainBody: String) async throws {
+    /// Pass `htmlBody` alongside the plain text to send rich formatting (multipart/alternative).
+    public func sendNew(from: String, to: [String], subject: String, plainBody: String, htmlBody: String? = nil) async throws {
+        let content = Self.bodySection(plain: plainBody, html: htmlBody)
         let mime = [
             "From: \(from)",
             "To: \(to.joined(separator: ", "))",
             "Subject: \(subject)",
             "MIME-Version: 1.0",
-            "Content-Type: text/plain; charset=UTF-8"
-        ].joined(separator: "\r\n") + "\r\n\r\n" + plainBody
+            content.contentType
+        ].joined(separator: "\r\n") + "\r\n\r\n" + content.body
         struct SendBody: Encodable { let raw: String }
         try await postJSON("messages/send", body: SendBody(raw: Data(mime.utf8).base64URLEncoded()))
     }
@@ -94,32 +96,56 @@ public actor GmailAPIClient {
         try await postJSON("threads/\(id)/modify", body: Body(addLabelIds: addLabels, removeLabelIds: removeLabels))
     }
 
-    /// Sends a plain-text reply and attaches it to the existing thread.
+    /// Sends a reply and attaches it to the existing thread.
+    /// Pass `htmlBody` alongside the plain text to send rich formatting (multipart/alternative).
     public func sendReply(
         threadID: String,
         inReplyToMessageID: String?,
         from: String,
         to: [String],
         subject: String,
-        plainBody: String
+        plainBody: String,
+        htmlBody: String? = nil
     ) async throws {
         let sub = subject.hasPrefix("Re: ") ? subject : "Re: \(subject)"
+        let content = Self.bodySection(plain: plainBody, html: htmlBody)
         var headers = [
             "From: \(from)",
             "To: \(to.joined(separator: ", "))",
             "Subject: \(sub)",
             "MIME-Version: 1.0",
-            "Content-Type: text/plain; charset=UTF-8"
+            content.contentType
         ]
         if let mid = inReplyToMessageID {
             headers.append("In-Reply-To: \(mid)")
             headers.append("References: \(mid)")
         }
-        let mime = headers.joined(separator: "\r\n") + "\r\n\r\n" + plainBody
+        let mime = headers.joined(separator: "\r\n") + "\r\n\r\n" + content.body
         let raw = Data(mime.utf8).base64URLEncoded()
 
         struct SendBody: Encodable { let raw: String; let threadId: String }
         try await postJSON("messages/send", body: SendBody(raw: raw, threadId: threadID))
+    }
+
+    /// Plain-only bodies keep the simple text/plain form; rich bodies go out as
+    /// multipart/alternative so every client can fall back to the plain part.
+    private static func bodySection(plain: String, html: String?) -> (contentType: String, body: String) {
+        guard let html else {
+            return ("Content-Type: text/plain; charset=UTF-8", plain)
+        }
+        let boundary = "winnow-\(UUID().uuidString)"
+        let body = [
+            "--\(boundary)",
+            "Content-Type: text/plain; charset=UTF-8",
+            "",
+            plain,
+            "--\(boundary)",
+            "Content-Type: text/html; charset=UTF-8",
+            "",
+            html,
+            "--\(boundary)--"
+        ].joined(separator: "\r\n")
+        return ("Content-Type: multipart/alternative; boundary=\"\(boundary)\"", body)
     }
 
     // MARK: - Token management
