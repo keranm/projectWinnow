@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:#ececed;}
+  .di{display:inline-block;background:#2f6bdb;transform:rotate(45deg);border-radius:1.5px;}
+  .chT{font:600 11px system-ui;letter-spacing:.06em;text-transform:uppercase;color:#9aa6bb;}
+  .mono{font-family:ui-monospace,monospace;}
+  .sec{padding:32px 48px;border-top:1px solid rgba(0,0,0,.06);}
+  .ico{position:relative;background:linear-gradient(155deg,#4f8ef0,#2f6bdb 55%,#2257c0);box-shadow:0 8px 22px rgba(20,22,45,.16),inset 0 1px 0 rgba(255,255,255,.4);}
+  .wm{font-weight:600;letter-spacing:-.02em;color:#1c1c20;}
+  .cap{font:500 11px ui-monospace,monospace;color:#9a9aa0;margin-top:10px;text-align:center;}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:40px 28px;">
+  <div style="width:1080px;background:#fff;border-radius:16px;box-shadow:0 30px 80px rgba(20,22,45,.18),0 2px 8px rgba(0,0,0,.05);border:1px solid rgba(0,0,0,.07);overflow:hidden;">
+
+    <!-- header -->
+    <div style="padding:38px 48px 30px;display:flex;align-items:center;gap:28px;">
+      <div class="ico" style="width:104px;height:104px;border-radius:24px;">
+        <svg viewBox="0 0 200 200" width="100%" height="100%"><defs><clipPath id="hM"><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)"/></clipPath></defs><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)" fill="#fff"/><path d="M144 56 L144 144 L100 100 Z" fill="rgba(18,38,90,.22)" clip-path="url(#hM)"/></svg>
+      </div>
+      <div>
+        <div style="display:flex;align-items:center;gap:9px;"><span class="di" style="width:9px;height:9px;"></span><span class="chT">Winnow · brand</span></div>
+        <div style="font:600 30px/1.2 system-ui;color:#161618;letter-spacing:-.02em;margin-top:12px;">App icon &amp; wordmark</div>
+        <div style="font:400 14px/1.55 system-ui;color:#6a6a70;margin-top:8px;max-width:560px;">The diamond mark on a blue ground, with the envelope flap at <span class="mono" style="color:#2f6bdb;">.22</span>. One icon, one wordmark, both quiet.</div>
+      </div>
+    </div>
+
+    <!-- master spec -->
+    <div class="sec" style="display:flex;gap:40px;">
+      <div class="ico" style="width:200px;height:200px;border-radius:46px;flex:none;">
+        <svg viewBox="0 0 200 200" width="100%" height="100%"><defs><clipPath id="big"><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)"/></clipPath></defs><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)" fill="#fff"/><path d="M144 56 L144 144 L100 100 Z" fill="rgba(18,38,90,.22)" clip-path="url(#big)"/></svg>
+      </div>
+      <div style="flex:1;">
+        <span class="chT">Construction · 1024 grid</span>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 28px;margin-top:14px;">
+          <div><div style="font:600 13px system-ui;color:#1c1c20;">Squircle</div><div style="font:400 12.5px/1.5 system-ui;color:#8a8a90;margin-top:2px;">macOS continuous corner, <span class="mono">22.3%</span> radius. Art fills the icon (no inner padding); the OS adds its own mask.</div></div>
+          <div><div style="font:600 13px system-ui;color:#1c1c20;">Ground</div><div style="font:400 12.5px/1.5 system-ui;color:#8a8a90;margin-top:2px;">Linear <span class="mono">155°</span> — <span class="mono">#4F8EF0</span> → <span class="mono">#2F6BDB</span> (55%) → <span class="mono">#2257C0</span>.</div></div>
+          <div><div style="font:600 13px system-ui;color:#1c1c20;">Diamond</div><div style="font:400 12.5px/1.5 system-ui;color:#8a8a90;margin-top:2px;">White, rotated square, <span class="mono">106/200</span> side (~75% bounding box), corner <span class="mono">22</span>, centred.</div></div>
+          <div><div style="font:600 13px system-ui;color:#1c1c20;">Flap</div><div style="font:400 12.5px/1.5 system-ui;color:#8a8a90;margin-top:2px;">Triangle <span class="mono">(144,56)(144,144)(100,100)</span>, fill <span class="mono">rgba(18,38,90,.22)</span>, clipped to the diamond.</div></div>
+        </div>
+        <div style="margin-top:18px;display:flex;align-items:flex-start;gap:9px;padding-top:14px;border-top:1px solid rgba(0,0,0,.06);"><span class="di" style="width:7px;height:7px;margin-top:3px;"></span><span style="font:400 12px/1.5 system-ui;color:#8a8a90;">The flap is the only place the mark deviates from the pure diamond — keeping it tied to the in-app assist marker.</span></div>
+      </div>
+    </div>
+
+    <!-- size grid: light -->
+    <div class="sec">
+      <span class="chT">macOS icon set · light</span>
+      <div style="display:flex;align-items:flex-end;gap:34px;margin-top:18px;">
+        <div style="text-align:center;"><div class="ico" style="width:128px;height:128px;border-radius:29px;margin:0 auto;"><svg viewBox="0 0 200 200" width="100%" height="100%"><defs><clipPath id="l128"><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)"/></clipPath></defs><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)" fill="#fff"/><path d="M144 56 L144 144 L100 100 Z" fill="rgba(18,38,90,.22)" clip-path="url(#l128)"/></svg></div><div class="cap">512 / 256</div></div>
+        <div style="text-align:center;"><div class="ico" style="width:64px;height:64px;border-radius:14.5px;margin:0 auto;"><svg viewBox="0 0 200 200" width="100%" height="100%"><defs><clipPath id="l64"><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)"/></clipPath></defs><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)" fill="#fff"/><path d="M144 56 L144 144 L100 100 Z" fill="rgba(18,38,90,.22)" clip-path="url(#l64)"/></svg></div><div class="cap">128</div></div>
+        <div style="text-align:center;"><div class="ico" style="width:48px;height:48px;border-radius:11px;margin:0 auto;"><svg viewBox="0 0 200 200" width="100%" height="100%"><defs><clipPath id="l48"><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)"/></clipPath></defs><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)" fill="#fff"/><path d="M144 56 L144 144 L100 100 Z" fill="rgba(18,38,90,.22)" clip-path="url(#l48)"/></svg></div><div class="cap">64</div></div>
+        <div style="text-align:center;"><div class="ico" style="width:32px;height:32px;border-radius:7.2px;margin:0 auto;"><svg viewBox="0 0 200 200" width="100%" height="100%"><defs><clipPath id="l32"><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)"/></clipPath></defs><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)" fill="#fff"/><path d="M144 56 L144 144 L100 100 Z" fill="rgba(18,38,90,.22)" clip-path="url(#l32)"/></svg></div><div class="cap">32</div></div>
+        <div style="text-align:center;"><div class="ico" style="width:16px;height:16px;border-radius:3.6px;margin:0 auto;"><svg viewBox="0 0 200 200" width="100%" height="100%"><defs><clipPath id="l16"><rect x="46" y="46" width="108" height="108" rx="24" transform="rotate(45 100 100)"/></clipPath></defs><rect x="46" y="46" width="108" height="108" rx="24" transform="rotate(45 100 100)" fill="#fff"/><path d="M145 55 L145 145 L100 100 Z" fill="rgba(18,38,90,.26)" clip-path="url(#l16)"/></svg></div><div class="cap">16</div></div>
+      </div>
+    </div>
+
+    <!-- size grid: dark -->
+    <div class="sec" style="background:#1c1c1e;border-top-color:rgba(255,255,255,.06);">
+      <span class="chT" style="color:#7f8aa0;">on dark</span>
+      <div style="display:flex;align-items:flex-end;gap:34px;margin-top:18px;">
+        <div style="text-align:center;"><div class="ico" style="width:128px;height:128px;border-radius:29px;margin:0 auto;"><svg viewBox="0 0 200 200" width="100%" height="100%"><defs><clipPath id="d128"><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)"/></clipPath></defs><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)" fill="#fff"/><path d="M144 56 L144 144 L100 100 Z" fill="rgba(18,38,90,.22)" clip-path="url(#d128)"/></svg></div><div class="cap" style="color:#6a6a72;">512 / 256</div></div>
+        <div style="text-align:center;"><div class="ico" style="width:64px;height:64px;border-radius:14.5px;margin:0 auto;"><svg viewBox="0 0 200 200" width="100%" height="100%"><defs><clipPath id="d64"><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)"/></clipPath></defs><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)" fill="#fff"/><path d="M144 56 L144 144 L100 100 Z" fill="rgba(18,38,90,.22)" clip-path="url(#d64)"/></svg></div><div class="cap" style="color:#6a6a72;">128</div></div>
+        <div style="text-align:center;"><div class="ico" style="width:32px;height:32px;border-radius:7.2px;margin:0 auto;"><svg viewBox="0 0 200 200" width="100%" height="100%"><defs><clipPath id="d32"><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)"/></clipPath></defs><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)" fill="#fff"/><path d="M144 56 L144 144 L100 100 Z" fill="rgba(18,38,90,.22)" clip-path="url(#d32)"/></svg></div><div class="cap" style="color:#6a6a72;">32</div></div>
+        <div style="text-align:center;"><div class="ico" style="width:16px;height:16px;border-radius:3.6px;margin:0 auto;"><svg viewBox="0 0 200 200" width="100%" height="100%"><defs><clipPath id="d16"><rect x="46" y="46" width="108" height="108" rx="24" transform="rotate(45 100 100)"/></clipPath></defs><rect x="46" y="46" width="108" height="108" rx="24" transform="rotate(45 100 100)" fill="#fff"/><path d="M145 55 L145 145 L100 100 Z" fill="rgba(18,38,90,.26)" clip-path="url(#d16)"/></svg></div><div class="cap" style="color:#6a6a72;">16</div></div>
+      </div>
+    </div>
+
+    <!-- wordmark lockups -->
+    <div class="sec">
+      <span class="chT">Wordmark lockups</span>
+      <!-- horizontal -->
+      <div style="display:flex;align-items:center;gap:40px;margin-top:20px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:18px;">
+          <div class="ico" style="width:60px;height:60px;border-radius:13.5px;flex:none;"><svg viewBox="0 0 200 200" width="100%" height="100%"><defs><clipPath id="w1"><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)"/></clipPath></defs><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)" fill="#fff"/><path d="M144 56 L144 144 L100 100 Z" fill="rgba(18,38,90,.22)" clip-path="url(#w1)"/></svg></div>
+          <span class="wm" style="font-size:38px;">Winnow</span>
+        </div>
+        <div style="height:46px;width:1px;background:rgba(0,0,0,.08);"></div>
+        <!-- with tagline -->
+        <div style="display:flex;align-items:center;gap:16px;">
+          <div class="ico" style="width:52px;height:52px;border-radius:11.7px;flex:none;"><svg viewBox="0 0 200 200" width="100%" height="100%"><defs><clipPath id="w2"><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)"/></clipPath></defs><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)" fill="#fff"/><path d="M144 56 L144 144 L100 100 Z" fill="rgba(18,38,90,.22)" clip-path="url(#w2)"/></svg></div>
+          <div><div class="wm" style="font-size:24px;line-height:1.05;">Winnow</div><div style="font:500 11.5px system-ui;color:#9a9aa0;margin-top:3px;letter-spacing:.01em;">Quiet mail for Gmail</div></div>
+        </div>
+      </div>
+      <!-- stacked + reversed -->
+      <div style="display:flex;gap:24px;margin-top:24px;">
+        <div style="flex:1;border:1px solid rgba(0,0,0,.07);border-radius:13px;padding:30px;display:flex;flex-direction:column;align-items:center;">
+          <div class="ico" style="width:76px;height:76px;border-radius:17px;"><svg viewBox="0 0 200 200" width="100%" height="100%"><defs><clipPath id="w3"><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)"/></clipPath></defs><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)" fill="#fff"/><path d="M144 56 L144 144 L100 100 Z" fill="rgba(18,38,90,.22)" clip-path="url(#w3)"/></svg></div>
+          <span class="wm" style="font-size:26px;margin-top:16px;">Winnow</span>
+          <div class="cap">Stacked</div>
+        </div>
+        <div style="flex:1;border-radius:13px;padding:30px;display:flex;flex-direction:column;align-items:center;background:#161617;">
+          <div style="display:flex;align-items:center;gap:16px;">
+            <div class="ico" style="width:56px;height:56px;border-radius:12.6px;flex:none;"><svg viewBox="0 0 200 200" width="100%" height="100%"><defs><clipPath id="w4"><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)"/></clipPath></defs><rect x="47" y="47" width="106" height="106" rx="22" transform="rotate(45 100 100)" fill="#fff"/><path d="M144 56 L144 144 L100 100 Z" fill="rgba(18,38,90,.22)" clip-path="url(#w4)"/></svg></div>
+            <span class="wm" style="font-size:32px;color:#f2f2f5;">Winnow</span>
+          </div>
+          <div class="cap" style="color:#6a6a72;margin-top:18px;">Reversed</div>
+        </div>
+      </div>
+      <div style="margin-top:18px;display:flex;align-items:flex-start;gap:9px;"><span class="di" style="width:7px;height:7px;margin-top:3px;"></span><span style="font:400 12px/1.5 system-ui;color:#8a8a90;">Wordmark: <span class="mono">system-ui / SF Pro</span>, weight 600, tracking <span class="mono">−.02em</span>, ink <span class="mono">#1C1C20</span> (light) / <span class="mono">#F2F2F5</span> (dark). Clear space on all sides = the diamond's half-height. Icon-to-wordmark gap ≈ 30% of icon width. Minimum lockup height 22px; below that, use the icon alone.</span></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

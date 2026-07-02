@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:system-ui,-apple-system,sans-serif;}
+  .trunc{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .win{border-radius:13px;box-shadow:0 24px 70px rgba(20,22,45,.18),0 2px 6px rgba(0,0,0,.05);overflow:hidden;border:1px solid rgba(0,0,0,.07);background:#fff;display:flex;flex-direction:column;}
+  .lbl{font:600 13px system-ui;color:#3a3a40;margin:0 0 16px 4px;}
+  .tl{display:flex;gap:8px;} .tl span{width:12px;height:12px;border-radius:50%;}
+  .di{display:inline-block;background:#2f6bdb;transform:rotate(45deg);border-radius:1.5px;}
+  .chT{font:600 11px system-ui;letter-spacing:.05em;text-transform:uppercase;color:#9aa6bb;}
+  .tok{display:inline-flex;align-items:center;gap:5px;font:600 11.5px ui-monospace,monospace;color:#2f6bdb;background:#eef3fc;border-radius:6px;padding:3px 9px;}
+  .tbtn{width:30px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font:600 13px system-ui;color:#6a6a70;}
+  .logo{flex:none;width:40px;height:40px;border-radius:9px;background:#1c1c20;color:#fff;font:700 13px system-ui;display:flex;align-items:center;justify-content:center;}
+</style>
+</helmet>
+
+<!-- ===== F1 — SIGNATURE EDITOR + LOGO ===== -->
+<div style="position:absolute; left:0; top:0; width:960px;">
+  <div data-drags-parent="1" class="lbl">01 · Signature editor — logo, layout, links</div>
+  <div class="win" style="height:720px;">
+    <div style="height:44px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;">
+      <div class="tl"><span style="background:#ff5f57;"></span><span style="background:#febc2e;"></span><span style="background:#28c840;"></span></div>
+      <div style="position:absolute;left:0;right:0;text-align:center;font:600 13px system-ui;color:#9a9aa0;pointer-events:none;">Settings — Signatures</div>
+    </div>
+    <div style="flex:1;display:flex;min-height:0;">
+      <!-- list -->
+      <div style="width:204px;flex:none;background:#fafafa;border-right:1px solid rgba(0,0,0,.05);padding:12px 9px;display:flex;flex-direction:column;gap:1px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 11px;border-radius:7px;background:#eef3fc;box-shadow:inset 2px 0 #2f6bdb;"><span style="font:600 13px system-ui;color:#1c1c20;">Studio</span><span style="font:600 9.5px system-ui;letter-spacing:.04em;text-transform:uppercase;color:#2f9e6f;">Default</span></div>
+        <div style="padding:9px 11px;font:500 13px system-ui;color:#55555c;">Winnow</div>
+        <div style="padding:9px 11px;font:500 13px system-ui;color:#55555c;">Quick reply</div>
+        <div style="margin-top:6px;padding:9px 11px;font:600 12.5px system-ui;color:#2f6bdb;">＋ New signature</div>
+      </div>
+      <!-- editor -->
+      <div style="flex:1;min-width:0;padding:22px 26px;display:flex;flex-direction:column;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="flex:1;"><div class="chT">Name</div><div style="font:600 17px system-ui;color:#161618;margin-top:3px;">Studio</div></div>
+          <div><div class="chT">Used by</div><div style="display:flex;align-items:center;gap:6px;margin-top:5px;"><span style="font:500 12px system-ui;color:#2f6bdb;background:#eef3fc;border-radius:13px;padding:4px 11px;">alex@morgan.studio</span></div></div>
+        </div>
+        <!-- toolbar -->
+        <div style="display:flex;align-items:center;gap:3px;margin-top:18px;padding:5px;border:1px solid rgba(0,0,0,.09);border-radius:10px;background:#fafafa;width:max-content;">
+          <span class="tbtn" style="font-weight:700;">B</span><span class="tbtn" style="font-style:italic;">i</span><span class="tbtn" style="text-decoration:underline;">U</span>
+          <span style="width:1px;height:18px;background:rgba(0,0,0,.1);margin:0 3px;"></span>
+          <span class="tbtn">🔗</span><span class="tbtn">▤</span><span class="tbtn">▦</span>
+          <span style="width:1px;height:18px;background:rgba(0,0,0,.1);margin:0 3px;"></span>
+          <span style="display:flex;align-items:center;gap:6px;font:600 12px system-ui;color:#2f6bdb;padding:0 10px;"><span class="di" style="width:6px;height:6px;"></span>Insert dynamic</span>
+        </div>
+
+        <!-- signature canvas -->
+        <div style="margin-top:16px;flex:1;border:1px solid rgba(0,0,0,.10);border-radius:12px;padding:22px 24px;display:flex;flex-direction:column;">
+          <div style="display:flex;align-items:flex-start;gap:18px;">
+            <div style="flex:none;width:150px;height:54px;border:1.5px dashed rgba(0,0,0,.18);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:#fafafa;"><span style="font:500 11.5px system-ui;color:#9a9aa0;">Drop logo</span><span style="font:500 10px system-ui;color:#b8b8be;">or browse</span></div>
+            <div style="width:1px;align-self:stretch;background:rgba(0,0,0,.08);"></div>
+            <div style="flex:1;min-width:0;">
+              <div style="font:700 15px system-ui;color:#1c1c20;">Alex Morgan</div>
+              <div style="font:500 13px system-ui;color:#6a6a70;margin-top:2px;">Founder · Morgan Studio</div>
+              <div style="font:400 12.5px system-ui;color:#8a8a90;margin-top:7px;"><span style="font-family:ui-monospace,monospace;">alex@morgan.studio</span> · <span style="font-family:ui-monospace,monospace;">+1 (415) 555-0142</span></div>
+              <div style="font:500 12.5px system-ui;color:#2f6bdb;margin-top:3px;">morgan.studio · @morganstudio</div>
+            </div>
+          </div>
+          <div style="height:1px;background:rgba(0,0,0,.07);margin:18px 0;"></div>
+          <div style="display:flex;align-items:center;gap:9px;">
+            <span style="flex:none;width:26px;height:26px;border-radius:7px;background:#006bff;color:#fff;font:700 11px system-ui;display:flex;align-items:center;justify-content:center;">C</span>
+            <span style="font:500 13px system-ui;color:#34343a;">Book a call →</span>
+            <span class="tok">Booking link</span>
+          </div>
+        </div>
+
+        <!-- insert tokens -->
+        <div style="margin-top:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span style="font:400 11px system-ui;color:#9a9aa0;">Insert:</span>
+          <span class="tok">First name</span><span class="tok">Today</span><span class="tok">Booking link</span><span class="tok">Website</span>
+          <span style="display:inline-flex;align-items:center;gap:5px;font:600 11.5px system-ui;color:#5a5a62;border:1px solid rgba(0,0,0,.12);border-radius:6px;padding:3px 9px;">Snippet ▾</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== F2 — DYNAMIC / TOKENS + SNIPPETS ===== -->
+<div style="position:absolute; left:1080px; top:0; width:640px;">
+  <div data-drags-parent="1" class="lbl">02 · Make it dynamic — tokens &amp; embedded snippets</div>
+  <div class="win" style="height:720px;">
+    <div style="height:44px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;">
+      <div class="tl"><span style="background:#ff5f57;"></span><span style="background:#febc2e;"></span><span style="background:#28c840;"></span></div>
+      <div style="position:absolute;left:0;right:0;text-align:center;font:600 13px system-ui;color:#9a9aa0;pointer-events:none;">Insert dynamic</div>
+    </div>
+    <div style="flex:1;display:flex;min-height:0;">
+      <!-- insert menu -->
+      <div style="width:268px;flex:none;border-right:1px solid rgba(0,0,0,.05);overflow:hidden;">
+        <div style="padding:14px 16px 6px;"><span class="chT">Contact</span></div>
+        <div style="display:flex;align-items:center;gap:9px;padding:8px 16px;"><span class="tok">First name</span><span style="font:400 11px system-ui;color:#b2b2b8;">recipient</span></div>
+        <div style="display:flex;align-items:center;gap:9px;padding:8px 16px;"><span class="tok">Full name</span><span style="font:400 11px system-ui;color:#b2b2b8;">you</span></div>
+        <div style="padding:12px 16px 6px;border-top:1px solid rgba(0,0,0,.05);"><span class="chT">Time</span></div>
+        <div style="display:flex;align-items:center;gap:9px;padding:8px 16px;"><span class="tok">Today</span></div>
+        <div style="display:flex;align-items:center;gap:9px;padding:8px 16px;"><span class="tok">Day of week</span></div>
+        <div style="padding:12px 16px 6px;border-top:1px solid rgba(0,0,0,.05);"><span class="chT">Links</span></div>
+        <div style="display:flex;align-items:center;gap:9px;padding:8px 16px;background:#eef3fc;box-shadow:inset 2px 0 #2f6bdb;"><span class="tok">Booking link</span><span style="font:400 11px system-ui;color:#7a8295;">Calendly</span></div>
+        <div style="display:flex;align-items:center;gap:9px;padding:8px 16px;"><span class="tok">Website</span></div>
+        <div style="padding:12px 16px 6px;border-top:1px solid rgba(0,0,0,.05);"><span class="chT">Snippet block</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 16px;"><span style="font:500 13px system-ui;color:#3a3a40;">Out-of-office banner</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">;ooo</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 16px;"><span style="font:500 13px system-ui;color:#3a3a40;">Launch promo</span><span style="font:500 11px ui-monospace,monospace;color:#b2b2b8;">;promo</span></div>
+      </div>
+      <!-- before/after -->
+      <div style="flex:1;min-width:0;padding:20px 22px;display:flex;flex-direction:column;gap:16px;overflow:hidden;">
+        <div>
+          <div class="chT" style="margin-bottom:8px;">Template</div>
+          <div style="border:1px solid rgba(0,0,0,.09);border-radius:11px;padding:15px 16px;font:400 13px/1.7 system-ui;color:#34343a;">
+            <div style="font:700 14px system-ui;color:#1c1c20;">Alex Morgan · Morgan Studio</div>
+            <div style="margin-top:6px;">Book a call → <span class="tok">Booking link</span></div>
+            <div style="margin-top:8px;display:inline-flex;align-items:center;gap:6px;background:#fdf6ee;border:1px dashed rgba(192,138,74,.4);border-radius:7px;padding:5px 9px;"><span style="width:6px;height:6px;background:#c08a4a;transform:rotate(45deg);border-radius:1px;"></span><span style="font:600 11.5px ui-monospace,monospace;color:#b07e36;">Snippet · ;ooo</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="chT" style="margin-bottom:8px;">As sent · live values</div>
+          <div style="border:1px solid rgba(47,107,219,.18);background:#fbfcfe;border-radius:11px;padding:15px 16px;font:400 13px/1.7 system-ui;color:#34343a;">
+            <div style="font:700 14px system-ui;color:#1c1c20;">Alex Morgan · Morgan Studio</div>
+            <div style="margin-top:6px;">Book a call → <span style="font-family:ui-monospace,monospace;color:#2f6bdb;">calendly.com/alex/30min</span></div>
+            <div style="margin-top:8px;font:400 12.5px/1.5 system-ui;color:#7a7a82;font-style:italic;">I'm away until Jul 14 with limited email — for anything urgent, call the studio.</div>
+          </div>
+        </div>
+        <div style="margin-top:auto;display:flex;align-items:flex-start;gap:8px;"><span class="di" style="width:7px;height:7px;margin-top:3px;"></span><span style="font:400 12px/1.5 system-ui;color:#8a8a90;">Tokens &amp; snippets resolve as the message is sent — booking links from Calendly, dates from the clock, banners only while active.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== F3 — APPLIED IN COMPOSE ===== -->
+<div style="position:absolute; left:1800px; top:0; width:720px;">
+  <div data-drags-parent="1" class="lbl">03 · In compose — applied, with a per-identity switcher</div>
+  <div class="win" style="height:640px;position:relative;">
+    <div style="height:44px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid rgba(0,0,0,.05);position:relative;">
+      <div class="tl"><span style="background:#ff5f57;"></span><span style="background:#febc2e;"></span><span style="background:#28c840;"></span></div>
+      <div style="position:absolute;left:0;right:0;text-align:center;font:600 13px system-ui;color:#9a9aa0;pointer-events:none;">New Message</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;padding:11px 22px;border-bottom:1px solid rgba(0,0,0,.04);"><span style="font:500 12.5px system-ui;color:#9a9aa0;width:48px;">To</span><span style="background:#eef3fc;border-radius:14px;padding:3px 11px;font:500 12.5px system-ui;color:#2f6bdb;">Priya Nair</span></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:11px 22px;border-bottom:1px solid rgba(0,0,0,.04);"><span style="font:500 12.5px system-ui;color:#9a9aa0;width:48px;">Subject</span><span style="font:600 13.5px system-ui;color:#1c1c20;">Partnership terms</span></div>
+    <div style="flex:1;padding:18px 22px;overflow:hidden;">
+      <div style="font:400 14px/1.65 system-ui;color:#34343a;">Hi Priya — happy to walk through the terms. Grab any time that suits below.</div>
+      <div style="font:400 14px/1.65 system-ui;color:#34343a;margin-top:11px;">Talk soon,</div>
+      <!-- rendered signature -->
+      <div style="margin-top:16px;padding-top:15px;border-top:1px solid rgba(0,0,0,.06);">
+        <div style="display:flex;align-items:flex-start;gap:14px;">
+          <span class="logo">MS</span>
+          <div style="width:1px;align-self:stretch;background:rgba(0,0,0,.08);"></div>
+          <div>
+            <div style="font:700 14px system-ui;color:#1c1c20;">Alex Morgan</div>
+            <div style="font:500 12.5px system-ui;color:#6a6a70;margin-top:1px;">Founder · Morgan Studio</div>
+            <div style="font:400 12px system-ui;color:#8a8a90;margin-top:5px;"><span style="font-family:ui-monospace,monospace;">alex@morgan.studio</span> · morgan.studio</div>
+            <div style="font:500 12px system-ui;color:#34343a;margin-top:7px;">Book a call → <span style="font-family:ui-monospace,monospace;color:#2f6bdb;">calendly.com/alex/30min</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="flex:none;display:flex;align-items:center;gap:14px;padding:12px 22px;border-top:1px solid rgba(0,0,0,.05);position:relative;">
+      <span style="font:600 13.5px system-ui;color:#fff;background:#2f6bdb;border-radius:9px;padding:9px 20px;">Send</span>
+      <span style="font:400 16px system-ui;color:#9a9aa0;">⎘</span><span style="font:400 16px system-ui;color:#9a9aa0;">◷</span>
+      <div style="flex:1;"></div>
+      <span style="display:flex;align-items:center;gap:7px;font:600 12.5px system-ui;color:#5a5a62;border:1px solid rgba(0,0,0,.12);border-radius:9px;padding:7px 13px;">Signature: Studio ⌄</span>
+      <!-- switcher popover -->
+      <div style="position:absolute;right:22px;bottom:58px;width:212px;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:11px;box-shadow:0 20px 50px rgba(10,12,30,.24);overflow:hidden;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#eef3fc;box-shadow:inset 2px 0 #2f6bdb;"><span style="font:600 13px system-ui;color:#1c1c20;">Studio</span><span style="font:600 9.5px system-ui;letter-spacing:.04em;text-transform:uppercase;color:#2f9e6f;">Default</span></div>
+        <div style="padding:10px 14px;border-top:1px solid rgba(0,0,0,.04);font:500 13px system-ui;color:#3a3a40;">Winnow</div>
+        <div style="padding:10px 14px;border-top:1px solid rgba(0,0,0,.04);font:500 13px system-ui;color:#3a3a40;">Quick reply</div>
+        <div style="padding:10px 14px;border-top:1px solid rgba(0,0,0,.04);font:500 13px system-ui;color:#9a9aa0;">None</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
