@@ -1,6 +1,6 @@
 import Foundation
 
-public enum IntelligenceResult: Sendable {
+public enum IntelligenceResult: Sendable, Codable {
     case summary(String)
     case suggestedReplies([String])
     case packageTracking(PackageInfo)
@@ -8,13 +8,13 @@ public enum IntelligenceResult: Sendable {
     case calendarEvent(CalendarEventInfo)
     case bill(BillInfo)
 
-    public struct PackageInfo: Sendable {
+    public struct PackageInfo: Sendable, Codable {
         public let carrier: String
         public let trackingNumber: String
         public let status: Status
         public let estimatedDelivery: Date?
 
-        public enum Status: Sendable {
+        public enum Status: Sendable, Codable {
             case inTransit, outForDelivery, delivered
             public var label: String {
                 switch self {
@@ -33,7 +33,7 @@ public enum IntelligenceResult: Sendable {
         }
     }
 
-    public struct FlightInfo: Sendable {
+    public struct FlightInfo: Sendable, Codable {
         public let flightNumber: String
         public let from: String
         public let to: String
@@ -49,7 +49,7 @@ public enum IntelligenceResult: Sendable {
         }
     }
 
-    public struct CalendarEventInfo: Sendable {
+    public struct CalendarEventInfo: Sendable, Codable {
         public let title: String
         public let startDate: Date
         public let endDate: Date?
@@ -83,7 +83,7 @@ public enum IntelligenceResult: Sendable {
         }
     }
 
-    public struct BillInfo: Sendable {
+    public struct BillInfo: Sendable, Codable {
         public let merchant: String
         public let amount: Double
         public let currency: String

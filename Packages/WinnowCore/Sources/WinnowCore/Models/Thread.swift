@@ -1,6 +1,6 @@
 import Foundation
 
-public struct MailThread: Identifiable, Sendable {
+public struct MailThread: Identifiable, Sendable, Codable {
     public let id: String
     public let accountID: String
     public var subject: String

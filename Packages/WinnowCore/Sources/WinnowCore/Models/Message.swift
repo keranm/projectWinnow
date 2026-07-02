@@ -1,6 +1,6 @@
 import Foundation
 
-public struct MailMessage: Identifiable, Sendable, Hashable {
+public struct MailMessage: Identifiable, Sendable, Hashable, Codable {
     public let id: String
     public let threadID: String
     public let accountID: String
@@ -47,7 +47,7 @@ public struct MailMessage: Identifiable, Sendable, Hashable {
     }
 }
 
-public struct Participant: Sendable, Hashable {
+public struct Participant: Sendable, Hashable, Codable {
     public let name: String?
     public let email: String
 
@@ -59,7 +59,7 @@ public struct Participant: Sendable, Hashable {
     public var displayName: String { name ?? email }
 }
 
-public enum MessageBody: Sendable, Hashable {
+public enum MessageBody: Sendable, Hashable, Codable {
     case plain(String)
     case html(String)
 }

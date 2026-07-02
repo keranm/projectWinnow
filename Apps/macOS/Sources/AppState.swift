@@ -129,9 +129,23 @@ final class AppState {
 
     func bootstrap() async {
         snoozedIDs = settings.activeSnoozedIDs()
+        Task.detached(priority: .utility) { await ToneClassifier.shared.prewarm() }
+
         guard let data = try? keychain.getData(forKey: tokenKey),
               let tokens = try? JSONDecoder().decode(OAuthTokens.self, from: data)
         else { return }
+
+        // Paint the mailbox from the local store immediately; the network sync
+        // that follows replaces it within seconds.
+        let cached = await ThreadCache.shared.load()
+        if threads.isEmpty, !cached.isEmpty {
+            threads = cached
+            refreshCorrespondents()
+            checkSnoozeWakeUps()
+            applyRules()
+            if selectedThreadID == nil { selectedThreadID = visibleThreads.first?.id }
+        }
+
         await connectClient(tokens: tokens)
     }
 
@@ -163,6 +177,7 @@ final class AppState {
         isAuthenticated = false
         threads = []
         accounts = []
+        Task { await ThreadCache.shared.clear() }
         selectedThreadID = nil
         nextPageToken = nil
         fullBodyLoadedIDs = []
@@ -177,7 +192,11 @@ final class AppState {
         syncError = nil
 
         do {
-            let profile = try await client.getProfile()
+            // Profile and inbox listing are independent — fetch them together.
+            async let profileFetch = client.getProfile()
+            async let inboxFetch = client.syncInbox()
+
+            let profile = try await profileFetch
             // Gmail's profile endpoint has no name — prefer the Mac account's full name
             // over a mashed-together email prefix ("Keranmckenzie").
             let derived = profile.emailAddress.components(separatedBy: "@").first?.capitalized ?? profile.emailAddress
@@ -192,12 +211,9 @@ final class AppState {
             )]
             settings.seedIdentityIfNeeded(email: profile.emailAddress, displayName: displayName)
 
-            let (raw, token) = try await client.syncInbox()
-            var fetched = await ExtractionPipeline.shared.processTier1(raw)
-            if settings.extractNeedsReply {
-                fetched = await ExtractionPipeline.shared.processTier2(fetched)
-            }
-            threads = fetched
+            let (raw, token) = try await inboxFetch
+            // Tier 1 only on the render path — Tier 2 tones merge in behind it.
+            threads = await ExtractionPipeline.shared.processTier1(raw)
             nextPageToken = token
             fullBodyLoadedIDs = []
             lastSyncDate = Date()
@@ -205,10 +221,12 @@ final class AppState {
             sweepSentCorrespondentsIfStale()
             checkSnoozeWakeUps()
             applyRules()
+            applyTier2Tones()
             prepareDraftsForNeedsReply()
             if selectedThreadID == nil || !threads.contains(where: { $0.id == selectedThreadID }) {
                 selectedThreadID = visibleThreads.first?.id
             }
+            schedulePersist()
 
             let updated = await client.currentTokens()
             try? keychain.setData(JSONEncoder().encode(updated), forKey: tokenKey)
@@ -225,15 +243,14 @@ final class AppState {
 
         do {
             let (raw, newToken) = try await client.loadMoreThreads(pageToken: token)
-            var annotated = await ExtractionPipeline.shared.processTier1(raw)
-            if settings.extractNeedsReply {
-                annotated = await ExtractionPipeline.shared.processTier2(annotated)
-            }
+            let annotated = await ExtractionPipeline.shared.processTier1(raw)
             let existingIDs = Set(threads.map { $0.id })
             threads += annotated.filter { !existingIDs.contains($0.id) }
             nextPageToken = newToken
             refreshCorrespondents()
             applyRules()
+            applyTier2Tones()
+            schedulePersist()
         } catch {
             syncError = error.localizedDescription
         }
@@ -267,18 +284,21 @@ final class AppState {
         guard let i = threads.firstIndex(where: { $0.id == id }), !threads[i].isRead else { return }
         threads[i].isRead = true
         Task { try? await gmailClient?.modifyThread(id, removeLabels: ["UNREAD"]) }
+        schedulePersist()
     }
 
     func markUnread(_ id: String) {
         guard let i = threads.firstIndex(where: { $0.id == id }), threads[i].isRead else { return }
         threads[i].isRead = false
         Task { try? await gmailClient?.modifyThread(id, addLabels: ["UNREAD"]) }
+        schedulePersist()
     }
 
     func archive(_ id: String) {
         if selectedThreadID == id { advance() }
         threads.removeAll { $0.id == id }
         Task { try? await gmailClient?.modifyThread(id, removeLabels: ["INBOX"]) }
+        schedulePersist()
     }
 
     // MARK: - Multi-select
@@ -456,6 +476,38 @@ final class AppState {
     /// falls back gracefully when the on-device model is unavailable (pre-macOS 26).
     private var generationAllowed: Bool { settings.assistanceLevel != .off }
 
+    /// Tier 2 tone classification runs behind the render path — threads paint with
+    /// Tier 1 results immediately and tones merge in as they're computed.
+    private func applyTier2Tones() {
+        guard settings.extractNeedsReply else { return }
+        let pending = threads.filter { $0.senderTone == nil }
+        guard !pending.isEmpty else { return }
+        Task {
+            let toned = await ExtractionPipeline.shared.processTier2(pending)
+            for t in toned {
+                guard let tone = t.senderTone,
+                      let i = threads.firstIndex(where: { $0.id == t.id })
+                else { continue }
+                threads[i].senderTone = tone
+            }
+            schedulePersist()
+        }
+    }
+
+    // MARK: - Local store
+
+    private var persistTask: Task<Void, Never>?
+
+    /// Debounced whole-store save — call after any meaningful thread mutation.
+    private func schedulePersist() {
+        persistTask?.cancel()
+        persistTask = Task {
+            try? await Task.sleep(for: .seconds(1))
+            guard !Task.isCancelled else { return }
+            await ThreadCache.shared.save(threads)
+        }
+    }
+
     func summarize(threadID: String) {
         guard let thread = threads.first(where: { $0.id == threadID }) else { return }
         let allow = generationAllowed
@@ -590,6 +642,7 @@ final class AppState {
         }
         fullBodyLoadedIDs.insert(id)
         generateSuggestionsIfNeeded(for: id)
+        schedulePersist()
     }
 
     // MARK: - Private helpers

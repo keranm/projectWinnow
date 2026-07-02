@@ -2,7 +2,7 @@ import Foundation
 import NaturalLanguage
 
 /// How a message reads — who sent it is `isLikelyAutomated`'s job; this is about tone.
-public enum SenderTone: String, Sendable {
+public enum SenderTone: String, Sendable, Codable {
     case personal       // written by a person, to you
     case transactional  // receipts, confirmations, account notices
     case marketing      // promotions, product updates, newsletters
@@ -22,6 +22,12 @@ public actor ToneClassifier {
     private init() {}
 
     public var isAvailable: Bool { embedding != nil }
+
+    /// Loads the embedding model (the slow part) ahead of first classification —
+    /// call early in app startup, off the sync path.
+    public func prewarm() {
+        _ = embedding?.vector(for: "hello")
+    }
 
     public func tone(subject: String, preview: String) -> SenderTone? {
         guard let embedding else { return nil }
