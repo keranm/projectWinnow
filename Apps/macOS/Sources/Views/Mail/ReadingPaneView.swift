@@ -412,7 +412,7 @@ struct ReadingPaneView: View {
                 text: $replyText,
                 placeholder: replyPlaceholder,
                 isFocused: $replyFocused,
-                growLimits: 20...170
+                growLimits: 36...240
             )
             .onChange(of: replyFocused) { _, focused in
                 guard focused, !signatureSeeded else { return }

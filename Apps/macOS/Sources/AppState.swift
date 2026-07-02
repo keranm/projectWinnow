@@ -350,11 +350,13 @@ final class AppState {
     }
 
     /// Generates quick-reply chips for a thread once its full body is loaded.
-    /// Skips threads where the user sent the last message — nothing to reply to.
+    /// Skips automated mail (nothing to say to a shipping bot) and threads where
+    /// the user sent the last message — nothing to reply to.
     private func generateSuggestionsIfNeeded(for id: String) {
         guard generationAllowed,
               let thread = threads.first(where: { $0.id == id }),
               thread.suggestedReplies.isEmpty,
+              !thread.isLikelyAutomated,
               let latest = thread.messages.last,
               latest.from.email != accounts.first?.email
         else { return }

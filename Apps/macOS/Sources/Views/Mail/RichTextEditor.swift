@@ -14,7 +14,8 @@ struct FormattedTextEditor: View {
     @Binding var text: NSAttributedString
     var placeholder: String = ""
     @Binding var isFocused: Bool
-    /// Auto-grow the editor with its content inside these bounds; nil fills available space.
+    /// Compact-to-expanded behaviour: collapsed to `lowerBound` when idle, expands on
+    /// focus and follows content up to `upperBound`. nil fills the available space.
     var growLimits: ClosedRange<CGFloat>? = nil
     var fontSize: CGFloat = 13.5
 
@@ -22,6 +23,19 @@ struct FormattedTextEditor: View {
     @State private var selectionRect: CGRect?
     @State private var linkFieldShown = false
     @State private var linkURL = ""
+    @State private var contentHeight: CGFloat = 0
+
+    /// Bottom-anchored in the reply footer, so growing = expanding upward.
+    private var displayHeight: CGFloat? {
+        guard let limits = growLimits else { return nil }
+        let content = contentHeight + 6
+        if isFocused {
+            // Open generously on click, then follow the text.
+            return min(max(content, 110), limits.upperBound)
+        }
+        // Idle: single line; peek a little taller when it already holds a draft.
+        return text.isBlank ? limits.lowerBound : min(max(content, limits.lowerBound), 84)
+    }
 
     var body: some View {
         RichTextEditor(
@@ -29,10 +43,12 @@ struct FormattedTextEditor: View {
             placeholder: placeholder,
             isFocused: $isFocused,
             selectionRect: $selectionRect,
-            growLimits: growLimits,
+            contentHeight: $contentHeight,
             fontSize: fontSize,
             controller: controller
         )
+        .frame(height: displayHeight)
+        .animation(.easeInOut(duration: 0.16), value: displayHeight)
         .overlay {
             GeometryReader { geo in
                 // linkFieldShown keeps the bar alive while the URL field has focus
@@ -180,7 +196,7 @@ private struct RichTextEditor: NSViewRepresentable {
     var placeholder: String
     @Binding var isFocused: Bool
     @Binding var selectionRect: CGRect?
-    var growLimits: ClosedRange<CGFloat>?
+    @Binding var contentHeight: CGFloat
     var fontSize: CGFloat
     let controller: RichTextController
 
@@ -210,19 +226,16 @@ private struct RichTextEditor: NSViewRepresentable {
         textView.isVerticallyResizable = true
         textView.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
 
-        let scroll = GrowingScrollView()
+        let scroll = NSScrollView()
         scroll.documentView = textView
         scroll.drawsBackground = false
         scroll.hasVerticalScroller = true
         scroll.autohidesScrollers = true
-        scroll.verticalScrollElasticity = growLimits == nil ? .automatic : .none
-        if let limits = growLimits {
-            scroll.growLimits = limits
-        }
 
         controller.textView = textView
         textView.onLinkRequest = { [weak controller] in controller?.onLinkRequest?() }
         textView.attributedText = text
+        context.coordinator.reportContentHeight(of: textView)
         return scroll
     }
 
@@ -232,7 +245,7 @@ private struct RichTextEditor: NSViewRepresentable {
         if !textView.attributedString().isEqual(to: text) {
             textView.attributedText = text
             textView.setSelectedRange(NSRange(location: text.length, length: 0))
-            scroll.invalidateIntrinsicContentSize()
+            context.coordinator.reportContentHeight(of: textView)
         }
 
         if isFocused, textView.window != nil, textView.window?.firstResponder !== textView {
@@ -250,7 +263,16 @@ private struct RichTextEditor: NSViewRepresentable {
         func textDidChange(_ notification: Notification) {
             guard let tv = notification.object as? NSTextView else { return }
             parent.text = tv.attributedString().copy() as! NSAttributedString
-            tv.enclosingScrollView?.invalidateIntrinsicContentSize()
+            reportContentHeight(of: tv)
+        }
+
+        func reportContentHeight(of tv: NSTextView) {
+            guard let lm = tv.layoutManager, let tc = tv.textContainer else { return }
+            lm.ensureLayout(for: tc)
+            let height = lm.usedRect(for: tc).height + tv.textContainerInset.height * 2
+            if abs(parent.contentHeight - height) > 0.5 {
+                DispatchQueue.main.async { [parent] in parent.contentHeight = height }
+            }
         }
 
         func textDidBeginEditing(_ notification: Notification) {
@@ -326,25 +348,6 @@ private final class FormattingTextView: NSTextView {
             let origin = NSPoint(x: textContainerOrigin.x + 4, y: textContainerOrigin.y)
             NSAttributedString(string: placeholder, attributes: attrs).draw(at: origin)
         }
-    }
-}
-
-// MARK: - Auto-growing scroll view
-
-private final class GrowingScrollView: NSScrollView {
-    var growLimits: ClosedRange<CGFloat>?
-
-    override var intrinsicContentSize: NSSize {
-        guard let limits = growLimits,
-              let tv = documentView as? NSTextView,
-              let lm = tv.layoutManager, let tc = tv.textContainer
-        else { return super.intrinsicContentSize }
-        lm.ensureLayout(for: tc)
-        let height = lm.usedRect(for: tc).height + tv.textContainerInset.height * 2
-        return NSSize(
-            width: NSView.noIntrinsicMetric,
-            height: min(max(height, limits.lowerBound), limits.upperBound)
-        )
     }
 }
 
