@@ -39,6 +39,7 @@ See `docs/architecture.md` for the full picture. Key rules:
 
 **Working end-to-end:**
 - Gmail OAuth PKCE → Keychain → live inbox sync every 5 min
+- Local thread store (`ThreadCache`, WinnowCore/Storage): launch paints from disk instantly, sync refreshes behind it; debounced saves on every thread mutation; cleared on sign-out
 - 3-pane mail layout: sidebar nav, thread list, reading pane with HTML rendering
 - Reply (with threading) and compose new (⌘N) — NSTextView-backed rich editor (`RichTextEditor.swift`): native newlines/undo/paste, ⌘B/I/U + ⌘K link while focused, floating formatting bar on selection; formatted mail goes out as multipart/alternative (plain + HTML)
 - Archive (`e`), mark-read (`m`), pagination, keyboard navigation (j/k)
