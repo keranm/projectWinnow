@@ -365,18 +365,13 @@ final class AppState {
         }
     }
 
-    /// The threads a human is actually waiting on — automated/transactional mail and
-    /// anything Tier 1 recognised as a notification never qualifies. Shared by Today's
-    /// hero card and the draft generator so they can't disagree.
-    /// (Gmail's IMPORTANT label remains the proxy until the Tier 2 classifier lands.)
+    /// The threads a human is actually waiting on — `NeedsReplySignal` requires an
+    /// inbound last message plus either your participation in the thread or a message
+    /// that plainly asks for a response. No Gmail-IMPORTANT proxy, no label guessing.
+    /// Shared by Today's hero card and the draft generator so they can't disagree.
     var needsReplyCandidates: [MailThread] {
         let selfEmail = accounts.first?.email
-        let human = threads.filter {
-            !$0.isLikelyAutomated && $0.messages.last?.from.email != selfEmail
-        }
-        let flagged = human.filter { $0.needsReply }
-        if !flagged.isEmpty { return flagged }
-        return human.filter { $0.labels.contains("IMPORTANT") }
+        return threads.filter { NeedsReplySignal.needsReply($0, selfEmail: selfEmail) }
     }
 
     /// One thread per tracking number, newest first — the single source for every

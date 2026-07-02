@@ -10,18 +10,37 @@ public extension MailThread {
         // invites are answered through RSVP, not a written reply.
         if !intelligenceResults.isEmpty { return true }
 
-        guard let sender = messages.last?.from.email.lowercased() else { return false }
+        guard let latest = messages.last else { return false }
+        let sender = latest.from.email.lowercased()
         let parts = sender.components(separatedBy: "@")
         let local = parts.first ?? sender
         let domain = parts.count > 1 ? parts[1] : ""
 
+        // "noreply" appears anywhere in the local part — covers suffix forms like
+        // googlecommunityteam-noreply@google.com.
+        if Self.noReplyFragments.contains(where: { local.contains($0) }) { return true }
         if Self.automatedLocalParts.contains(where: { matches(local, keyword: $0) }) { return true }
         if Self.automatedSubdomains.contains(where: { domain.hasPrefix($0) }) { return true }
+
+        // Content only a bot sends. Checked against subject + preview so senders with
+        // human-looking addresses (account@, service@) still get caught.
+        let text = "\(subject) \(latest.snippet)".lowercased()
+        if Self.automatedContent.contains(where: { text.contains($0) }) { return true }
         return false
     }
 
+    private static let noReplyFragments: [String] = [
+        "noreply", "no-reply", "no_reply", "donotreply", "do-not-reply", "do_not_reply",
+    ]
+
+    private static let automatedContent: [String] = [
+        "verification code", "verify your email", "password reset", "reset your password",
+        "terms of service", "privacy policy", "two-factor", "security alert",
+        "new sign-in", "sign-in attempt", "login attempt", "log in into",
+        "do not reply", "automated message", "automatically generated", "unsubscribe",
+    ]
+
     private static let automatedLocalParts: [String] = [
-        "no-reply", "noreply", "no_reply", "do-not-reply", "donotreply", "do_not_reply",
         "notification", "notifications", "notify", "alert", "alerts",
         "mailer-daemon", "postmaster", "bounce", "bounces",
         "transaction", "transactions", "order", "orders", "shipping", "shipment",

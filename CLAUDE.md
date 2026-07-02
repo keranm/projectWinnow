@@ -55,7 +55,7 @@ See `docs/architecture.md` for the full picture. Key rules:
 - Signing config locked in `project.yml` — no provisioning-profile errors after xcodegen
 
 **Not yet built (priority order):**
-1. Intelligence Tier 2 — needs-reply/triage classifier (sent-folder analysis + NLEmbedding). Today's "needs a reply" and draft-ready candidates currently proxy Gmail's IMPORTANT label
+1. Intelligence Tier 2 — NLEmbedding triage/sender-type/project grouping. (Needs-reply is now deterministic: `NeedsReplySignal` — inbound last message + participation-or-question, automated mail excluded via `isLikelyAutomated`. No IMPORTANT proxy anymore.)
 2. iOS companion target
 3. Push notifications
 4. iCloud KV Store for settings (currently UserDefaults — CLAUDE.md says KV Store)
