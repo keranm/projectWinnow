@@ -207,7 +207,58 @@ struct TodayView: View {
                     .strokeBorder(Color.black.opacity(0.07), lineWidth: 1)
             )
             .padding(.bottom, 16)
+        } else if !appState.threads.isEmpty {
+            caughtUpCard
         }
+    }
+
+    // MARK: - Caught up (the calm finish from the Triage-to-Zero design)
+
+    private var caughtUpCard: some View {
+        VStack(spacing: 0) {
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.winnowAccentTint)
+                .frame(width: 44, height: 44)
+                .overlay(
+                    Rectangle()
+                        .fill(Color.winnowAccent)
+                        .frame(width: 15, height: 15)
+                        .rotationEffect(.degrees(45))
+                        .cornerRadius(2)
+                )
+
+            Text("You're all caught up")
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(Color.winnowText)
+                .tracking(-0.2)
+                .padding(.top, 16)
+
+            Text(caughtUpSubline)
+                .font(.system(size: 13))
+                .foregroundStyle(Color.winnowTextTertiary)
+                .padding(.top, 5)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 36)
+        .background(Color.winnowSurface)
+        .clipShape(RoundedRectangle(cornerRadius: 13))
+        .overlay(
+            RoundedRectangle(cornerRadius: 13)
+                .strokeBorder(Color.black.opacity(0.07), lineWidth: 1)
+        )
+        .padding(.bottom, 16)
+    }
+
+    private var caughtUpSubline: String {
+        var bits = ["Nothing needs a reply"]
+        let deliveries = dedupedPackageThreads.count
+        if deliveries > 0 {
+            bits.append("\(deliveries) deliver\(deliveries == 1 ? "y" : "ies") on the way")
+        }
+        if !billThreads.isEmpty {
+            bits.append("\(billThreads.count) bill\(billThreads.count == 1 ? "" : "s") coming up")
+        }
+        return bits.joined(separator: " · ") + "."
     }
 
     // MARK: - Secondary 3-column grid
