@@ -12,13 +12,29 @@ public actor ExtractionPipeline {
         threads.map { annotate($0) }
     }
 
-    /// Runs the Tier 1 summary extractor for a single thread, on demand (user-triggered, not part of batch sync).
-    public func summarize(_ thread: MailThread) -> MailThread {
+    /// Summarizes a single thread on demand (user-triggered, not part of batch sync).
+    /// Tier 3 generation when allowed and available, else the Tier 1 extractive fallback.
+    public func summarize(_ thread: MailThread, allowGeneration: Bool = false) async -> MailThread {
         var t = thread
+        if allowGeneration, let generated = await GenerationEngine.shared.summarize(t) {
+            t.summary = generated
+            return t
+        }
         if let summary = SummaryExtractor.extract(from: t) {
             t.summary = summary
         }
         return t
+    }
+
+    /// Tier 3: quick-reply chips for the latest message. Empty when generation is
+    /// unavailable — callers should simply not render the chips.
+    public func suggestReplies(for thread: MailThread) async -> [String] {
+        await GenerationEngine.shared.suggestReplies(to: thread)
+    }
+
+    /// Tier 3: a full draft reply to the latest message, or nil when unavailable.
+    public func draftReply(for thread: MailThread) async -> String? {
+        await GenerationEngine.shared.draftReply(to: thread)
     }
 
     /// Re-runs calendar event extraction against a full message body, filling in fields

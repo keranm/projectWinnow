@@ -1,4 +1,5 @@
 import SwiftUI
+import WinnowCore
 import WinnowUI
 
 struct IntelligencePanel: View {
@@ -35,6 +36,31 @@ struct IntelligencePanel: View {
                 }
             }
             .padding(.top, 11)
+
+            if !GenerationEngine.isAvailable {
+                HStack(alignment: .top, spacing: 9) {
+                    Image(systemName: "exclamationmark.triangle")
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundStyle(Color(hex: "C08A4A"))
+                        .padding(.top, 1)
+                    Text("The on-device model isn't available right now — enable Apple Intelligence in System Settings (requires macOS 26). Until then, summaries fall back to on-device extraction and reply suggestions are off.")
+                        .font(.system(size: 12))
+                        .foregroundStyle(Color(hex: "7A6A52"))
+                        .lineSpacing(3)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(12)
+                .frame(maxWidth: 560, alignment: .leading)
+                .background(
+                    RoundedRectangle(cornerRadius: 11)
+                        .fill(Color(hex: "FDF6EE"))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 11)
+                                .strokeBorder(Color(hex: "C08A4A").opacity(0.22), lineWidth: 1)
+                        )
+                )
+                .padding(.top, 10)
+            }
 
             // ── Assistance level ───────────────────────────────────────────
             SettingsSectionHeader(title: "Assistance level").padding(.top, 26)

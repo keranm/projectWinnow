@@ -18,6 +18,7 @@ public struct MailThread: Identifiable, Sendable {
     // On-device intelligence (tier 2/3 outputs)
     public var summary: String?
     public var suggestedReplies: [String]
+    public var draftReply: String?
     public var intelligenceResults: [IntelligenceResult]
 
     public init(
@@ -34,6 +35,7 @@ public struct MailThread: Identifiable, Sendable {
         hasDraftReady: Bool = false,
         summary: String? = nil,
         suggestedReplies: [String] = [],
+        draftReply: String? = nil,
         intelligenceResults: [IntelligenceResult] = []
     ) {
         self.id = id
@@ -49,6 +51,7 @@ public struct MailThread: Identifiable, Sendable {
         self.hasDraftReady = hasDraftReady
         self.summary = summary
         self.suggestedReplies = suggestedReplies
+        self.draftReply = draftReply
         self.intelligenceResults = intelligenceResults
     }
 }

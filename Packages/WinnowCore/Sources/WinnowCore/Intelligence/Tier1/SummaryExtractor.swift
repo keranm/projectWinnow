@@ -9,7 +9,7 @@ public struct SummaryExtractor {
         case .plain(let text):
             return firstSentences(text, count: 3)
         case .html(let html):
-            return firstSentences(stripHTML(html), count: 3)
+            return firstSentences(TextSanitizer.stripHTML(html), count: 3)
         case nil:
             // No body loaded yet — join snippets from the last few messages
             let snippets = thread.messages.suffix(3).reversed()
@@ -39,21 +39,5 @@ public struct SummaryExtractor {
 
         let result = sentences.joined(separator: " ")
         return result.isEmpty ? nil : result
-    }
-
-    private static func stripHTML(_ html: String) -> String {
-        // Remove style/script blocks first, then all remaining tags
-        var s = html
-        for pattern in ["<style[^>]*>[\\s\\S]*?</style>", "<script[^>]*>[\\s\\S]*?</script>"] {
-            s = s.replacingOccurrences(of: pattern, with: " ", options: [.regularExpression, .caseInsensitive])
-        }
-        s = s.replacingOccurrences(of: "<[^>]+>", with: " ", options: .regularExpression)
-        return s
-            .replacingOccurrences(of: "&nbsp;",  with: " ")
-            .replacingOccurrences(of: "&amp;",   with: "&")
-            .replacingOccurrences(of: "&lt;",    with: "<")
-            .replacingOccurrences(of: "&gt;",    with: ">")
-            .replacingOccurrences(of: "&quot;",  with: "\"")
-            .replacingOccurrences(of: "&#39;",   with: "'")
     }
 }

@@ -343,7 +343,7 @@ struct ReadingPaneView: View {
 
     private var composeFooter: some View {
         VStack(alignment: .leading, spacing: 11) {
-            if !thread.suggestedReplies.isEmpty {
+            if !thread.suggestedReplies.isEmpty || thread.draftReply != nil {
                 quickReplies
             }
             replyBox
@@ -360,6 +360,12 @@ struct ReadingPaneView: View {
     private var quickReplies: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
+                if let draft = thread.draftReply {
+                    DraftReadyChip {
+                        replyText = draft
+                        replyFocused = true
+                    }
+                }
                 ForEach(thread.suggestedReplies, id: \.self) { reply in
                     QuickReplyChip(text: reply) {
                         replyText = reply
@@ -458,6 +464,37 @@ struct ReadingPaneView: View {
 }
 
 // MARK: - Quick reply chip
+
+/// Assist-marked chip that drops the on-device draft into the reply field.
+private struct DraftReadyChip: View {
+    let onTap: () -> Void
+    @State private var isHovered = false
+
+    var body: some View {
+        Button(action: onTap) {
+            HStack(spacing: 6) {
+                AssistDiamond(size: .small)
+                Text("Draft ready — insert")
+                    .font(.system(size: 12.5, weight: .semibold))
+            }
+            .foregroundStyle(Color.winnowAccent)
+            .padding(.horizontal, 13)
+            .padding(.vertical, 5)
+            .background(
+                Capsule()
+                    .fill(isHovered ? Color.winnowAccentTint : .clear)
+                    .animation(.easeInOut(duration: 0.12), value: isHovered)
+                    .overlay(
+                        Capsule()
+                            .strokeBorder(Color.winnowAccent.opacity(isHovered ? 0.4 : 0.28), lineWidth: 1)
+                    )
+            )
+        }
+        .buttonStyle(.plain)
+        .onHover { isHovered = $0 }
+        .help("Reply drafted on this Mac — review before sending")
+    }
+}
 
 private struct QuickReplyChip: View {
     let text: String

@@ -161,6 +161,7 @@ final class AppState {
             lastSyncDate = Date()
             checkSnoozeWakeUps()
             applyRules()
+            prepareDraftsForNeedsReply()
             if selectedThreadID == nil || !threads.contains(where: { $0.id == selectedThreadID }) {
                 selectedThreadID = visibleThreads.first?.id
             }
@@ -329,12 +330,53 @@ final class AppState {
 
     // MARK: - Intelligence
 
+    /// Tier 3 generation is used only when assistance isn't off; each call site also
+    /// falls back gracefully when the on-device model is unavailable (pre-macOS 26).
+    private var generationAllowed: Bool { settings.assistanceLevel != .off }
+
     func summarize(threadID: String) {
         guard let thread = threads.first(where: { $0.id == threadID }) else { return }
+        let allow = generationAllowed
         Task {
-            let annotated = await ExtractionPipeline.shared.summarize(thread)
+            let annotated = await ExtractionPipeline.shared.summarize(thread, allowGeneration: allow)
             guard let i = threads.firstIndex(where: { $0.id == threadID }) else { return }
             threads[i].summary = annotated.summary
+        }
+    }
+
+    /// Generates quick-reply chips for a thread once its full body is loaded.
+    /// Skips threads where the user sent the last message — nothing to reply to.
+    private func generateSuggestionsIfNeeded(for id: String) {
+        guard generationAllowed,
+              let thread = threads.first(where: { $0.id == id }),
+              thread.suggestedReplies.isEmpty,
+              let latest = thread.messages.last,
+              latest.from.email != accounts.first?.email
+        else { return }
+        Task {
+            let replies = await ExtractionPipeline.shared.suggestReplies(for: thread)
+            guard !replies.isEmpty, let i = threads.firstIndex(where: { $0.id == id }) else { return }
+            threads[i].suggestedReplies = replies
+        }
+    }
+
+    /// Drafts replies in the background for the threads Today surfaces as "needs a reply",
+    /// so the hero card can show its "Draft ready" chip. Capped to keep sync light.
+    private func prepareDraftsForNeedsReply(limit: Int = 2) {
+        guard generationAllowed else { return }
+        let selfEmail = accounts.first?.email
+        let candidates = threads
+            .filter { ($0.needsReply || $0.labels.contains("IMPORTANT")) && !$0.hasDraftReady && $0.draftReply == nil }
+            .filter { $0.messages.last?.from.email != selfEmail }
+            .prefix(limit)
+        for thread in candidates {
+            Task {
+                guard let draft = await ExtractionPipeline.shared.draftReply(for: thread),
+                      let i = threads.firstIndex(where: { $0.id == thread.id })
+                else { return }
+                threads[i].draftReply = draft
+                threads[i].hasDraftReady = true
+            }
         }
     }
 
@@ -396,6 +438,7 @@ final class AppState {
             threads[i] = await ExtractionPipeline.shared.enrichCalendarEvent(full)
         }
         fullBodyLoadedIDs.insert(id)
+        generateSuggestionsIfNeeded(for: id)
     }
 
     // MARK: - Private helpers

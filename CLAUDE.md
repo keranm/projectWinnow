@@ -35,7 +35,7 @@ See `docs/architecture.md` for the full picture. Key rules:
 - Apple Foundation Models / MLX (tier 3, off by default)
 - EventKit for calendar free/busy
 
-## Current implementation status (as of 2026-07-01)
+## Current implementation status (as of 2026-07-02)
 
 **Working end-to-end:**
 - Gmail OAuth PKCE → Keychain → live inbox sync every 5 min
@@ -43,17 +43,19 @@ See `docs/architecture.md` for the full picture. Key rules:
 - Reply (with threading) and compose new (⌘N)
 - Archive (`e`), mark-read (`m`), pagination, keyboard navigation (j/k)
 - Today screen: greeting, needs-reply, due-soon, trips/deliveries cards
-- Intelligence Tier 1: `PackageExtractor`, `FlightExtractor`, `BillExtractor`, `SummaryExtractor` (regex-based, on-device, all routed through `ExtractionPipeline`)
+- Intelligence Tier 1: `PackageExtractor`, `FlightExtractor`, `BillExtractor`, `SummaryExtractor`, `CalendarEventExtractor` (regex-based, on-device, all routed through `ExtractionPipeline`; unit tests in `WinnowCoreTests`)
+- Intelligence Tier 3: `GenerationEngine` (WinnowCore/Intelligence/Foundation) on Apple Foundation Models — generative ⌘/ summaries, suggested-reply chips on thread open, background "Draft ready" drafts for needs-reply threads. Requires macOS 26 + Apple Intelligence enabled; falls back to Tier 1 silently when unavailable. Gated by `settings.assistanceLevel != .off`.
+- Calendar free/busy — EventKit only (ADR 003): invite detail view w/ free/busy rail, conflict card, inline RSVP; "Find a time" in reply + compose; Settings → Calendar
 - Search — Gmail-backed, debounced, keyboard nav
 - Snooze + Rules — on-device triage, popover + action bar
 - Dark mode — token wash across the app
 - ⌘/ command bar (⌘K reserved for prev-thread nav), incl. "Summarize this thread"
-- Settings window (⌘,): Accounts/Identities, Signatures, Snippets, Intelligence, General, Shortcuts, Lab
+- Settings window (⌘,): Accounts/Identities, Signatures, Snippets, Rules, Calendar, Intelligence, General, Shortcuts, Lab
 - Signatures: auto-appended in compose and on first reply-field focus
 - Signing config locked in `project.yml` — no provisioning-profile errors after xcodegen
 
 **Not yet built (priority order):**
-1. Calendar free/busy — EventKit scope already planned (ADR 003)
+1. Intelligence Tier 2 — needs-reply/triage classifier (sent-folder analysis + NLEmbedding). Today's "needs a reply" and draft-ready candidates currently proxy Gmail's IMPORTANT label
 2. iOS companion target
 3. Push notifications
 4. iCloud KV Store for settings (currently UserDefaults — CLAUDE.md says KV Store)
