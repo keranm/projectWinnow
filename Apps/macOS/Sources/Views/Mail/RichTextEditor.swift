@@ -242,6 +242,12 @@ private struct RichTextEditor: NSViewRepresentable {
     func updateNSView(_ scroll: NSScrollView, context: Context) {
         guard let textView = scroll.documentView as? FormattingTextView else { return }
 
+        // The view is reused across thread switches — keep the placeholder current.
+        if textView.placeholder != placeholder {
+            textView.placeholder = placeholder
+            textView.needsDisplay = true
+        }
+
         if !textView.attributedString().isEqual(to: text) {
             textView.attributedText = text
             textView.setSelectedRange(NSRange(location: text.length, length: 0))
