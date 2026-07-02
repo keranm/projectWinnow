@@ -6,7 +6,9 @@ import WinnowCore
 @MainActor
 final class AppState {
     // Navigation
-    var selectedNavItem: NavItem = .today
+    var selectedNavItem: NavItem = .today {
+        didSet { if selectedNavItem != oldValue { multiSelectedIDs = [] } }
+    }
     var selectedThreadID: String?
 
     // Data
@@ -267,10 +269,83 @@ final class AppState {
         Task { try? await gmailClient?.modifyThread(id, removeLabels: ["UNREAD"]) }
     }
 
+    func markUnread(_ id: String) {
+        guard let i = threads.firstIndex(where: { $0.id == id }), threads[i].isRead else { return }
+        threads[i].isRead = false
+        Task { try? await gmailClient?.modifyThread(id, addLabels: ["UNREAD"]) }
+    }
+
     func archive(_ id: String) {
         if selectedThreadID == id { advance() }
         threads.removeAll { $0.id == id }
         Task { try? await gmailClient?.modifyThread(id, removeLabels: ["INBOX"]) }
+    }
+
+    // MARK: - Multi-select
+
+    var multiSelectedIDs: Set<String> = []
+    private var selectionAnchorID: String?
+
+    /// Click entry point for thread rows — honours ⇧ (range from anchor) and ⌘
+    /// (toggle) like a standard Mac list. Plain clicks collapse the multi-selection.
+    func clickThread(_ id: String) {
+        let mods = NSEvent.modifierFlags
+        if mods.contains(.shift) {
+            extendSelection(to: id)
+        } else if mods.contains(.command) {
+            toggleSelection(of: id)
+        } else {
+            multiSelectedIDs = []
+            selectionAnchorID = id
+            selectThread(id)
+            markRead(id)
+        }
+    }
+
+    private func toggleSelection(of id: String) {
+        // Seed with the current single selection so ⌘-click builds on what's shown
+        if multiSelectedIDs.isEmpty, let current = selectedThreadID, current != id {
+            multiSelectedIDs = [current]
+        }
+        if multiSelectedIDs.contains(id) {
+            multiSelectedIDs.remove(id)
+        } else {
+            multiSelectedIDs.insert(id)
+        }
+        selectionAnchorID = id
+    }
+
+    private func extendSelection(to id: String) {
+        let list = visibleThreads
+        let anchor = selectionAnchorID ?? selectedThreadID ?? id
+        guard let a = list.firstIndex(where: { $0.id == anchor }),
+              let b = list.firstIndex(where: { $0.id == id })
+        else { return }
+        multiSelectedIDs.formUnion(list[min(a, b)...max(a, b)].map { $0.id })
+        if selectionAnchorID == nil { selectionAnchorID = anchor }
+    }
+
+    func clearMultiSelection() {
+        multiSelectedIDs = []
+    }
+
+    /// Context-menu targets: the whole selection when the clicked row is part of it,
+    /// otherwise just the clicked row.
+    func contextTargets(for id: String) -> Set<String> {
+        multiSelectedIDs.contains(id) ? multiSelectedIDs : [id]
+    }
+
+    func archiveAll(_ ids: Set<String>) {
+        ids.forEach(archive)
+        multiSelectedIDs.subtract(ids)
+    }
+
+    func markReadAll(_ ids: Set<String>) {
+        ids.forEach(markRead)
+    }
+
+    func markUnreadAll(_ ids: Set<String>) {
+        ids.forEach(markUnread)
     }
 
     func sendReply(threadID: String, body: String, html: String? = nil) async {

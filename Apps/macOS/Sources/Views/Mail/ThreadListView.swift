@@ -22,11 +22,12 @@ struct ThreadListView: View {
                             ThreadRowView(
                                 thread: thread,
                                 isSelected: thread.id == appState.selectedThreadID
+                                    || appState.multiSelectedIDs.contains(thread.id)
                             )
                             .onTapGesture {
-                                appState.selectThread(thread.id)
-                                appState.markRead(thread.id)
+                                appState.clickThread(thread.id)
                             }
+                            .contextMenu { rowContextMenu(for: thread.id) }
                             Color.black.opacity(0.04).frame(height: 1)
                         }
 
@@ -50,13 +51,45 @@ struct ThreadListView: View {
         }
         .onKeyPress("e") {
             guard !appState.isSearchActive else { return .ignored }
-            if let id = appState.selectedThreadID { appState.archive(id) }
+            if !appState.multiSelectedIDs.isEmpty {
+                appState.archiveAll(appState.multiSelectedIDs)
+            } else if let id = appState.selectedThreadID {
+                appState.archive(id)
+            }
+            return .handled
+        }
+        .onKeyPress(.escape) {
+            guard !appState.multiSelectedIDs.isEmpty else { return .ignored }
+            appState.clearMultiSelection()
             return .handled
         }
         .onChange(of: appState.isSearchActive) { _, active in
             if active {
                 DispatchQueue.main.async { searchFocused = true }
             }
+        }
+    }
+
+    // MARK: - Row context menu
+
+    @ViewBuilder
+    private func rowContextMenu(for id: String) -> some View {
+        let targets = appState.contextTargets(for: id)
+        let n = targets.count
+
+        Button(n > 1 ? "Archive \(n) Conversations" : "Archive") {
+            appState.archiveAll(targets)
+        }
+        Divider()
+        Button(n > 1 ? "Mark \(n) as Read" : "Mark as Read") {
+            appState.markReadAll(targets)
+        }
+        Button(n > 1 ? "Mark \(n) as Unread" : "Mark as Unread") {
+            appState.markUnreadAll(targets)
+        }
+        if n > 1 {
+            Divider()
+            Button("Deselect All") { appState.clearMultiSelection() }
         }
     }
 
