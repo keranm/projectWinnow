@@ -137,7 +137,16 @@ final class WinnowSettings {
     // MARK: - Seeders (called from AppState after first auth)
 
     func seedIdentityIfNeeded(email: String, displayName: String) {
-        guard !identities.contains(where: { $0.email == email }) else { return }
+        if let idx = identities.firstIndex(where: { $0.email == email }) {
+            // Migrate earlier seeds that stored the raw email prefix as a stand-in name
+            let derived = email.components(separatedBy: "@").first?.capitalized ?? email
+            if identities[idx].displayName == derived, displayName != derived {
+                identities[idx].displayName = displayName
+                if identities[idx].signatureName == derived { identities[idx].signatureName = displayName }
+                save()
+            }
+            return
+        }
         identities.append(.defaultForGmail(email: email, displayName: displayName))
         save()
     }

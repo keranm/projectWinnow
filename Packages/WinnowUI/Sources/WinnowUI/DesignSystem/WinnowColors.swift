@@ -21,6 +21,8 @@ public extension Color {
     // MARK: - Accent
     static let winnowAccent         = adaptive(light: "2F6BDB", dark: "4F8EF0")
     static let winnowAccentTint     = adaptive(light: "EEF3FC", dark: "20304D")
+    // Assist blocks (summary card, agent strip) — quieter than accentTint
+    static let winnowAssistTint     = adaptive(light: "F7F9FC", dark: "202838")
 
     // MARK: - Semantic
     static let winnowSuccess        = adaptive(light: "2F9E6F", dark: "3DB87F")

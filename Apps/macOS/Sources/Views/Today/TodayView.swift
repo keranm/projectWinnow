@@ -26,10 +26,7 @@ struct TodayView: View {
     }
 
     private var needsReplyThreads: [MailThread] {
-        // Use flagged/important threads as proxy until sent-folder analysis lands
-        let nr = appState.threads.filter { $0.needsReply }
-        if !nr.isEmpty { return Array(nr.prefix(5)) }
-        return Array(appState.threads.filter { $0.labels.contains("IMPORTANT") }.prefix(3))
+        Array(appState.needsReplyCandidates.prefix(5))
     }
 
     private var billThreads: [MailThread] {
@@ -52,24 +49,7 @@ struct TodayView: View {
 
     // Deduplicate packages by tracking number — keep the most recent per track ID.
     private var dedupedPackageThreads: [MailThread] {
-        var seen: [String: MailThread] = [:]
-        var noTrack: [MailThread] = []
-        for thread in packageThreads {
-            guard let p = thread.intelligenceResults.compactMap({ r -> IntelligenceResult.PackageInfo? in
-                if case .packageTracking(let pkg) = r { return pkg }; return nil
-            }).first else { continue }
-            if p.trackingNumber.isEmpty {
-                noTrack.append(thread)
-            } else {
-                let key = p.trackingNumber
-                if let existing = seen[key] {
-                    if thread.lastMessageDate > existing.lastMessageDate { seen[key] = thread }
-                } else {
-                    seen[key] = thread
-                }
-            }
-        }
-        return Array(seen.values).sorted { $0.lastMessageDate > $1.lastMessageDate } + noTrack
+        appState.dedupedPackageThreads
     }
 
     private var totalBillAmount: Double {
@@ -104,7 +84,7 @@ struct TodayView: View {
             VStack(alignment: .leading, spacing: 5) {
                 Text(greeting)
                     .font(.system(size: 25, weight: .semibold))
-                    .foregroundStyle(Color(hex: "161618"))
+                    .foregroundStyle(Color.winnowText)
                     .tracking(-0.5)
 
                 Text(dateString)
@@ -203,7 +183,7 @@ struct TodayView: View {
 
                     Text("they're waiting on you")
                         .font(.system(size: 11, weight: .medium))
-                        .foregroundStyle(Color(hex: "B2B2B8"))
+                        .foregroundStyle(Color.winnowTextQuaternary)
                 }
                 .padding(.horizontal, 19)
                 .padding(.top, 16)
@@ -266,7 +246,7 @@ struct TodayView: View {
             }
             .padding(.horizontal, 17)
             .padding(.vertical, 13)
-            .background(Color(hex: "F7F9FC"))
+            .background(Color.winnowAssistTint)
             .clipShape(RoundedRectangle(cornerRadius: 11))
             .overlay(
                 RoundedRectangle(cornerRadius: 11)
@@ -333,12 +313,12 @@ private struct NeedsReplyRow: View {
 
                     Text(waitingLabel)
                         .font(.system(size: 11, weight: .medium).monospaced())
-                        .foregroundStyle(Color(hex: "B2B2B8"))
+                        .foregroundStyle(Color.winnowTextQuaternary)
                 }
 
                 Text(thread.subject)
                     .font(.system(size: 13, weight: .medium))
-                    .foregroundStyle(Color(hex: "3A3A40"))
+                    .foregroundStyle(Color.winnowTextSubdued)
                     .lineLimit(1)
 
                 Text(thread.snippet)
@@ -424,12 +404,12 @@ private struct DueSoonCard: View {
                 Text("DUE SOON")
                     .font(.system(size: 11, weight: .semibold))
                     .tracking(0.05 * 11)
-                    .foregroundStyle(Color(hex: "9AA6BB"))
+                    .foregroundStyle(Color.winnowLabelText)
                 Spacer()
                 if total > 0 {
                     Text("≈\(currencyString(total))")
                         .font(.system(size: 11, weight: .semibold).monospaced())
-                        .foregroundStyle(Color(hex: "34343A"))
+                        .foregroundStyle(Color.winnowTextSubdued)
                 }
             }
             .padding(.horizontal, 17)
@@ -481,17 +461,17 @@ private struct BillDueSoonRow: View {
                     if let due = b.dueDate {
                         Text(due.formatted(.dateTime.month().day()))
                             .font(.system(size: 11))
-                            .foregroundStyle(Color(hex: "A2A2A8"))
+                            .foregroundStyle(Color.winnowTextTertiary)
                     } else {
                         Text(thread.lastMessageDate.formatted(.dateTime.month().day()))
                             .font(.system(size: 11))
-                            .foregroundStyle(Color(hex: "A2A2A8"))
+                            .foregroundStyle(Color.winnowTextTertiary)
                     }
                 }
                 Spacer()
                 Text(amountString(b))
                     .font(.system(size: 12.5, weight: .semibold).monospaced())
-                    .foregroundStyle(Color(hex: "34343A"))
+                    .foregroundStyle(Color.winnowTextSubdued)
             }
             .frame(maxWidth: .infinity)
             .padding(.horizontal, 16)
@@ -681,7 +661,7 @@ private struct OpenInboxPill: View {
                     .foregroundStyle(Color.winnowTextTertiary)
                 Text("⌘1")
                     .font(.system(size: 11, weight: .semibold).monospaced())
-                    .foregroundStyle(Color(hex: "B2B2B8"))
+                    .foregroundStyle(Color.winnowTextQuaternary)
                     .padding(.horizontal, 6)
                     .padding(.vertical, 1)
                     .background(Color.black.opacity(0.05))
@@ -733,7 +713,7 @@ private func todayCardHeader(title: String, badge: Int? = nil) -> some View {
         Text(title.uppercased())
             .font(.system(size: 11, weight: .semibold))
             .tracking(0.6)
-            .foregroundStyle(Color(hex: "9AA6BB"))
+            .foregroundStyle(Color.winnowLabelText)
         if let b = badge, b > 0 {
             Text("\(b)")
                 .font(.system(size: 11, weight: .semibold).monospaced())

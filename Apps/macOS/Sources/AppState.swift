@@ -57,7 +57,7 @@ final class AppState {
         case .important:     return threads.filter { $0.labels.contains("IMPORTANT") }.count
         case .other:         return threads.filter { $0.labels.contains("INBOX") }.count
         case .flights:       return threads.filter { isFlight($0) }.count
-        case .deliveries:    return threads.filter { isDelivery($0) }.count
+        case .deliveries:    return dedupedPackageThreads.count
         case .quotes:        return 0
         case .subscriptions: return threads.filter { isBill($0) }.count
         case .calendar:      return 0
@@ -143,7 +143,11 @@ final class AppState {
 
         do {
             let profile = try await client.getProfile()
-            let displayName = profile.emailAddress.components(separatedBy: "@").first?.capitalized ?? profile.emailAddress
+            // Gmail's profile endpoint has no name — prefer the Mac account's full name
+            // over a mashed-together email prefix ("Keranmckenzie").
+            let derived = profile.emailAddress.components(separatedBy: "@").first?.capitalized ?? profile.emailAddress
+            let fullName = NSFullUserName()
+            let displayName = fullName.isEmpty ? derived : fullName
             accounts = [Account(
                 id: "primary",
                 email: profile.emailAddress,
@@ -361,14 +365,46 @@ final class AppState {
         }
     }
 
+    /// The threads a human is actually waiting on — automated/transactional mail and
+    /// anything Tier 1 recognised as a notification never qualifies. Shared by Today's
+    /// hero card and the draft generator so they can't disagree.
+    /// (Gmail's IMPORTANT label remains the proxy until the Tier 2 classifier lands.)
+    var needsReplyCandidates: [MailThread] {
+        let selfEmail = accounts.first?.email
+        let human = threads.filter {
+            !$0.isLikelyAutomated && $0.messages.last?.from.email != selfEmail
+        }
+        let flagged = human.filter { $0.needsReply }
+        if !flagged.isEmpty { return flagged }
+        return human.filter { $0.labels.contains("IMPORTANT") }
+    }
+
+    /// One thread per tracking number, newest first — the single source for every
+    /// "how many shipments" surface (briefing, Deliveries card, sidebar badge).
+    var dedupedPackageThreads: [MailThread] {
+        var seen: [String: MailThread] = [:]
+        var noTrack: [MailThread] = []
+        for thread in threads where isDelivery(thread) {
+            guard let p = thread.intelligenceResults.compactMap({ r -> IntelligenceResult.PackageInfo? in
+                if case .packageTracking(let pkg) = r { return pkg }; return nil
+            }).first else { continue }
+            if p.trackingNumber.isEmpty {
+                noTrack.append(thread)
+            } else if let existing = seen[p.trackingNumber] {
+                if thread.lastMessageDate > existing.lastMessageDate { seen[p.trackingNumber] = thread }
+            } else {
+                seen[p.trackingNumber] = thread
+            }
+        }
+        return Array(seen.values).sorted { $0.lastMessageDate > $1.lastMessageDate } + noTrack
+    }
+
     /// Drafts replies in the background for the threads Today surfaces as "needs a reply",
     /// so the hero card can show its "Draft ready" chip. Capped to keep sync light.
     private func prepareDraftsForNeedsReply(limit: Int = 2) {
         guard generationAllowed else { return }
-        let selfEmail = accounts.first?.email
-        let candidates = threads
-            .filter { ($0.needsReply || $0.labels.contains("IMPORTANT")) && !$0.hasDraftReady && $0.draftReply == nil }
-            .filter { $0.messages.last?.from.email != selfEmail }
+        let candidates = needsReplyCandidates
+            .filter { !$0.hasDraftReady && $0.draftReply == nil }
             .prefix(limit)
         for thread in candidates {
             Task {
