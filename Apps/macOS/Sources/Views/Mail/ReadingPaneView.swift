@@ -10,6 +10,7 @@ struct ReadingPaneView: View {
     @State private var signatureSeeded = false
     @State private var isSendHovered = false
     @State private var showSnoozePopover = false
+    @State private var isFindingTime = false
     @FocusState private var replyFocused: Bool
 
     private var latestMessage: MailMessage? { thread.messages.last }
@@ -171,9 +172,18 @@ struct ReadingPaneView: View {
 
     // MARK: - Body
 
+    private var calendarEvent: IntelligenceResult.CalendarEventInfo? {
+        for result in thread.intelligenceResults {
+            if case .calendarEvent(let info) = result { return info }
+        }
+        return nil
+    }
+
     @ViewBuilder
     private var bodyContent: some View {
-        if let msg = latestMessage {
+        if let event = calendarEvent {
+            CalendarInviteDetailView(thread: thread, event: event)
+        } else if let msg = latestMessage {
             switch msg.body {
             case .html(let html):
                 VStack(spacing: 0) {
@@ -360,8 +370,38 @@ struct ReadingPaneView: View {
         }
     }
 
+    private var findATimeButton: some View {
+        Button {
+            isFindingTime = true
+            let calIDs = settings.calendarCalendarsSeeded ? settings.calendarSelectedIDs : nil
+            let hours = settings.workingHours
+            Task {
+                if let text = await FindATime.suggestionText(calendarIDs: calIDs, workingHours: hours) {
+                    replyText = replyText.isEmpty ? text : "\(replyText)\n\n\(text)"
+                    replyFocused = true
+                }
+                isFindingTime = false
+            }
+        } label: {
+            HStack(spacing: 6) {
+                AssistDiamond(size: .small)
+                Text(isFindingTime ? "Finding…" : "Find a time")
+                    .font(.system(size: 12.5, weight: .semibold))
+            }
+            .foregroundStyle(Color.winnowAccent)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 7)
+            .overlay(RoundedRectangle(cornerRadius: 8).strokeBorder(Color.winnowAccent.opacity(0.28), lineWidth: 1))
+        }
+        .buttonStyle(.plain)
+        .disabled(isFindingTime)
+        .help("Suggest times you're free, from Apple Calendar")
+    }
+
     private var replyBox: some View {
         HStack(alignment: .bottom, spacing: 10) {
+            findATimeButton
+
             TextField(replyPlaceholder, text: $replyText, axis: .vertical)
                 .onChange(of: replyFocused) { _, focused in
                     guard focused, !signatureSeeded else { return }

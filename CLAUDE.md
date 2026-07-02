@@ -35,7 +35,7 @@ See `docs/architecture.md` for the full picture. Key rules:
 - Apple Foundation Models / MLX (tier 3, off by default)
 - EventKit for calendar free/busy
 
-## Current implementation status (as of 2026-06-30)
+## Current implementation status (as of 2026-07-01)
 
 **Working end-to-end:**
 - Gmail OAuth PKCE → Keychain → live inbox sync every 5 min
@@ -43,20 +43,20 @@ See `docs/architecture.md` for the full picture. Key rules:
 - Reply (with threading) and compose new (⌘N)
 - Archive (`e`), mark-read (`m`), pagination, keyboard navigation (j/k)
 - Today screen: greeting, needs-reply, due-soon, trips/deliveries cards
-- Intelligence Tier 1: `PackageExtractor`, `FlightExtractor`, `BillExtractor` (regex-based, on-device)
+- Intelligence Tier 1: `PackageExtractor`, `FlightExtractor`, `BillExtractor`, `SummaryExtractor` (regex-based, on-device, all routed through `ExtractionPipeline`)
+- Search — Gmail-backed, debounced, keyboard nav
+- Snooze + Rules — on-device triage, popover + action bar
+- Dark mode — token wash across the app
+- ⌘/ command bar (⌘K reserved for prev-thread nav), incl. "Summarize this thread"
 - Settings window (⌘,): Accounts/Identities, Signatures, Snippets, Intelligence, General, Shortcuts, Lab
 - Signatures: auto-appended in compose and on first reply-field focus
 - Signing config locked in `project.yml` — no provisioning-profile errors after xcodegen
 
 **Not yet built (priority order):**
-1. Search (`Winnow Accounts & Search.dc.html`)
-2. Snooze (`Winnow Snooze & Projects.dc.html`)
-3. Rules / smart routing (`Winnow Notifications & Rules.dc.html`)
-4. Calendar free/busy — EventKit scope already planned (ADR 003)
-5. Dark mode — token system supports it; dark variants may be incomplete
-6. iOS companion target
-7. Push notifications
-8. iCloud KV Store for settings (currently UserDefaults — CLAUDE.md says KV Store)
+1. Calendar free/busy — EventKit scope already planned (ADR 003)
+2. iOS companion target
+3. Push notifications
+4. iCloud KV Store for settings (currently UserDefaults — CLAUDE.md says KV Store)
 
 ## Design language — "Quiet"
 

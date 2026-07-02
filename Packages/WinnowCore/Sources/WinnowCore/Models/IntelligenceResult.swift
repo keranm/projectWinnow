@@ -51,15 +51,35 @@ public enum IntelligenceResult: Sendable {
 
     public struct CalendarEventInfo: Sendable {
         public let title: String
-        public let date: Date
+        public let startDate: Date
+        public let endDate: Date?
         public let location: String?
         public let organiser: String?
+        public let organiserEmail: String?
+        public let guests: [String]
+        public let meetingLink: String?
+        public let isCancelled: Bool
 
-        public init(title: String, date: Date, location: String? = nil, organiser: String? = nil) {
+        public init(
+            title: String,
+            startDate: Date,
+            endDate: Date? = nil,
+            location: String? = nil,
+            organiser: String? = nil,
+            organiserEmail: String? = nil,
+            guests: [String] = [],
+            meetingLink: String? = nil,
+            isCancelled: Bool = false
+        ) {
             self.title = title
-            self.date = date
+            self.startDate = startDate
+            self.endDate = endDate
             self.location = location
             self.organiser = organiser
+            self.organiserEmail = organiserEmail
+            self.guests = guests
+            self.meetingLink = meetingLink
+            self.isCancelled = isCancelled
         }
     }
 

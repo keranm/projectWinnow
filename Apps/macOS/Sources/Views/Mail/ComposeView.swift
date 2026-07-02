@@ -12,6 +12,7 @@ struct ComposeView: View {
     @State private var bodyText = ""
     @State private var isSending = false
     @State private var isCancelHovered = false
+    @State private var isFindingTime = false
     @FocusState private var focused: Field?
 
     enum Field { case to, subject, body }
@@ -87,6 +88,14 @@ struct ComposeView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .padding(.horizontal, 20)
                     .padding(.top, 12)
+
+                Divider().opacity(0.4)
+                HStack {
+                    findATimeButton
+                    Spacer()
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 10)
             }
         }
         .background(Color.winnowSurface)
@@ -97,6 +106,33 @@ struct ComposeView: View {
                 bodyText = "\n\n\(sig)"
             }
         }
+    }
+
+    private var findATimeButton: some View {
+        Button {
+            isFindingTime = true
+            let calIDs = settings.calendarCalendarsSeeded ? settings.calendarSelectedIDs : nil
+            let hours = settings.workingHours
+            Task {
+                if let text = await FindATime.suggestionText(calendarIDs: calIDs, workingHours: hours) {
+                    bodyText = bodyText.isEmpty ? text : "\(bodyText)\n\n\(text)"
+                }
+                isFindingTime = false
+            }
+        } label: {
+            HStack(spacing: 6) {
+                AssistDiamond(size: .small)
+                Text(isFindingTime ? "Finding…" : "Find a time")
+                    .font(.system(size: 12.5, weight: .semibold))
+            }
+            .foregroundStyle(Color.winnowAccent)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 7)
+            .overlay(RoundedRectangle(cornerRadius: 8).strokeBorder(Color.winnowAccent.opacity(0.28), lineWidth: 1))
+        }
+        .buttonStyle(.plain)
+        .disabled(isFindingTime)
+        .help("Suggest times you're free, from Apple Calendar")
     }
 
     private func fieldRow(_ label: String, text: Binding<String>, field: Field) -> some View {

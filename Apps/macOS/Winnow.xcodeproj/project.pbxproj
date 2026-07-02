@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0700019D1219663690D1E64C /* CalendarPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8AE690E58F36A451B4DBB9 /* CalendarPanel.swift */; };
 		1D93D66BE2E6E15FA7135A55 /* ThreadListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 599FF8EA65BD502CED244223 /* ThreadListView.swift */; };
+		1FD90A4F89C1D52E28C93536 /* FindATime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA0468DE7E7BC3B5DB75DF3 /* FindATime.swift */; };
 		20F3228A7974B704A4B39A5B /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2F75367F63C93D25CE6036 /* RootView.swift */; };
 		25C96B799C27D18C72B85E92 /* MailContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D6D77278B8FF8C4563D3813 /* MailContentView.swift */; };
 		33EAA79A63BF562B71E0AA0E /* SnippetsPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096C6816A9C1FBFD98F29874 /* SnippetsPanel.swift */; };
@@ -26,6 +28,7 @@
 		B44C44A5DF353B84F9A5909E /* IntelligencePanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B89C34F45796EBA6004080 /* IntelligencePanel.swift */; };
 		BD3DA47C794B12A5FC41508D /* WinnowUI in Frameworks */ = {isa = PBXBuildFile; productRef = 51BB0E31B28E644545F84B9D /* WinnowUI */; };
 		C60F1AC83C0586BD0DD93129 /* ThreadRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2D1A3D8A4CC83CE18DFC152 /* ThreadRowView.swift */; };
+		C8C5B5E09E3795AA730E6DE8 /* CalendarInviteDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A146A429605EDB8152F498E /* CalendarInviteDetailView.swift */; };
 		CBB8F21BD721799A3BD0A3C7 /* EmptySelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99B35E428690A0A8F77D7292 /* EmptySelectionView.swift */; };
 		CFA76F0F7364A7B6B818CD51 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7243C27B17F187C29A79BD75 /* SettingsView.swift */; };
 		D03FC023CB5E2B0DE4AE8D84 /* WinnowCore in Frameworks */ = {isa = PBXBuildFile; productRef = 485B8EC29AB4A84D0D841C5B /* WinnowCore */; };
@@ -44,9 +47,12 @@
 		26425429F6F68035A64BE30F /* WinnowSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WinnowSettings.swift; sourceTree = "<group>"; };
 		2752BC82243F1BF2EF150CE3 /* SnoozePopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnoozePopover.swift; sourceTree = "<group>"; };
 		2848D76D6E58005ECB79B5FD /* NavItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavItem.swift; sourceTree = "<group>"; };
+		2EA0468DE7E7BC3B5DB75DF3 /* FindATime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindATime.swift; sourceTree = "<group>"; };
 		2EEF79BB74C034EC00BF2FC7 /* AccountsPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsPanel.swift; sourceTree = "<group>"; };
+		3A146A429605EDB8152F498E /* CalendarInviteDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarInviteDetailView.swift; sourceTree = "<group>"; };
 		4244D12F8892270741AFAA40 /* CommandBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandBarView.swift; sourceTree = "<group>"; };
 		475EB32FAE5A75CBE6674C50 /* ReadingPaneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPaneView.swift; sourceTree = "<group>"; };
+		4B8AE690E58F36A451B4DBB9 /* CalendarPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPanel.swift; sourceTree = "<group>"; };
 		599FF8EA65BD502CED244223 /* ThreadListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadListView.swift; sourceTree = "<group>"; };
 		5C2F75367F63C93D25CE6036 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		614F311C47862DEB5F65ED36 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
@@ -86,6 +92,7 @@
 				4244D12F8892270741AFAA40 /* CommandBarView.swift */,
 				99B35E428690A0A8F77D7292 /* EmptySelectionView.swift */,
 				5C2F75367F63C93D25CE6036 /* RootView.swift */,
+				431FC7349AF57BC90F816961 /* Calendar */,
 				79FDD361E2286C7DE3492DB2 /* Mail */,
 				C59DCE4569D60AB04A5BE690 /* Onboarding */,
 				9E0C081C09DA06544B2FA8EF /* Sidebar */,
@@ -100,6 +107,15 @@
 				9001E3F8A44E8C83F5621D55 /* TodayView.swift */,
 			);
 			path = Today;
+			sourceTree = "<group>";
+		};
+		431FC7349AF57BC90F816961 /* Calendar */ = {
+			isa = PBXGroup;
+			children = (
+				3A146A429605EDB8152F498E /* CalendarInviteDetailView.swift */,
+				2EA0468DE7E7BC3B5DB75DF3 /* FindATime.swift */,
+			);
+			path = Calendar;
 			sourceTree = "<group>";
 		};
 		6E7511C92E00174257DD96F9 /* Packages */ = {
@@ -172,6 +188,7 @@
 			children = (
 				2EEF79BB74C034EC00BF2FC7 /* AccountsPanel.swift */,
 				B5B84CB71846660771C0B9EC /* AppearancePanel.swift */,
+				4B8AE690E58F36A451B4DBB9 /* CalendarPanel.swift */,
 				CAA34D531DC5D7EF9933286C /* GeneralPanel.swift */,
 				B2B89C34F45796EBA6004080 /* IntelligencePanel.swift */,
 				689C4FC6BB21DE77FABEB767 /* RulesPanel.swift */,
@@ -263,10 +280,13 @@
 				8015D170B2682583FBF24C48 /* AccountsPanel.swift in Sources */,
 				E6E3D8AA952BD661732393BB /* AppState.swift in Sources */,
 				9B75EFE52376613A84A41D48 /* AppearancePanel.swift in Sources */,
+				C8C5B5E09E3795AA730E6DE8 /* CalendarInviteDetailView.swift in Sources */,
+				0700019D1219663690D1E64C /* CalendarPanel.swift in Sources */,
 				A9D013A817D1CAC37A535671 /* CommandBarView.swift in Sources */,
 				81E468F690A2B021A5095BA2 /* ComposeView.swift in Sources */,
 				B1E374C66DB634A57B4B987B /* ConnectAccountView.swift in Sources */,
 				CBB8F21BD721799A3BD0A3C7 /* EmptySelectionView.swift in Sources */,
+				1FD90A4F89C1D52E28C93536 /* FindATime.swift in Sources */,
 				5C1965EDC4931FBECC3E669B /* GeneralPanel.swift in Sources */,
 				B44C44A5DF353B84F9A5909E /* IntelligencePanel.swift in Sources */,
 				25C96B799C27D18C72B85E92 /* MailContentView.swift in Sources */,

@@ -106,6 +106,16 @@ final class WinnowSettings {
 
     var snoozeEntries: [SnoozeEntry] = []
 
+    // MARK: - Calendar
+
+    var calendarSelectedIDs: Set<String> = []
+    var calendarCalendarsSeeded: Bool = false   // set true once we've defaulted to "all calendars visible" on first EventKit access
+    var calendarWorkingHoursStart: Int = 9      // 24h, e.g. 9 = 9am
+    var calendarWorkingHoursEnd: Int = 18       // e.g. 18 = 6pm
+    var calendarShowFreeBusyBesideInvites: Bool = true
+    var calendarFlagConflicts: Bool = true
+    var calendarRSVPs: [String: String] = [:]   // threadID -> "yes" | "maybe" | "no"
+
     // MARK: - General
 
     var showDockBadge: Bool       = true
@@ -209,6 +219,24 @@ final class WinnowSettings {
         if snoozeEntries.count != before { save() }
     }
 
+    // MARK: - Calendar helpers
+
+    var workingHours: WorkingHours {
+        WorkingHours(startHour: calendarWorkingHoursStart, endHour: calendarWorkingHoursEnd, weekdays: [2, 3, 4, 5, 6])
+    }
+
+    func seedCalendarsIfNeeded(_ calendars: [CalendarInfo]) {
+        guard !calendarCalendarsSeeded else { return }
+        calendarSelectedIDs = Set(calendars.map { $0.id })
+        calendarCalendarsSeeded = true
+        save()
+    }
+
+    func setRSVP(threadID: String, response: String) {
+        calendarRSVPs[threadID] = response
+        save()
+    }
+
     // MARK: - Identity helpers
 
     func upsertIdentity(_ identity: Identity) {
@@ -243,6 +271,14 @@ final class WinnowSettings {
         defaults.set(showDockBadge, forKey: "s.dockBadge")
         defaults.set(threadDensity, forKey: "s.density")
 
+        defaults.set(Array(calendarSelectedIDs), forKey: "s.calSelectedIDs")
+        defaults.set(calendarCalendarsSeeded, forKey: "s.calSeeded")
+        defaults.set(calendarWorkingHoursStart, forKey: "s.calWorkStart")
+        defaults.set(calendarWorkingHoursEnd, forKey: "s.calWorkEnd")
+        defaults.set(calendarShowFreeBusyBesideInvites, forKey: "s.calShowFreeBusy")
+        defaults.set(calendarFlagConflicts, forKey: "s.calFlagConflicts")
+        defaults.set(calendarRSVPs, forKey: "s.calRSVPs")
+
         let enc = JSONEncoder()
         if let data = try? enc.encode(identities)    { defaults.set(data, forKey: "s.identities") }
         if let data = try? enc.encode(snippets)      { defaults.set(data, forKey: "s.snippets") }
@@ -271,6 +307,18 @@ final class WinnowSettings {
         showDockBadge = defaults.object(forKey: "s.dockBadge") != nil
             ? defaults.bool(forKey: "s.dockBadge") : true
         threadDensity = defaults.string(forKey: "s.density") ?? "comfortable"
+
+        if let ids = defaults.array(forKey: "s.calSelectedIDs") as? [String] { calendarSelectedIDs = Set(ids) }
+        calendarCalendarsSeeded = defaults.bool(forKey: "s.calSeeded")
+        if defaults.object(forKey: "s.calWorkStart") != nil {
+            calendarWorkingHoursStart = defaults.integer(forKey: "s.calWorkStart")
+            calendarWorkingHoursEnd   = defaults.integer(forKey: "s.calWorkEnd")
+        }
+        calendarShowFreeBusyBesideInvites = defaults.object(forKey: "s.calShowFreeBusy") != nil
+            ? defaults.bool(forKey: "s.calShowFreeBusy") : true
+        calendarFlagConflicts = defaults.object(forKey: "s.calFlagConflicts") != nil
+            ? defaults.bool(forKey: "s.calFlagConflicts") : true
+        if let rsvps = defaults.dictionary(forKey: "s.calRSVPs") as? [String: String] { calendarRSVPs = rsvps }
 
         let dec = JSONDecoder()
         if let data = defaults.data(forKey: "s.identities"),

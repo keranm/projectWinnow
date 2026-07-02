@@ -141,9 +141,10 @@ enum MockData {
             intelligenceResults: [
                 .calendarEvent(.init(
                     title: "Product strategy sync",
-                    date: Calendar.current.nextDate(after: Date(), matching: DateComponents(hour: 15, weekday: 5), matchingPolicy: .nextTime)!,
+                    startDate: Calendar.current.nextDate(after: Date(), matching: DateComponents(hour: 15, weekday: 5), matchingPolicy: .nextTime)!,
                     location: "Google Meet",
-                    organiser: "Tom Walsh"
+                    organiser: "Tom Walsh",
+                    organiserEmail: "tom@acme.io"
                 ))
             ]
         ),

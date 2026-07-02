@@ -330,11 +330,12 @@ final class AppState {
     // MARK: - Intelligence
 
     func summarize(threadID: String) {
-        guard let thread = threads.first(where: { $0.id == threadID }),
-              let summary = SummaryExtractor.extract(from: thread),
-              let i = threads.firstIndex(where: { $0.id == threadID })
-        else { return }
-        threads[i].summary = summary
+        guard let thread = threads.first(where: { $0.id == threadID }) else { return }
+        Task {
+            let annotated = await ExtractionPipeline.shared.summarize(thread)
+            guard let i = threads.firstIndex(where: { $0.id == threadID }) else { return }
+            threads[i].summary = annotated.summary
+        }
     }
 
     // MARK: - Search
@@ -391,7 +392,9 @@ final class AppState {
     func loadFullThread(_ id: String) async {
         guard let client = gmailClient, !fullBodyLoadedIDs.contains(id) else { return }
         guard let full = try? await client.getFullThread(id) else { return }
-        if let i = threads.firstIndex(where: { $0.id == id }) { threads[i] = full }
+        if let i = threads.firstIndex(where: { $0.id == id }) {
+            threads[i] = await ExtractionPipeline.shared.enrichCalendarEvent(full)
+        }
         fullBodyLoadedIDs.insert(id)
     }
 
