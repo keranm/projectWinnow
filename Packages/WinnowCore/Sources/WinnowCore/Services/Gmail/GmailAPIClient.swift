@@ -45,6 +45,55 @@ public actor GmailAPIClient {
         return (try await fetchThreads(stubs: listing.threads ?? []), listing.nextPageToken)
     }
 
+    /// Sweeps recent SENT mail and returns every address the user has written to.
+    /// Metadata-only (To/Cc headers) — no bodies are fetched. Seeds the on-device
+    /// correspondent list that drives Important/Other triage.
+    public func listSentCorrespondents(maxMessages: Int = 200) async throws -> Set<String> {
+        struct MessagesList: Decodable {
+            struct Stub: Decodable { let id: String }
+            let messages: [Stub]?
+            let nextPageToken: String?
+        }
+
+        var stubs: [String] = []
+        var pageToken: String?
+        repeat {
+            var params = ["maxResults": "100", "labelIds": "SENT"]
+            if let t = pageToken { params["pageToken"] = t }
+            let page = try await get("messages", params: params, as: MessagesList.self)
+            stubs += (page.messages ?? []).map { $0.id }
+            pageToken = page.nextPageToken
+        } while pageToken != nil && stubs.count < maxMessages
+
+        var recipients = Set<String>()
+        try await withThrowingTaskGroup(of: [String].self) { group in
+            for id in stubs.prefix(maxMessages) {
+                group.addTask {
+                    let msg = try await self.get(
+                        "messages/\(id)",
+                        params: ["format": "metadata", "metadataHeaders": "To"],
+                        as: GmailMessage.self
+                    )
+                    return Self.emails(inHeader: msg.header("To") ?? "")
+                }
+            }
+            for try await emails in group { recipients.formUnion(emails) }
+        }
+        return recipients
+    }
+
+    /// Pulls addresses out of a To/Cc header value: "Dana <dana@x.com>, bob@y.org".
+    static func emails(inHeader value: String) -> [String] {
+        value.components(separatedBy: ",").compactMap { part in
+            let trimmed = part.trimmingCharacters(in: .whitespaces)
+            if let open = trimmed.lastIndex(of: "<"), let close = trimmed.lastIndex(of: ">"), open < close {
+                let inner = String(trimmed[trimmed.index(after: open)..<close])
+                return inner.contains("@") ? inner.lowercased() : nil
+            }
+            return trimmed.contains("@") ? trimmed.lowercased() : nil
+        }
+    }
+
     /// High-level: lists threads then fetches metadata for each in parallel.
     /// Returns (threads, nextPageToken) — pass the token to loadMoreThreads() to paginate.
     public func syncInbox() async throws -> ([MailThread], nextPageToken: String?) {

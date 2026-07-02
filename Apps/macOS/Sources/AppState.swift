@@ -93,11 +93,26 @@ final class AppState {
         )
     }
 
-    /// Cached per sync — senders/recipients from threads the user participated in.
+    /// Cached per sync — the persisted SENT-sweep list plus senders/recipients from
+    /// loaded threads the user participated in.
     private(set) var knownCorrespondents: Set<String> = []
 
     func refreshCorrespondents() {
         knownCorrespondents = InboxTriage.correspondents(in: threads, selfEmail: accounts.first?.email)
+            .union(settings.correspondentEmails)
+    }
+
+    /// One-time (then weekly) sweep of SENT mail to learn who the user writes to.
+    /// Metadata-only; runs in the background after a successful sync.
+    private func sweepSentCorrespondentsIfStale() {
+        guard let client = gmailClient else { return }
+        let stale = settings.correspondentsSweptAt.map { Date().timeIntervalSince($0) > 7 * 86_400 } ?? true
+        guard stale else { return }
+        Task {
+            guard let recipients = try? await client.listSentCorrespondents() else { return }
+            settings.mergeCorrespondents(recipients)
+            refreshCorrespondents()
+        }
     }
 
     // Internal
@@ -176,12 +191,16 @@ final class AppState {
             settings.seedIdentityIfNeeded(email: profile.emailAddress, displayName: displayName)
 
             let (raw, token) = try await client.syncInbox()
-            let fetched = await ExtractionPipeline.shared.processTier1(raw)
+            var fetched = await ExtractionPipeline.shared.processTier1(raw)
+            if settings.extractNeedsReply {
+                fetched = await ExtractionPipeline.shared.processTier2(fetched)
+            }
             threads = fetched
             nextPageToken = token
             fullBodyLoadedIDs = []
             lastSyncDate = Date()
             refreshCorrespondents()
+            sweepSentCorrespondentsIfStale()
             checkSnoozeWakeUps()
             applyRules()
             prepareDraftsForNeedsReply()
@@ -204,7 +223,10 @@ final class AppState {
 
         do {
             let (raw, newToken) = try await client.loadMoreThreads(pageToken: token)
-            let annotated = await ExtractionPipeline.shared.processTier1(raw)
+            var annotated = await ExtractionPipeline.shared.processTier1(raw)
+            if settings.extractNeedsReply {
+                annotated = await ExtractionPipeline.shared.processTier2(annotated)
+            }
             let existingIDs = Set(threads.map { $0.id })
             threads += annotated.filter { !existingIDs.contains($0.id) }
             nextPageToken = newToken

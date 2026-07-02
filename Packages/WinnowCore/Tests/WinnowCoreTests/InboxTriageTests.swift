@@ -108,6 +108,25 @@ struct InboxTriageTests {
         #expect(!important(t(Self.now.addingTimeInterval(30 * 86_400))))
     }
 
+    @Test("personal tone promotes an unknown sender; marketing tone does not")
+    func tonePromoter() {
+        var personal = thread([message(id: "m1", from: "dana@acme.io",
+                                       snippet: "Great meeting you at the conference last week.")])
+        personal.senderTone = .personal
+        #expect(important(personal))
+
+        var marketing = thread([message(id: "m2", from: "hello@amber.com.au",
+                                        snippet: "You can now add or remove GreenPower.")])
+        marketing.senderTone = .marketing
+        #expect(!important(marketing))
+    }
+
+    @Test("sent-header addresses parse names, brackets and bare emails")
+    func headerParsing() {
+        let parsed = GmailAPIClient.emails(inHeader: #"Dana Whitfield <dana@acme.io>, bob@y.org, "Nair, Priya" <priya@acme.io>"#)
+        #expect(Set(parsed) == ["dana@acme.io", "bob@y.org", "priya@acme.io"])
+    }
+
     // MARK: - Correspondents
 
     @Test("correspondents come from threads you took part in")

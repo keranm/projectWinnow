@@ -116,6 +116,17 @@ final class WinnowSettings {
     var calendarFlagConflicts: Bool = true
     var calendarRSVPs: [String: String] = [:]   // threadID -> "yes" | "maybe" | "no"
 
+    // MARK: - Correspondents (seeds Important/Other triage; swept from SENT mail)
+
+    var correspondentEmails: Set<String> = []
+    var correspondentsSweptAt: Date?
+
+    func mergeCorrespondents(_ emails: Set<String>) {
+        correspondentEmails.formUnion(emails)
+        correspondentsSweptAt = Date()
+        save()
+    }
+
     // MARK: - General
 
     var showDockBadge: Bool       = true
@@ -280,6 +291,9 @@ final class WinnowSettings {
         defaults.set(showDockBadge, forKey: "s.dockBadge")
         defaults.set(threadDensity, forKey: "s.density")
 
+        defaults.set(Array(correspondentEmails), forKey: "s.correspondents")
+        if let d = correspondentsSweptAt { defaults.set(d, forKey: "s.correspondentsSweptAt") }
+
         defaults.set(Array(calendarSelectedIDs), forKey: "s.calSelectedIDs")
         defaults.set(calendarCalendarsSeeded, forKey: "s.calSeeded")
         defaults.set(calendarWorkingHoursStart, forKey: "s.calWorkStart")
@@ -316,6 +330,9 @@ final class WinnowSettings {
         showDockBadge = defaults.object(forKey: "s.dockBadge") != nil
             ? defaults.bool(forKey: "s.dockBadge") : true
         threadDensity = defaults.string(forKey: "s.density") ?? "comfortable"
+
+        if let emails = defaults.array(forKey: "s.correspondents") as? [String] { correspondentEmails = Set(emails) }
+        correspondentsSweptAt = defaults.object(forKey: "s.correspondentsSweptAt") as? Date
 
         if let ids = defaults.array(forKey: "s.calSelectedIDs") as? [String] { calendarSelectedIDs = Set(ids) }
         calendarCalendarsSeeded = defaults.bool(forKey: "s.calSeeded")

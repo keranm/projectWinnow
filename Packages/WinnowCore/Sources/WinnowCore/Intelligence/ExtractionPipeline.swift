@@ -12,6 +12,20 @@ public actor ExtractionPipeline {
         threads.map { annotate($0) }
     }
 
+    /// Tier 2: annotates threads with an on-device tone classification (NLEmbedding).
+    /// Cheap enough to run for a whole sync batch; nil tones mean "no signal".
+    public func processTier2(_ threads: [MailThread]) async -> [MailThread] {
+        var out: [MailThread] = []
+        out.reserveCapacity(threads.count)
+        for var t in threads {
+            if t.senderTone == nil {
+                t.senderTone = await ToneClassifier.shared.tone(subject: t.subject, preview: t.snippet)
+            }
+            out.append(t)
+        }
+        return out
+    }
+
     /// Summarizes a single thread on demand (user-triggered, not part of batch sync).
     /// Tier 3 generation when allowed and available, else the Tier 1 extractive fallback.
     public func summarize(_ thread: MailThread, allowGeneration: Bool = false) async -> MailThread {

@@ -25,7 +25,11 @@ public enum InboxTriage {
         guard let last = thread.messages.last else { return false }
         let sender = last.from.email.lowercased()
         guard sender != selfEmail?.lowercased() else { return false }
-        return correspondents.contains(sender) && !thread.isLikelyAutomated
+        if correspondents.contains(sender) && !thread.isLikelyAutomated { return true }
+
+        // Tier 2 promoter: personal-sounding mail from someone new can reach Important.
+        // Promoter only — a nil or non-personal tone never demotes the rules above.
+        return thread.senderTone == .personal && !thread.isLikelyAutomated
     }
 
     /// People you've written to, and people who wrote in threads you took part in —

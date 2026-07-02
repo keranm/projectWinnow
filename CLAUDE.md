@@ -44,6 +44,7 @@ See `docs/architecture.md` for the full picture. Key rules:
 - Archive (`e`), mark-read (`m`), pagination, keyboard navigation (j/k)
 - Today screen: greeting, needs-reply, due-soon, trips/deliveries cards
 - Intelligence Tier 1: `PackageExtractor`, `FlightExtractor`, `BillExtractor`, `SummaryExtractor`, `CalendarEventExtractor` (regex-based, on-device, all routed through `ExtractionPipeline`; unit tests in `WinnowCoreTests`)
+- Intelligence Tier 2: `ToneClassifier` (WinnowCore/Intelligence/CoreML) — NLEmbedding zero-shot tone scoring (personal/transactional/marketing) via `ExtractionPipeline.processTier2`, gated by the "Triage & needs-reply" toggle. Promoter-only in `InboxTriage`. Correspondent list seeded by a weekly SENT-mail metadata sweep (`listSentCorrespondents`), persisted in settings.
 - Intelligence Tier 3: `GenerationEngine` (WinnowCore/Intelligence/Foundation) on Apple Foundation Models — generative ⌘/ summaries, suggested-reply chips on thread open, background "Draft ready" drafts for needs-reply threads. Requires macOS 26 + Apple Intelligence enabled; falls back to Tier 1 silently when unavailable. Gated by `settings.assistanceLevel != .off`.
 - Calendar free/busy — EventKit only (ADR 003): invite detail view w/ free/busy rail, conflict card, inline RSVP; "Find a time" in reply + compose; Settings → Calendar
 - Search — Gmail-backed, debounced, keyboard nav
@@ -55,7 +56,7 @@ See `docs/architecture.md` for the full picture. Key rules:
 - Signing config locked in `project.yml` — no provisioning-profile errors after xcodegen
 
 **Not yet built (priority order):**
-1. Intelligence Tier 2 — NLEmbedding sender-type/project grouping. (Needs-reply and Important/Other are now deterministic: `NeedsReplySignal` — inbound last message + participation-or-question; `InboxTriage` — needs-reply ∪ known correspondents ∪ time-critical package/flight/event. Gmail's IMPORTANT label is not consulted anywhere. Correspondents currently derive from the loaded window; a SENT-history sweep would widen coverage.)
+1. Tier 2 extensions — project grouping via embeddings; hotels/quotes/subscriptions extractors (Intelligence settings already shows their toggles)
 2. iOS companion target
 3. Push notifications
 4. iCloud KV Store for settings (currently UserDefaults — CLAUDE.md says KV Store)

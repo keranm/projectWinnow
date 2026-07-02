@@ -19,6 +19,7 @@ public struct MailThread: Identifiable, Sendable {
     public var summary: String?
     public var suggestedReplies: [String]
     public var draftReply: String?
+    public var senderTone: SenderTone?
     public var intelligenceResults: [IntelligenceResult]
 
     public init(
@@ -36,6 +37,7 @@ public struct MailThread: Identifiable, Sendable {
         summary: String? = nil,
         suggestedReplies: [String] = [],
         draftReply: String? = nil,
+        senderTone: SenderTone? = nil,
         intelligenceResults: [IntelligenceResult] = []
     ) {
         self.id = id
@@ -52,6 +54,7 @@ public struct MailThread: Identifiable, Sendable {
         self.summary = summary
         self.suggestedReplies = suggestedReplies
         self.draftReply = draftReply
+        self.senderTone = senderTone
         self.intelligenceResults = intelligenceResults
     }
 }
