@@ -54,8 +54,8 @@ final class AppState {
     func count(for item: NavItem) -> Int {
         switch item {
         case .today:         return threads.filter { !$0.isRead }.count
-        case .important:     return threads.filter { $0.labels.contains("IMPORTANT") }.count
-        case .other:         return threads.filter { $0.labels.contains("INBOX") }.count
+        case .important:     return threads.filter { isImportantThread($0) }.count
+        case .other:         return threads.filter { $0.labels.contains("INBOX") && !isImportantThread($0) }.count
         case .flights:       return threads.filter { isFlight($0) }.count
         case .deliveries:    return dedupedPackageThreads.count
         case .quotes:        return 0
@@ -70,7 +70,7 @@ final class AppState {
         func visible(_ t: MailThread) -> Bool { !hidden.contains(t.id) }
         switch selectedNavItem {
         case .today, .important:
-            return threads.filter { visible($0) && ($0.labels.contains("IMPORTANT") || $0.needsReply) }
+            return threads.filter { visible($0) && isImportantThread($0) }
         case .flights:
             return threads.filter { visible($0) && isFlight($0) }
         case .deliveries:
@@ -78,8 +78,26 @@ final class AppState {
         case .subscriptions:
             return threads.filter { visible($0) && isBill($0) }
         default:
-            return threads.filter { visible($0) && $0.labels.contains("INBOX") }
+            // Other: everything in the inbox that didn't earn Important
+            return threads.filter { visible($0) && $0.labels.contains("INBOX") && !isImportantThread($0) }
         }
+    }
+
+    /// On-device triage (InboxTriage) — humans you correspond with, things asking for
+    /// a reply, and time-critical items. Gmail's IMPORTANT label is not consulted.
+    func isImportantThread(_ thread: MailThread) -> Bool {
+        InboxTriage.isImportant(
+            thread,
+            selfEmail: accounts.first?.email,
+            correspondents: knownCorrespondents
+        )
+    }
+
+    /// Cached per sync — senders/recipients from threads the user participated in.
+    private(set) var knownCorrespondents: Set<String> = []
+
+    func refreshCorrespondents() {
+        knownCorrespondents = InboxTriage.correspondents(in: threads, selfEmail: accounts.first?.email)
     }
 
     // Internal
@@ -163,6 +181,7 @@ final class AppState {
             nextPageToken = token
             fullBodyLoadedIDs = []
             lastSyncDate = Date()
+            refreshCorrespondents()
             checkSnoozeWakeUps()
             applyRules()
             prepareDraftsForNeedsReply()
@@ -189,6 +208,7 @@ final class AppState {
             let existingIDs = Set(threads.map { $0.id })
             threads += annotated.filter { !existingIDs.contains($0.id) }
             nextPageToken = newToken
+            refreshCorrespondents()
             applyRules()
         } catch {
             syncError = error.localizedDescription
